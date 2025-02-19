@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WorkoutDiary.Views.AddExercisePage"
+             xmlns:viewModels="clr-namespace:WorkoutDiary.ViewModels"
+             Title="Dodaj ćwiczenie"
+             BackgroundColor="DarkGray">
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Border Margin="20" StrokeShape="RoundRectangle 45" StrokeThickness="4" Stroke="White">
+
+
+    <Grid  Margin="20" VerticalOptions="Center" Padding="15" Grid.Row="1">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Label Grid.Row="0" Text="Partia ciała" />
+        <Entry Grid.Row="1" x:Name="PartEditor"
+        Text="{Binding Part}"
+        HeightRequest="50" />
+        <Label Grid.Row="2" Text="Ilość serii"/>
+        <Entry Grid.Row="3" x:Name="SeriesEditor"
+        Keyboard="Numeric"
+        Text="{Binding Series}"
+        HeightRequest="50" />
+        <Label Grid.Row="4" Text="Ilość powtórzeń"/>
+        <Entry Grid.Row="5" x:Name="RepetitionsEditor"
+        Keyboard="Numeric"
+        Placeholder="Powtórzenia"
+        Text="{Binding Repetitions}"
+        HeightRequest="50" />
+        <Label Grid.Row="6" Text="waga"/>
+        <Entry Grid.Row="7" x:Name="WeightEditor"
+        Keyboard="Numeric"
+        Placeholder="Waga"
+        Text="{Binding Weight}"
+        HeightRequest="50" />
+
+        <Button Grid.Row="8" Text="Zapisz"
+               
+            Command="{Binding SaveCommand}" Background="White"/>
+
+
+    </Grid>
+    </Border>
+    </Grid>
+</ContentPage>
