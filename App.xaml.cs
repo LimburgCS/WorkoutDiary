@@ -1,4 +1,6 @@
-﻿namespace WorkoutDiary
+﻿using System.Globalization;
+
+namespace WorkoutDiary
 {
     public partial class App : Application
     {
@@ -8,6 +10,8 @@
 
             MainPage = new AppShell();
             Application.Current.UserAppTheme = AppTheme.Dark;
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("pl-PL");
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo("pl-PL");
         }
     }
 }

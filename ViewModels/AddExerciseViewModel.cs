@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,15 +15,19 @@ namespace WorkoutDiary.ViewModels
     public class AddExerciseViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
 
         readonly TodoItemDatabase _database;
         private BodyParts _bodyPart;
         private string _part;
-        private int _series;
-        private int _repetitions;
-        private double _weight;
-
+        private string _partPicker;
+        private int? _series;
+        private int? _repetitions;
+        private float? _weight;
+        private int _numberweek;
         public string Part
         {
             get => _part;
@@ -32,7 +37,16 @@ namespace WorkoutDiary.ViewModels
                 OnPropertyChanged(nameof(Part));
             }
         }
-        public int Series
+        public string PartPicker
+        {
+            get => _partPicker;
+            set
+            {
+                _partPicker = value;
+                OnPropertyChanged(nameof(_partPicker));
+            }
+        }
+        public int? Series
         {
             get => _series;
             set
@@ -41,7 +55,7 @@ namespace WorkoutDiary.ViewModels
                 OnPropertyChanged(nameof(Series));
             }
         }
-        public int Repetitions
+        public int? Repetitions
         {
             get => _repetitions;
             set
@@ -50,7 +64,7 @@ namespace WorkoutDiary.ViewModels
                 OnPropertyChanged(nameof(Repetitions));
             }
         }
-        public double Weight
+        public float? Weight
         {
             get => _weight;
             set
@@ -59,11 +73,21 @@ namespace WorkoutDiary.ViewModels
                 OnPropertyChanged(nameof(Weight));
             }
         }
+
+        public int NumberWeek
+        {
+            get => _numberweek;
+            set
+            {
+                _numberweek = value;
+            }
+        }
         public ICommand SaveCommand { get; }
         public AddExerciseViewModel(TodoItemDatabase database)
         {
             _database = database;
             SaveCommand = new Command(async () => await Save());
+            LoadNumberWeek();
         }
 
 
@@ -71,12 +95,12 @@ namespace WorkoutDiary.ViewModels
         {
             if (query.ContainsKey("exerciseId") && int.TryParse(query["exerciseId"].ToString(), out int exerciseId))
             {
-                LoadInvoice(exerciseId);
+                LoadExercise(exerciseId);
             }
         }
-        public async void LoadInvoice(int exerciseId)
+        public async void LoadExercise(int exerciseId)
         {
-            _bodyPart = await _database.GetInvoiceIDAsync(exerciseId); // Zakładam, że masz taką metodę w klasie Database
+            _bodyPart = await _database.GetInvoiceIDAsync(exerciseId); 
 
             if (_bodyPart != null)
             {
@@ -85,7 +109,6 @@ namespace WorkoutDiary.ViewModels
                 Repetitions = _bodyPart.Repetitions;
                 Weight = _bodyPart.Weight;
 
-                // Notyfikacja o zmianie właściwości, aby zaktualizować widok
                 OnPropertyChanged(nameof(Series));
                 OnPropertyChanged(nameof(Repetitions));
                 OnPropertyChanged(nameof(Weight));
@@ -97,16 +120,14 @@ namespace WorkoutDiary.ViewModels
         {
             if (_bodyPart != null && _bodyPart.Id != 0)
             {
-                // Aktualizuj istniejącą fakturę
                 var existingBodyPart = await _database.GetInvoiceIDAsync(_bodyPart.Id);
 
                 if (existingBodyPart != null)
                 {
                     existingBodyPart.Part = Part;
-                    existingBodyPart.Series = Series;
-                    existingBodyPart.Repetitions = Repetitions;
-                    existingBodyPart.Weight = Weight;
-                    existingBodyPart.DateTime = DateTime.Today;
+                    existingBodyPart.Series = (int)Series;
+                    existingBodyPart.Repetitions = (int)Repetitions;
+                    existingBodyPart.Weight = (float)Weight;
 
                     await _database.UpdateInvoiceAsync(existingBodyPart);
                 }
@@ -117,11 +138,13 @@ namespace WorkoutDiary.ViewModels
                 var newExercise = new BodyParts()
                 {
                     Id = (await _database.GetInvoiceAsync()).Count + 1, // lub zastosuj logikę generowania ID
-                    Part = Part,
-                    Series = Series,
-                    Repetitions = Repetitions,
-                    Weight = Weight,
+                    Part = Part ?? PartPicker,
+                    Series = (int)Series,
+                    Repetitions = (int)Repetitions,
+                    Weight = (float)Weight,
                     DateTime = DateTime.Today,
+                    NumberWeek = NumberWeek,
+
 
                 };
 
@@ -129,9 +152,48 @@ namespace WorkoutDiary.ViewModels
             }
             await Shell.Current.GoToAsync("..");
         }
-        protected virtual void OnPropertyChanged(string propertyName)
+        private async void LoadNumberWeek()
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+            var data = await _database.GetInvoiceAsync();
+            if (data != null && data.Any()) 
+            {
+                var db = await _database.GetInvoiceAsync();
+                var firstweek = db.FirstOrDefault();
+            int currentNumberWeek = CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(
+            DateTime.Now, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+            int firstWorkNumberWeek = CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(
+                                firstweek.DateTime, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+
+            int weekDisplay = currentNumberWeek - firstWorkNumberWeek;
+
+            NumberWeek = weekDisplay + 1;
+            }
+            else
+            {
+                NumberWeek = 1;
+            }
+            //if (weekDisplay == 0)
+            //{
+            //    NumberWeek = ;
+            //}
+            //else if (weekDisplay == 1)
+            //{
+            //    NumberWeek = 2;
+            //}
+            //else if (weekDisplay > 2)
+            //{
+            //    NumberWeek = weekDisplay;
+            //}
+
+
+
+
         }
+        public void loadPicker(string selectedPart)
+        {
+            PartPicker = selectedPart;
+        }
+
     }
 }

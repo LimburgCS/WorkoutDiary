@@ -1,4 +1,5 @@
-﻿using WorkoutDiary.Views;
+﻿using WorkoutDiary.ViewModels;
+using WorkoutDiary.Views;
 
 namespace WorkoutDiary
 {
@@ -8,6 +9,8 @@ namespace WorkoutDiary
         {
             InitializeComponent();
             Routing.RegisterRoute(nameof(AddExercisePage), typeof(AddExercisePage));
+            Routing.RegisterRoute(nameof(StatisticPage), typeof(StatisticPage));
+            BindingContext = new AppShellViewModel();
         }
     }
 }

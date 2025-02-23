@@ -51,5 +51,10 @@ namespace WorkoutDiary.data
             await Init();
             return await Database.DeleteAsync(bodyParts);
         }
+        public async Task<int> DeleteInvoiceAllAsync()
+        {
+            await Init();
+            return await Database.DeleteAllAsync<BodyParts>();
+        }
     }
 }

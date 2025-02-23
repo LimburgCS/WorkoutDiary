@@ -25,7 +25,7 @@ namespace WorkoutDiary.Views
             // Zakładamy, że ViewModel ma metodę odświeżania danych
             if (BindingContext is MainPageViewModel viewModel)
             {
-                viewModel.loadInvoice();
+                viewModel.loadExercise();
             }
         }
         private void ContentPage_NavigatedTo(object sender, NavigatedToEventArgs e)

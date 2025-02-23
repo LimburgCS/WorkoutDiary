@@ -4,22 +4,34 @@
              x:Class="WorkoutDiary.Views.MainPage"
              xmlns:viewodel="clr-namespace:WorkoutDiary.ViewModels"
              NavigatedTo="ContentPage_NavigatedTo"
-             Title="Dziennik ćwiczeń">
+             Title="Dziennik ćwiczeń" Shell.TitleColor="white">
 
 
 
-    <ContentPage.ToolbarItems>
-        
+    <ContentPage.ToolbarItems >
         <ToolbarItem Text="Add" Command="{Binding NewExercise}" IconImageSource="{FontImage Glyph='+', Color=White, Size=22}" />
     </ContentPage.ToolbarItems>
     <Grid>
-        <ScrollView Grid.Row="0">
+
+        <ScrollView Grid.Row="0" Margin="5">
             <StackLayout>
-                <!--<StackLayout Orientation="Horizontal" Padding="20, 10, 20, 0">
-            <Label Text="Nazwa" FontSize="20" FontAttributes="Bold" HorizontalOptions="Start" WidthRequest="100" />
-            <Label Text="Opis" FontSize="20" FontAttributes="Bold" HorizontalOptions="Start" WidthRequest="100" />
-            <Label Text="Kwota" FontSize="20" FontAttributes="Bold" HorizontalOptions="Start" WidthRequest="100" />
-        </StackLayout>-->
+                <StackLayout Orientation="Horizontal"  Padding="20, 10, 20, 0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <DatePicker Grid.Row="0"  Grid.Column="0" HorizontalOptions="Start" Format="dd.MM.yyyy"  />
+                        <ImageButton Grid.Row="0" Grid.Column="1" HorizontalOptions="CenterAndExpand" Source="/Resources/Images/caretleft.svg" Command="{Binding Back}"/>
+                        <Label Grid.Row="0" Grid.Column="2" HorizontalOptions="CenterAndExpand" TextColor="white" Text="{Binding DisplayNumberWeekText}" VerticalTextAlignment="Center"  FontSize="15" />
+                        <ImageButton Grid.Row="0" Grid.Column="3" HorizontalOptions="CenterAndExpand" Source="/Resources/Images/caretright.svg" Command="{Binding Next}" />
+                    </Grid>
+                </StackLayout>
                 <CollectionView x:Name="ExerciseCollectionView"
                          ItemsSource="{Binding BodyParts}"
                         Margin="20"
@@ -48,6 +60,7 @@
                                     <RowDefinition Height="auto" />
                                     <RowDefinition Height="auto" />
                                     <RowDefinition Height="auto" />
+                                        <RowDefinition Height="auto" />
                                     </Grid.RowDefinitions>
 
                                 <Grid.ColumnDefinitions>
@@ -61,10 +74,10 @@
                                    
                                 
                                 <!-- First row: Categories and Price -->
-                                    <Label Grid.Row="0" Grid.Column="0" TextColor="black" Text="{Binding DateTime, StringFormat='{0:dd.MM.yyyy}'}"  FontSize="10" />
+                                    <Label Grid.Row="0" Grid.Column="0" TextColor="black" Text="{Binding DateTime, StringFormat='{0:dddd: dd.MM.yyyy}'}"  FontSize="10" />
                                 <Button Grid.Row="0" Grid.Column="2" TextColor="black" Text="X" Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.Delete}" 
                             CommandParameter="{Binding .}" FontSize="12"  BackgroundColor="Transparent" HorizontalOptions="EndAndExpand" WidthRequest="40" />
-                                    <Label Grid.Row="0" Grid.ColumnSpan="3" TextColor="black" HorizontalTextAlignment="Center"  Text="{Binding Part}" FontSize="22" />
+                                    <Label Grid.Row="0" Grid.ColumnSpan="3" TextColor="black" HorizontalTextAlignment="Center" MaximumWidthRequest="150" LineBreakMode="WordWrap" Text="{Binding Part}" FontSize="22" />
                                     <Label Grid.Row="2" Grid.Column="0" TextColor="black" HorizontalTextAlignment="Center" Text="Serie" FontSize="15"  />
                                     <Label Grid.Row="3" Grid.Column="0" TextColor="black" HorizontalTextAlignment="Center" Text="{Binding Series}" FontSize="22"  />
                                     <Label Grid.Row="2" Grid.Column="1" TextColor="black" HorizontalTextAlignment="Center" Text="Powtórzenia" FontSize="15"  />
@@ -72,8 +85,8 @@
                                     <Label Grid.Row="2" Grid.Column="3" TextColor="black" HorizontalTextAlignment="Center" Text="Waga" FontSize="15"  />
                                     <Label Grid.Row="3" Grid.Column="2" TextColor="black" HorizontalOptions="Center" Text="{Binding Weight, StringFormat='{0:F2}kg'}" FontSize="22" />
                                 <!-- Delete button in the first row, right-aligned -->
-                                
-                            </Grid>
+
+                                </Grid>
                             </Border>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>

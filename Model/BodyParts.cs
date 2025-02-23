@@ -12,10 +12,11 @@ namespace WorkoutDiary.Model
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
         public DateTime DateTime { get; set; }
+        public int NumberWeek {  get; set; }
         public string Part { get; set; }
         public int Series {  get; set; }
         public int Repetitions { get; set; }
-        public double Weight { get; set; }
+        public float Weight { get; set; }
 
     }
 }
