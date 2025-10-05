@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:charts="clr-namespace:Microcharts.Maui;assembly=Microcharts.Maui"
+             x:Class="WorkoutDiary.Views.StatisticCardioPage"
+             Title="Statystyka Cardio" Shell.TitleColor="{DynamicResource PrimaryColor}" BackgroundColor="{DynamicResource PageBackgroundColor}">
+
+        <Grid RowDefinitions="*,auto,auto,auto" Padding="0">
+
+            <StackLayout Grid.Row="0">
+                <Border Margin="10">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="15"/>
+                    </Border.StrokeShape>
+                    <Picker x:Name="namePicker" 
+                Title="Wybierz partie"
+                TitleColor="Black"
+                TextColor="Black"
+                BackgroundColor="White"
+                SelectedIndexChanged="PartSelected">
+                    </Picker>
+                </Border>
+
+                <Label x:Name="LabelName" HorizontalOptions="Center" FontSize="20" HorizontalTextAlignment="Center" Padding="10" TextColor="{DynamicResource PrimaryColor}"/>
+
+                <ScrollView Orientation="Horizontal"
+            Grid.Row="1"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="FillAndExpand"
+            BackgroundColor="Transparent">
+                    <Grid x:Name="ChartContainer"
+          VerticalOptions="FillAndExpand"
+          HorizontalOptions="Start"
+          
+          WidthRequest="800">
+                        <!-- początkowa szerokość, potem nadpisz w kodzie -->
+
+                        <!-- Wykres 1 -->
+                        <charts:ChartView x:Name="chartView"
+                          MaximumHeightRequest="300"
+                          VerticalOptions="FillAndExpand"
+                          HorizontalOptions="Start"/>
+
+                        <!-- Wykres 2 -->
+                        <charts:ChartView x:Name="chartViewCalories"
+                          MaximumHeightRequest="300"
+                          VerticalOptions="FillAndExpand"
+                          HorizontalOptions="Start"
+                          InputTransparent="True"/>
+                        <!-- zapobiega konflikcie kliknięć -->
+                    </Grid>
+                </ScrollView>
+
+            </StackLayout>
+            <StackLayout Grid.Row="2">
+
+
+
+
+                <Frame Grid.Row="1"
+             BackgroundColor="White" 
+             CornerRadius="15"
+             HasShadow="True"
+             Padding="0"
+             Margin="20">
+                    <Grid  Margin="20" ColumnSpacing="20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <Label Grid.Row="0" Grid.ColumnSpan="2" Text="Ilość trenignów" HorizontalOptions="Center" FontSize="15" TextColor="{DynamicResource PrimaryColor}"/>
+                        <Label Grid.Row="1" Grid.ColumnSpan="2" x:Name="CountExercises" HorizontalOptions="Center" FontSize="20" TextColor="{DynamicResource PrimaryColor}"/>
+                        <Label Grid.Row="2" Grid.Column="0" Text="całkowity dystans[km]" HorizontalOptions="Center" FontSize="15" TextColor="{DynamicResource PrimaryColor}"/>
+                        <Label Grid.Row="3" Grid.Column="0" x:Name="FullDistance" HorizontalOptions="Center" FontSize="20" TextColor="{DynamicResource PrimaryColor}"/>
+                        <Label Grid.Row="4" Grid.Column="0" Text="śr. min/km" HorizontalOptions="Center" FontSize="15" TextColor="{DynamicResource PrimaryColor}"/>
+                        <Label Grid.Row="5" Grid.Column="0" x:Name="ProgressTime" HorizontalOptions="Center" FontSize="20" TextColor="{DynamicResource PrimaryColor}"/>
+                        <Label Grid.Row="2" Grid.Column="1" Text="spalone kcal" HorizontalOptions="Center" FontSize="15" TextColor="{DynamicResource PrimaryColor}"/>
+                        <Label Grid.Row="3" Grid.Column="1" x:Name="MaxKcal" HorizontalOptions="Center" FontSize="20" TextColor="{DynamicResource PrimaryColor}"/>
+                        <Label Grid.Row="4" Grid.Column="2" Text="śr. kcal/km" HorizontalOptions="Center" FontSize="15" TextColor="{DynamicResource PrimaryColor}"/>
+                        <Label Grid.Row="5" Grid.Column="1" x:Name="AvgKcal" HorizontalOptions="Center" FontSize="20" TextColor="{DynamicResource PrimaryColor}"/>
+                    </Grid>
+                </Frame>
+            </StackLayout>
+
+
+
+
+            <StackLayout Grid.Row="3" Background="{DynamicResource PageBackgroundColor}" >
+
+                <Grid ColumnSpacing="10" Padding="10" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Row="0" Grid.Column="0" Padding="15"
+                            VerticalOptions="End" Text="Trening siłowy" Background="{DynamicResource PageBackgroundColor}"
+                            BorderColor="{DynamicResource PrimaryColor}" BorderWidth="1" TextColor="{DynamicResource PrimaryColor}" Clicked="Button_Clicked_Strong"/>
+                    <Button Grid.Row="0" Grid.Column="1" Padding="15" VerticalOptions="End"
+                            Text="Trening cardio" Background="{DynamicResource PageBackgroundColor}" BorderColor="{DynamicResource PrimaryColor}" BorderWidth="1"
+                             TextColor="{DynamicResource PrimaryColor}"/>
+
+                </Grid>
+            </StackLayout>
+        </Grid>
+</ContentPage>

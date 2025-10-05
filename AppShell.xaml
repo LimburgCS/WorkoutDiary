@@ -4,23 +4,47 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:WorkoutDiary.Views"
-    Shell.FlyoutBehavior="Flyout"
-    Shell.ForegroundColor="White" Shell.FlyoutBackdrop="White"
+    Shell.FlyoutBehavior="Disabled"
+    Shell.ForegroundColor="{DynamicResource PrimaryTextColor}"
+    Shell.BackgroundColor="{DynamicResource PageBackgroundColor}"
+    Shell.TabBarBackgroundColor="White"
+   
+Shell.FlyoutBackdrop="White"
+    Shell.TabBarForegroundColor="black"
     Title="WorkoutDiary">
 
+    <FlyoutItem FlyoutDisplayOptions="AsMultipleItems">
 
-    <FlyoutItem Title="Dziennik ćwiczeń" Icon="book">
-        <ShellContent
-        Title="Dziennik ćwiczeń"
+
+        <Tab Title="Ćwiczenia" Icon="book" FlyoutItemIsVisible="True">
+            <ShellContent
+        Title="Dziennik ćwiczeń" 
         ContentTemplate="{DataTemplate local:MainPage}"
         Route="MainPage"
         Icon="{OnPlatform 'icon_notes.png', Android='icon_notes_ios.png', MacCatalyst='icon_notes_ios.png'}"/>
+        </Tab>
+        <!--<Tab Title="Statystyka" Icon="graph">
+            <ShellContent Title="Statystyka" Route="StatisticPage" ContentTemplate="{DataTemplate local:StatisticPage}" />
+        </Tab>-->
+        <Tab Title="Cardio" Icon="person">
+            <ShellContent Title="Cardio" Route="CardioPage" ContentTemplate="{DataTemplate local:CardioPage}" />
+        </Tab>
+        <Tab FlyoutItemIsVisible="False" Title="Statystyka" Icon="graph2" >
+            <ShellContent Title="Statystyka ćwiczeń siłowych" Route="StatisticPage" ContentTemplate="{DataTemplate local:StatisticPage}" />
+        </Tab>
+        <Tab FlyoutItemIsVisible="False" Title="Ustawienia" Icon="setting">
+            <ShellContent Title="Ustawienia" Route="SettingPage" ContentTemplate="{DataTemplate local:SettingPage}" />
+        </Tab>
+
+        <!--<ShellContent 
+        FlyoutItemIsVisible="False"
+        Title="Statystyka-cardio" 
+        Route="StatisticCardioPage"
+        ContentTemplate="{DataTemplate local:StatisticCardioPage}" />-->
     </FlyoutItem>
-    <FlyoutItem Title="Statystyka" Icon="graph">
-        <ShellContent Title="Statystyka" Route="StatisticPage" ContentTemplate="{DataTemplate local:StatisticPage}" />
-    </FlyoutItem>
-    <ShellContent FlyoutItemIsVisible="False" Title="Add Exercise" Route="AddExercisePage" ContentTemplate="{DataTemplate local:AddExercisePage}" />
-    <Shell.FlyoutFooter>
+    <ShellContent Title="Cardio" Route="StatisticCardioPage" ContentTemplate="{DataTemplate local:StatisticCardioPage}" />
+    <ShellContent FlyoutItemIsVisible="True" Title="Dodaj ćwiczenie" Route="AddExercisePage" ContentTemplate="{DataTemplate local:AddExercisePage}" />
+    <!--<Shell.FlyoutFooter>
         <Grid BackgroundColor="Transparent" Padding="10">
             <Border BackgroundColor="red">
                 <Button Text="Wyczyść dziennik ćwiczeń"
@@ -29,5 +53,6 @@
                 TextColor="red"/>
             </Border>
         </Grid>
-    </Shell.FlyoutFooter>
+    </Shell.FlyoutFooter>-->
+
 </Shell>

@@ -16,31 +16,10 @@ namespace WorkoutDiary.Views
 {
     public partial class StatisticPage : ContentPage
     {
-        //ChartEntry[] entries = new[]
-        //{
-        //    new ChartEntry(100)
-        //    {
-        //        Color = SKColor.Parse("#FF1493"),
-        //        Label = "January",
-        //        ValueLabel = "200",
 
-
-        //    },
-        //    new ChartEntry(200)
-        //    {
-        //        Color = SKColor.Parse("#00BFFF"),
-        //        Label = "February",
-        //        ValueLabel = "200"
-        //    },
-        //    new ChartEntry(300)
-        //    {
-        //        Color = SKColor.Parse("#00CED1"),
-        //        Label = "March",
-        //        ValueLabel = "300"
-        //    },
-        //};
         private readonly TodoItemDatabase _database;
         public ObservableCollection<BodyParts> BodyParts;
+        private string _selectPart;
         public StatisticPage()
         {
             InitializeComponent();
@@ -54,6 +33,10 @@ namespace WorkoutDiary.Views
         protected override void OnAppearing()
         {
             base.OnAppearing();
+            if (_selectPart != null)
+            {
+                UpdateChart();
+            }
         }
 
         private async void LoadPart()
@@ -66,8 +49,8 @@ namespace WorkoutDiary.Views
         private async Task LoadChartv2(string selectedPart)
         {
             chartView.Chart = null;
-            
-               var db = await _database.GetInvoiceAsync();
+            _selectPart = selectedPart;
+            var db = await _database.GetInvoiceAsync();
             var dbOrderBy1 = db.Where(x=>x.Part == selectedPart).OrderBy(x => x.DateTime).ToList();
             var dbOrderBy = db.Where(x => x.Part == selectedPart)
                   .GroupBy(x => x.DateTime.Date)  // Grupowanie po samej dacie (ignorujemy godziny)
@@ -81,11 +64,24 @@ namespace WorkoutDiary.Views
             if (dbOrderBy.Count == 0)
                 return;
 
-            
+            int widthPerPoint = 80; // np. 80 pikseli na punkt
+            int chartWidth = Math.Max(dbOrderBy.Count * widthPerPoint, (int)this.Width); // nie mniejszy niż ekran
+            chartView.WidthRequest = chartWidth;
             double firstweight = dbOrderBy.First().MaxWeight;
             double lastweight = dbOrderBy.Last().MaxWeight;
             DateTime firstDay = dbOrderBy.First().Date;
             DateTime lastDay = dbOrderBy.Last().Date;
+            var minValue = dbOrderBy.Min(x => x.MaxWeight);
+            var maxValue = dbOrderBy.Max(x => x.MaxWeight);
+
+            // Dodaj mały margines 10% po bokach
+            var range = maxValue - minValue;
+
+            // Jeśli zakres jest za mały (np. 5 kg), ustaw minimalny rozstaw, żeby wykres nie był „płaski”
+            if (range < 10) range = 10;
+
+            var yMax = maxValue + range * 0.3f;       // +10% od góry
+            var yMin = Math.Max(0, minValue - range * 0.1f); // -10% od dołu
             LabelPart.Text = selectedPart;
             ProgressLabel.Text = (lastweight - firstweight).ToString();
             ProgressTime.Text = dbOrderBy.Count().ToString();
@@ -93,16 +89,80 @@ namespace WorkoutDiary.Views
             {
                 Label = entry.Date.ToString("dd.MM"),
                 ValueLabel = (entry.MaxWeight).ToString("0.0"),
-                Color = SkiaSharp.SKColor.Parse("#ffffff"), // Kolor linii
+                Color = SkiaSharp.SKColor.Parse("#000000"), // Kolor linii
                 //TextColor = SkiaSharp.SKColor.Parse("#27AE60"),
                 
-                ValueLabelColor = SkiaSharp.SKColor.Parse("#FFFFFF")
+                ValueLabelColor = SkiaSharp.SKColor.Parse("#000000")
                 
             }).ToList();
-            UpdateChart(chartEntries);
+            var lineChart = new Microcharts.LineChart
+            {
+                Entries = chartEntries,
+                LineMode = LineMode.Straight, // Prosta linia
+                LineSize = 3, // Grubość linii
+                ValueLabelTextSize = 30,
+                EnableYFadeOutGradient = false,
+                LabelOrientation = Orientation.Horizontal,
+                ValueLabelOrientation = Orientation.Horizontal,
+                IsAnimated = false,
+                MaxValue = yMax,
+                MinValue = yMin, 
+                BackgroundColor = SKColors.Transparent, // Przezroczyste tło
+                PointMode = PointMode.Circle, // Brak punktów na wykresie (opcjonalnie)
+                LabelTextSize = 30,
+                ValueLabelOption = ValueLabelOption.TopOfElement,
+                LabelColor = SKColor.Parse("#000000"), 
+
+            };
+
+            chartView.Chart = lineChart;
         }
-        private void UpdateChart(List<Microcharts.ChartEntry> chartEntries)
+        private async void UpdateChart()
         {
+            var db = await _database.GetInvoiceAsync();
+            var dbOrderBy1 = db.Where(x => x.Part == _selectPart).OrderBy(x => x.DateTime).ToList();
+            var dbOrderBy = db.Where(x => x.Part == _selectPart)
+                  .GroupBy(x => x.DateTime.Date)  // Grupowanie po samej dacie (ignorujemy godziny)
+                  .Select(group => new
+                  {
+                      Date = group.Key,  // Data
+                      MaxWeight = group.Max(x => x.Weight)  // Najwyższa waga danego dnia
+                  })
+                  .OrderBy(x => x.Date)  // Sortowanie po dacie
+                  .ToList();
+
+            int widthPerPoint = 80; // np. 80 pikseli na punkt
+            int chartWidth = Math.Max(dbOrderBy.Count * widthPerPoint, (int)this.Width); // nie mniejszy niż ekran
+            chartView.WidthRequest = chartWidth;
+
+            double firstweight = dbOrderBy.First().MaxWeight;
+            double lastweight = dbOrderBy.Last().MaxWeight;
+            DateTime firstDay = dbOrderBy.First().Date;
+            DateTime lastDay = dbOrderBy.Last().Date;
+            LabelPart.Text = _selectPart;
+            var minValue = dbOrderBy.Min(x => x.MaxWeight);
+            var maxValue = dbOrderBy.Max(x => x.MaxWeight);
+
+            // Dodaj mały margines 10% po bokach
+            var range = maxValue - minValue;
+
+            // Jeśli zakres jest za mały (np. 5 kg), ustaw minimalny rozstaw, żeby wykres nie był „płaski”
+            if (range < 10) range = 10;
+
+            var yMax = maxValue + range * 0.3f;       // +10% od góry
+            var yMin = Math.Max(0, minValue - range * 0.1f); // -10% od dołu
+            ProgressLabel.Text = (lastweight - firstweight).ToString();
+            ProgressTime.Text = dbOrderBy.Count().ToString();
+            var chartEntries = dbOrderBy.Select(entry => new Microcharts.ChartEntry((float?)(entry.MaxWeight))
+            {
+                Label = entry.Date.ToString("dd.MM"),
+                ValueLabel = (entry.MaxWeight).ToString("0.0"),
+                Color = SkiaSharp.SKColor.Parse("#000000"), // Kolor linii
+                                                            //TextColor = SkiaSharp.SKColor.Parse("#27AE60"),
+
+                ValueLabelColor = SkiaSharp.SKColor.Parse("#000000")
+
+            }).ToList();
             var lineChart = new Microcharts.LineChart
             {
                 Entries = chartEntries,
@@ -113,25 +173,32 @@ namespace WorkoutDiary.Views
                 LabelOrientation = Orientation.Horizontal,
                 ValueLabelOrientation = Orientation.Horizontal,
                 IsAnimated = false,
-                MinValue = 0,
-                MaxValue = 150,
+                MaxValue = yMax,
+                MinValue = yMin,
                 BackgroundColor = SKColors.Transparent, // Przezroczyste tło
                 PointMode = PointMode.Circle, // Brak punktów na wykresie (opcjonalnie)
                 LabelTextSize = 30,
                 ValueLabelOption = ValueLabelOption.TopOfElement,
-                LabelColor = SKColor.Parse("#FFFFFF"), // Białe etykiety
+                LabelColor = SKColor.Parse("#000000"), // Białe etykiety
                 
             };
 
             chartView.Chart = lineChart;
         }
-        private void OnNameSelected(object sender, EventArgs e)
+        private void PartSelected(object sender, EventArgs e)
         {
             if (namePicker.SelectedIndex != -1)
             {
                 string selectedPart = namePicker.SelectedItem.ToString();
                 _ = LoadChartv2(selectedPart); // Załaduj dane dla wybranej osoby
             }
+        }
+
+
+
+        private async void Button_Clicked_Cardio(object sender, EventArgs e)
+        {
+            await Shell.Current.GoToAsync(nameof(StatisticCardioPage));
         }
 
 

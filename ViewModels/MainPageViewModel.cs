@@ -19,7 +19,10 @@ namespace WorkoutDiary.ViewModels
     {
         public event PropertyChangedEventHandler PropertyChanged;
         public TodoItemDatabase _database;
+        public ObservableCollection<string> Parts { get; set; } = new();
         private ObservableCollection<BodyParts> _bodyParts;
+        private bool _isBottomGridVisible;
+        private float _lastWeight;
         private int _displayNumberWeek;
         public ObservableCollection<BodyParts> BodyParts
         {
@@ -40,7 +43,60 @@ namespace WorkoutDiary.ViewModels
                     _displayNumberWeek = value;
                     OnPropertyChanged(nameof(DisplayNumberWeek));
                     OnPropertyChanged(nameof(DisplayNumberWeekText));
-                    loadExercise(); // Asynchroniczne odświeżenie listy
+                    _ = loadExercise(); // Asynchroniczne odświeżenie listy
+                }
+            }
+        }
+
+
+
+        private string _selectedPart;
+        public string SelectedPart
+        {
+            get => _selectedPart;
+            set
+            {
+                if (_selectedPart != value)
+                {
+                    _selectedPart = value;
+                    OnPropertyChanged(nameof(SelectedPart));
+                    
+
+                    _ = loadExercise();
+                    if (_selectedPart == null || _selectedPart == "Wszystko")
+                    {
+                        IsBottomGridVisible = false;
+                    }
+                    else
+                    {
+                        IsBottomGridVisible = true;
+                        //UpdateLastWeight();
+                    }
+
+                }
+            }
+        }
+     
+        public float LastWeight
+        {
+            get => _lastWeight;
+            set
+            {
+
+                    _lastWeight = value;
+                    OnPropertyChanged(nameof(_lastWeight));
+               
+            }
+        }
+        public bool IsBottomGridVisible
+        {
+            get => _isBottomGridVisible;
+            set
+            {
+                if (_isBottomGridVisible != value)
+                {
+                    _isBottomGridVisible = value;
+                    OnPropertyChanged(nameof(IsBottomGridVisible));
                 }
             }
         }
@@ -60,12 +116,37 @@ namespace WorkoutDiary.ViewModels
             Back = new Command(BackMethod);
             Next = new Command(NextMethod);
             Delete = new Command<BodyParts>(async (BodyParts) => await DeleteExercise(BodyParts));
-            DisplayNumberWeek = 1;
-            loadExercise();
-            //RefreshData();
+            //DisplayNumberWeek = 1;
+            LoadDisplayNumberWeek();
+            _ = loadExercise();
+            _ = LoadPartsAsync();
+            RefreshData();
         }
 
+        public async void ChooseDate(DateTime date)
+        {
+            var data = await _database.GetInvoiceAsync();
+            if (data != null && data.Any())
+            {
+                var db = await _database.GetInvoiceAsync();
+                var firstweek = db.FirstOrDefault();
+                int currentNumberWeek = CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(
+                date, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
 
+                int firstWorkNumberWeek = CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(
+                                    firstweek.DateTime, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+
+                int weekDisplay = currentNumberWeek - firstWorkNumberWeek;
+
+                DisplayNumberWeek = weekDisplay + 1;
+            }
+            else
+            {
+                DisplayNumberWeek = 1;
+            }
+
+
+        }
 
         private void BackMethod()
         {
@@ -95,18 +176,88 @@ namespace WorkoutDiary.ViewModels
         //    NumberWeek = $"Tydzień {weekDisplay}";
         //}
 
-        public async void loadExercise()
+        public async Task loadExercise()
         {
-            //standardowe ładowanie danych
+ 
+            if (_selectedPart == null || _selectedPart == "Wszystko")
+            {
+                //standardowe ładowanie danych
+                var exerciseFromDb = await _database.GetInvoiceAsync();
+
+                if (exerciseFromDb == null)
+                    return;
+
+                var filteredData = exerciseFromDb.Where(x => x.NumberWeek == DisplayNumberWeek).ToList(); // Dodano ToList()
+                BodyParts = new ObservableCollection<BodyParts>(filteredData);
+                OnPropertyChanged(nameof(BodyParts));
+
+
+            }
+            else
+            {
+                var exerciseFromDb = await _database.GetInvoiceAsync();
+
+                if (exerciseFromDb == null)
+                    return;
+                var filteredData = exerciseFromDb.Where(x => x.Part == SelectedPart).ToList(); // Dodano ToList()
+                BodyParts = new ObservableCollection<BodyParts>(filteredData);
+                OnPropertyChanged(nameof(BodyParts));
+                var filterLastWeight = exerciseFromDb.Where(x => x.Part == SelectedPart).Max(x => x.Weight);
+                _lastWeight = filterLastWeight;
+                OnPropertyChanged(nameof(LastWeight));
+            }
+
+
+        }
+        //private async void UpdateLastWeight()
+        //{
+        //    var exerciseFromDb = await _database.GetInvoiceAsync();
+
+        //    if (exerciseFromDb == null)
+        //        return;
+        //    var filterLastWeight = exerciseFromDb.Where(x => x.Part == SelectedPart).Max(x => x.Weight);
+        //    _lastWeight = filterLastWeight;
+        //    OnPropertyChanged(nameof(LastWeight));
+        //}
+        private async Task LoadPartsAsync()
+        {
+            try
+            {
+                var db = await _database.GetInvoiceAsync();
+                var bodypartsDB = db
+                    .Select(x => x.Part)
+                    .Distinct()
+                    .ToList();
+
+                bodypartsDB.Insert(0, "Wszystko");
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    Parts.Clear();
+                    foreach (var part in bodypartsDB)
+                        Parts.Add(part);
+                });
+            }
+            catch (Exception ex)
+            {
+                // opcjonalnie obsługa błędów
+                Console.WriteLine($"Błąd przy wczytywaniu części: {ex.Message}");
+            }
+        }
+        private async void LoadDisplayNumberWeek()
+        {
             var exerciseFromDb = await _database.GetInvoiceAsync();
 
-            if (exerciseFromDb == null)
-                return;
+            if (exerciseFromDb == null || exerciseFromDb.Count() == 0)
+            {
+                DisplayNumberWeek = 1;
+            }
+            else
+            {
+                var filteredData = exerciseFromDb.OrderBy(x => x.NumberWeek).ToList();
+                DisplayNumberWeek = filteredData.Last().NumberWeek;
+            }
 
-            var filteredData = exerciseFromDb.Where(x => x.NumberWeek == DisplayNumberWeek).ToList(); // Dodano ToList()
 
-            BodyParts = new ObservableCollection<BodyParts>(filteredData);
-            OnPropertyChanged(nameof(BodyParts));
 
         }
         private void RefreshData()
@@ -118,7 +269,7 @@ namespace WorkoutDiary.ViewModels
                 appShellViewModel.DataDeleted += (sender, e) =>
                 {
                     // Odśwież dane
-                    loadExercise();
+                    _ = loadExercise();
                 };
             }
         }
@@ -140,7 +291,7 @@ namespace WorkoutDiary.ViewModels
                 BodyParts.Remove(bodyParts);
                 //await _supabase.From<ShopList>().Where(x => x.Id == shopList.Id).Delete();
             }
-            loadExercise();
+           _ = loadExercise();
 
         }
         private async Task NewExerciseAsync()

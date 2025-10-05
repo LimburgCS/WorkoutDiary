@@ -18,20 +18,38 @@ namespace WorkoutDiary.Views
             bodyParts = new ObservableCollection<BodyParts>();
             OnAppearing();
         }
-        protected override void OnAppearing()
+        protected override async void OnAppearing()
         {
             base.OnAppearing();
 
-            // Zakładamy, że ViewModel ma metodę odświeżania danych
             if (BindingContext is MainPageViewModel viewModel)
             {
-                viewModel.loadExercise();
+                await viewModel.loadExercise();
             }
         }
+        //private async void LoadPart()
+        //{
+        //    var db = await database.GetInvoiceAsync();
+        //    var bodypartsDB = db.Select(x => x.Part).Distinct().ToList();
+        //    namePicker.ItemsSource = bodypartsDB; // Ustawienie listy w Picker
+
+        //}
         private void ContentPage_NavigatedTo(object sender, NavigatedToEventArgs e)
         {
             ExerciseCollectionView.SelectedItem = null;
         }
+
+        private void DatePicker_DateSelected(object sender, DateChangedEventArgs e)
+        {
+            if (BindingContext is MainPageViewModel viewModel)
+            {
+                DateTime date = datepicker.Date;
+                viewModel.ChooseDate(date);
+            }
+            
+            
+        }
+
     }
 
 }

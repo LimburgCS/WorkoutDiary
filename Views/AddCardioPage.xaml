@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WorkoutDiary.Views.AddCardioPage"
+             xmlns:viewModels="clr-namespace:WorkoutDiary.ViewModels"
+             Title="Dodaj ćwiczenie Cardio" Shell.TitleColor="{DynamicResource PrimaryColor}"
+             BackgroundColor="{DynamicResource PageBackgroundColor}">
+
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <Border Margin="20" StrokeShape="RoundRectangle 5" StrokeThickness="2" Background="{DynamicResource PageBackgroundColor}" Grid.Row="0" Stroke="{DynamicResource PrimaryColor}">
+
+
+            <Grid  Margin="20" VerticalOptions="Center" Padding="25" Grid.Row="0" RowSpacing="8" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Row="0" Grid.Column="0" TextColor="{DynamicResource PrimaryColor}" Text="Dodaj ćwiczenie cardio"/>
+                <ImageButton Grid.Row="0" Grid.ColumnSpan="2" Command="{Binding ButtonInfo}"
+                             HorizontalOptions="Center" HeightRequest="15" BackgroundColor="{DynamicResource PrimaryColor}"
+                             Padding="0"
+                             Source="info.svg"/>
+                <Entry Grid.Row="1" Grid.ColumnSpan="2" x:Name="NameEditor"
+                       Placeholder="np: Bieżnia"
+                       PlaceholderColor="{DynamicResource PrimaryColor}"
+                         Text="{Binding Name}"
+                         HeightRequest="50" />
+                <Label Grid.Row="2" Grid.ColumnSpan="2" Text="LUB" TextColor="{DynamicResource PrimaryColor}" HorizontalOptions="Center" FontSize="15"/>
+                <Picker x:Name="namePicker" Background="{DynamicResource PageBackgroundColor}" Margin="0,0,0,15"
+                        Grid.Row="3" Grid.ColumnSpan="2" 
+                        Title="Wybierz ćwiczenie z listy"
+                        TitleColor="{DynamicResource PrimaryColor}"
+                        
+                        TextColor="{DynamicResource PrimaryColor}"
+                        SelectedIndexChanged="PartSelected">
+                </Picker>
+                <Entry Grid.Row="4" Grid.ColumnSpan="2" x:Name="CommentEditor"
+                       Placeholder="Komentarz do treningu"
+                       PlaceholderColor="{DynamicResource PrimaryColor}"
+                         Text="{Binding Comment}"
+                         HeightRequest="50" />
+                <Label Grid.Row="5" Grid.Column="0" HorizontalOptions="Start" TextColor="{DynamicResource PrimaryColor}" VerticalOptions="Center" Text="Data ćwiczenia"/>
+                <Image Grid.Row="6" Grid.Column="0" HorizontalOptions="Start" BackgroundColor="{DynamicResource PrimaryColor}" HeightRequest="30" Source="calendar.svg"/>
+                <DatePicker x:Name="datepickerEditor" Grid.Row="6" Grid.Column="0"
+                            DateSelected="DatePicker_DateSelected"
+                            HorizontalOptions="Start" Format="dd.MM.yyyy" Opacity="0" />
+                <Label Grid.Row="6" Grid.Column="0" x:Name="DatetimeEditor" TextColor="{DynamicResource PrimaryColor}"
+                        Text="{Binding DatetimeEntry, StringFormat='{0:dd.MM.yyyy}'}" VerticalTextAlignment="Center"
+                        HeightRequest="40" HorizontalOptions="Center" TextDecorations="Underline" />
+
+                <Label Grid.Row="7" Grid.ColumnSpan="2" TextColor="{DynamicResource PrimaryColor}" Text="Dane treningu"/>
+                <Entry Grid.Row="8" Grid.ColumnSpan="2" x:Name="DistanceEditor"
+                        Keyboard="Numeric" Placeholder="Wpisz odległość [m]"
+                       PlaceholderColor="{DynamicResource PrimaryColor}"
+                        Text="{Binding Distance}"
+                        HeightRequest="40" />
+                <Entry Grid.Row="9" Grid.ColumnSpan="2" x:Name="TimeEditor"
+                       Keyboard="Numeric" Placeholder="Wpisz czas [min]"
+                       PlaceholderColor="{DynamicResource PrimaryColor}"
+                       Text="{Binding Time}"
+                       HeightRequest="40" />
+                <Entry Grid.Row="10" Grid.ColumnSpan="2" x:Name="CaloriesEditor"
+                        Keyboard="Numeric" Placeholder="Wpisz kalorie"
+                       PlaceholderColor="{DynamicResource PrimaryColor}"
+                        Text="{Binding Calories}"
+                        HeightRequest="40" />
+                <Button Grid.Row="11" Grid.ColumnSpan="2" TextColor="{DynamicResource PrimaryColor}" Text="Zapisz"
+               
+            Command="{Binding SaveCommand}" Background="{DynamicResource PageBackgroundColor}" BorderColor="{DynamicResource PrimaryColor}"/>
+
+
+            </Grid>
+        </Border>
+    </Grid>
+</ContentPage>

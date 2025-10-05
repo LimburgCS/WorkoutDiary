@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:charts="clr-namespace:Microcharts.Maui;assembly=Microcharts.Maui"
+             x:Class="WorkoutDiary.Views.AddPersonPage"
+             Title="Cardio" Shell.TitleColor="{DynamicResource PrimaryColor}" BackgroundColor="{DynamicResource PageBackgroundColor}">
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <Border Margin="20" StrokeShape="RoundRectangle 5" StrokeThickness="2" Background="{DynamicResource PageBackgroundColor}" Grid.Row="0" Stroke="{DynamicResource PrimaryColor}">
+
+
+            <Grid  Margin="20" VerticalOptions="Center" Padding="25" Grid.Row="0" RowSpacing="8" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Row="0" Grid.Column="0" TextColor="{DynamicResource PrimaryColor}" Text="Podaj swoje dane"/>
+                <Entry Grid.Row="1" Grid.ColumnSpan="2" x:Name="AgeEditor"
+                       Placeholder="Podaj Wiek"
+                       PlaceholderColor="{DynamicResource PrimaryColor}" Keyboard="Numeric"
+                         Text="{Binding Age}"
+                         HeightRequest="50" />
+                <Entry Grid.Row="2" Grid.ColumnSpan="2" x:Name="GrowthEditor"
+                       Placeholder="Podaj wzrost"
+                       PlaceholderColor="{DynamicResource PrimaryColor}"
+                       Keyboard="Numeric"
+                         Text="{Binding Growth}"
+                         HeightRequest="50" />
+                <Entry Grid.Row="3" Grid.ColumnSpan="2" x:Name="WeightEditor"
+                       Placeholder="Podaj Wagę" Keyboard="Numeric"
+                       PlaceholderColor="{DynamicResource PrimaryColor}"
+                         Text="{Binding Weight}"
+                         HeightRequest="50" />
+
+
+
+                <Button Grid.Row="4" Grid.ColumnSpan="2" Text="Zapisz"
+                        TextColor="{DynamicResource PrimaryColor}" BorderWidth="2" BorderColor="{DynamicResource PrimaryColor}"
+                        Command="{Binding SaveCommand}" Background="{DynamicResource PageBackgroundColor}"/>
+                
+
+            </Grid>
+        </Border>
+    </Grid>
+</ContentPage>

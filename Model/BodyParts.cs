@@ -14,6 +14,7 @@ namespace WorkoutDiary.Model
         public DateTime DateTime { get; set; }
         public int NumberWeek {  get; set; }
         public string Part { get; set; }
+        public string Comment { get; set; }
         public int Series {  get; set; }
         public int Repetitions { get; set; }
         public float Weight { get; set; }

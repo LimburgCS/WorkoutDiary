@@ -3,42 +3,82 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:charts="clr-namespace:Microcharts.Maui;assembly=Microcharts.Maui"
              x:Class="WorkoutDiary.Views.StatisticPage"
-             Title="Statystyka" Shell.TitleColor="white">
+             Title="Statystyka - trening siłowy" Shell.TitleColor="{DynamicResource PrimaryColor}" BackgroundColor="{DynamicResource PageBackgroundColor}">
 
-    <StackLayout>
-        <Border Margin="10">
-            <Border.StrokeShape>
-                <RoundRectangle CornerRadius="15"/>
-            </Border.StrokeShape>
-            <Picker x:Name="namePicker" 
+
+    <Grid RowDefinitions="*,Auto,auto" Padding="0">
+
+        <StackLayout Grid.Row="0">
+            <Border Margin="10">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="15"/>
+                </Border.StrokeShape>
+                <Picker x:Name="namePicker" 
                 Title="Wybierz partie"
                 TitleColor="Black"
                 TextColor="Black"
                 BackgroundColor="White"
-                SelectedIndexChanged="OnNameSelected">
-            </Picker>
-        </Border>
+                SelectedIndexChanged="PartSelected">
+                </Picker>
+            </Border>
 
-        <Label x:Name="LabelPart" HorizontalOptions="Center" FontSize="35" TextColor="White"/>
-            <charts:ChartView x:Name="chartView" HeightRequest="300" />
-        
-        <Border Margin="20">
-            <Border.StrokeShape>
-                <RoundRectangle CornerRadius="15"/>
-            </Border.StrokeShape>
-        <Grid  Margin="20">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                </Grid.RowDefinitions>
-                <Label Grid.Row="0" Text="Progres[kg]" HorizontalOptions="Center" FontSize="25" TextColor="White"/>
-                <Label Grid.Row="1" x:Name="ProgressLabel" HorizontalOptions="Center" FontSize="30" TextColor="White"/>
-                <Label Grid.Row="2" Text="Ilość trenigów" HorizontalOptions="Center" FontSize="25" TextColor="White"/>
-                <Label Grid.Row="3" x:Name="ProgressTime" HorizontalOptions="Center" FontSize="30" TextColor="White"/>
-            </Grid>
-        </Border>
-    </StackLayout>
+            <Label x:Name="LabelPart" HorizontalOptions="Center" FontSize="20" HorizontalTextAlignment="Center" Padding="10" TextColor="{DynamicResource PrimaryColor}"/>
 
+
+            <ScrollView Orientation="Horizontal" Grid.Row="1" Background="Transparent" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                <StackLayout Orientation="Horizontal">
+                    <charts:ChartView x:Name="chartView"
+                          HeightRequest="300"  
+                        HorizontalOptions="Center"
+                          VerticalOptions="Center"
+                          ZIndex="200"/>
+                </StackLayout>
+            </ScrollView>
+
+        </StackLayout>
+
+        <StackLayout Grid.Row="1">
+
+
+            <Frame
+    BackgroundColor="White" 
+    CornerRadius="15"
+    HasShadow="True"
+    Padding="0"
+    Margin="20">
+
+                <Grid Grid.Row="1" Padding="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" Text="Progres[kg]" HorizontalOptions="Center" FontSize="20" TextColor="{DynamicResource PrimaryColor}"/>
+                    <Label Grid.Row="1" x:Name="ProgressLabel" HorizontalOptions="Center" FontSize="25" TextColor="{DynamicResource PrimaryColor}"/>
+                    <Label Grid.Row="2" Text="Ilość trenigów" HorizontalOptions="Center" FontSize="20" TextColor="{DynamicResource PrimaryColor}"/>
+                    <Label Grid.Row="3" x:Name="ProgressTime" HorizontalOptions="Center" FontSize="25" TextColor="{DynamicResource PrimaryColor}"/>
+                </Grid>
+            </Frame>
+        </StackLayout>
+        <StackLayout Grid.Row="2" Background="{DynamicResource PageBackgroundColor}" >
+
+                <Grid ColumnSpacing="10" Padding="10" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                <Button Grid.Row="0" Grid.Column="0" Padding="15"
+                            VerticalOptions="End" Text="Trening siłowy" Background="{DynamicResource PageBackgroundColor}"
+                            BorderColor="{DynamicResource PrimaryColor}" BorderWidth="1" TextColor="{DynamicResource PrimaryColor}" />
+                <Button Grid.Row="0" Grid.Column="1" Padding="15" VerticalOptions="End" Clicked="Button_Clicked_Cardio"
+                            Text="Trening cardio" Background="{DynamicResource PageBackgroundColor}" BorderColor="{DynamicResource PrimaryColor}" BorderWidth="1"
+                             TextColor="{DynamicResource PrimaryColor}"/>
+
+                </Grid>
+        </StackLayout>
+    </Grid>
 </ContentPage>

@@ -1,0 +1,180 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:charts="clr-namespace:Microcharts.Maui;assembly=Microcharts.Maui"
+             x:Class="WorkoutDiary.Views.CardioPage"
+             NavigatedTo="ContentPage_NavigatedTo"
+             Title="Cardio" Shell.TitleColor="{DynamicResource PrimaryColor}" BackgroundColor="{DynamicResource PageBackgroundColor}">
+    <!--<ContentPage.ToolbarItems >
+        <ToolbarItem  Text="Zapisz" Command="{Binding AddCardio}" IconImageSource="{FontImage Glyph='+', Color=White, Size=22}" />
+    </ContentPage.ToolbarItems>-->
+    <ScrollView Margin="5">
+        <StackLayout>
+
+            <CollectionView x:Name="ExerciseCollectionView"
+         ItemsSource="{Binding Person}"
+        Margin="20">
+            <CollectionView.ItemsLayout>
+
+                <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />
+
+            </CollectionView.ItemsLayout>
+
+
+
+            <CollectionView.ItemTemplate>
+
+                <DataTemplate>
+
+                        <Border StrokeShape="RoundRectangle 10" StrokeThickness="2" Stroke="{DynamicResource PrimaryColor}">
+
+
+                        <Grid  Margin="0" VerticalOptions="Start" Padding="25" Grid.Row="0" RowSpacing="1" >
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                                <Label Grid.Row="1" HorizontalOptions="Center" TextColor="{DynamicResource PrimaryColor}" Text="wzrost"/>
+                                <Label Grid.Row="2" Grid.Column="0" HorizontalOptions="Center" TextColor="{DynamicResource PrimaryColor}" Text="{Binding Growth}"/>
+                                <Label Grid.Row="3" HorizontalOptions="Center" TextColor="{DynamicResource PrimaryColor}" Text="Waga"/>
+                                <Label Grid.Row="4" Grid.Column="0" HorizontalOptions="Center"  TextColor="{DynamicResource PrimaryColor}" Text="{Binding Weight}"/>
+                                <Label Grid.Row="5" HorizontalOptions="Center" TextColor="{DynamicResource PrimaryColor}"  Text="Wiek"/>
+                                <Label Grid.Row="6" Grid.Column="0" HorizontalOptions="Center"  TextColor="{DynamicResource PrimaryColor}" Text="{Binding Age}"/>
+
+                                <Label Grid.Row="1" Grid.Column="1" HorizontalOptions="Center" TextColor="{DynamicResource PrimaryColor}" Text="max tętno"/>
+                                <Label Grid.Row="2" Grid.Column="1" HorizontalOptions="Center" TextColor="{DynamicResource PrimaryColor}" Text="{Binding Pulse}"/>
+                                <Label Grid.Row="3" Grid.Column="1" HorizontalOptions="Center" TextColor="{DynamicResource PrimaryColor}" Text="wskaźnik BMI"/>
+                                <Label Grid.Row="4" Grid.Column="1" HorizontalOptions="Center"  TextColor="{DynamicResource PrimaryColor}" Text="{Binding IndexBmi, StringFormat='{}{0:0.0}'}"/>
+                                <Label Grid.Row="5" Grid.Column="1" HorizontalOptions="Center"  TextColor="{DynamicResource PrimaryColor}" Text="Ocena BMI"/>
+                                <Label Grid.Row="6" Grid.Column="1" HorizontalOptions="Center"  TextColor="{DynamicResource PrimaryColor}" Text="{Binding RateBmi}"/>
+
+                            <Button Grid.Row="0" Grid.Column="2" HeightRequest="20" HorizontalOptions="End" Padding="0"
+                                Background="Transparent" Text="+"
+                                TextColor="{DynamicResource PrimaryColor}"  FontSize="20" Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.AddPerson}"/>
+                                <Image Grid.RowSpan="6" Grid.Column="2"  HorizontalOptions="Center" Scale="2"  Source="person.svg"/>
+
+
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        
+        
+        
+        
+        
+        
+ 
+            <StackLayout>
+                <StackLayout>
+                    <Button BorderColor="{DynamicResource PrimaryColor}" BorderWidth="1" Margin="5" HeightRequest="30" HorizontalOptions="End" Padding="3,-6,3,1"
+                                Background="Transparent" Text="+"
+                                TextColor="{DynamicResource PrimaryColor}" FontSize="30" Command="{Binding AddCardio}"/>
+                </StackLayout>
+                <StackLayout Orientation="Horizontal"  Padding="20, 10, 20, 0">
+
+                    <Grid HorizontalOptions="FillAndExpand">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid Grid.Row="0">
+                            <DatePicker x:Name="datepicker" Grid.Row="0" TextColor="{DynamicResource PrimaryColor}" Grid.Column="0" DateSelected="DatePicker_DateSelected" BindingContext="{Binding DatePicker, Mode=TwoWay}" HorizontalOptions="StartAndExpand" Format="dd.MM.yyyy"  />
+                        </Grid>
+                        <Grid Grid.ColumnSpan="1" Grid.Row="0" HorizontalOptions="CenterAndExpand">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="auto"/>
+
+                            </Grid.ColumnDefinitions>
+
+                            <ImageButton Grid.Row="1" Grid.Column="0" HorizontalOptions="CenterAndExpand" BackgroundColor="{DynamicResource PrimaryColor}" Source="/Resources/Images/caretleft.svg" Command="{Binding Back}"/>
+                            <Label Grid.Row="1" Grid.Column="1" HorizontalOptions="CenterAndExpand" TextColor="{DynamicResource PrimaryColor}" Text="{Binding DisplayNumberWeekText}" VerticalTextAlignment="Center"  FontSize="15" />
+                            <ImageButton Grid.Row="1" Grid.Column="2" HorizontalOptions="CenterAndExpand" BackgroundColor="{DynamicResource PrimaryColor}" Source="/Resources/Images/caretright.svg" Command="{Binding Next}" />
+                        </Grid>
+                    </Grid>
+                </StackLayout>
+                <CollectionView x:Name="CardioCollectionView"
+                                 ItemsSource="{Binding Cardio}"
+                                Margin="20"
+                                SelectionMode="Single"
+                                SelectionChangedCommand="{Binding SelectDayCommand}"
+                                SelectionChangedCommandParameter="{Binding Source={RelativeSource Self}, Path=SelectedItem}">
+                    <CollectionView.ItemsLayout>
+
+                        <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />
+
+                    </CollectionView.ItemsLayout>
+
+
+
+                    <CollectionView.ItemTemplate>
+
+                        <DataTemplate>
+
+                            <Border StrokeShape="RoundRectangle 10" StrokeThickness="2" Stroke="{DynamicResource PrimaryColor}" >
+
+
+                                <Grid Padding="10" ColumnSpacing="1"  BackgroundColor="{DynamicResource PageBackgroundColor}">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto" />
+                                        <RowDefinition Height="auto" />
+                                        <RowDefinition Height="auto" />
+                                        <RowDefinition Height="auto" />
+                                        <RowDefinition Height="auto" />
+                                        <RowDefinition Height="auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <!-- First column -->
+                                        <ColumnDefinition Width="*" />
+                                        <!-- Second column -->
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+
+
+                                    <!-- First row: Categories and Price -->
+                                    <Label Grid.Row="0" Grid.ColumnSpan="2" TextColor="{DynamicResource PrimaryColor}" Text="{Binding DateTime, StringFormat='{0:dddd: dd.MM.yyyy}'}"  FontSize="10" />
+                                    <Button Grid.Row="0" Grid.Column="2" TextColor="{DynamicResource PrimaryColor}" Text="X" Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.Delete}" 
+            CommandParameter="{Binding .}" FontSize="12" HeightRequest="20" Padding="0" BackgroundColor="Transparent" HorizontalOptions="EndAndExpand" VerticalOptions="Start" WidthRequest="40" />
+                                    <Label Grid.Row="1" Grid.ColumnSpan="3" TextColor="{DynamicResource PrimaryColor}" HorizontalTextAlignment="Center"  LineBreakMode="WordWrap" Text="{Binding Name}" FontSize="22" />
+                                    <Label Grid.Row="2" Grid.Column="0" TextColor="{DynamicResource PrimaryColor}" HorizontalTextAlignment="Center"  LineBreakMode="WordWrap" Text="Dystans[m]" FontSize="15" />
+                                    <Label Grid.Row="3" Grid.Column="0" TextColor="{DynamicResource PrimaryColor}" HorizontalTextAlignment="Center"  LineBreakMode="WordWrap" Text="{Binding Distance}" FontSize="22" />
+                                    <Label Grid.Row="2" Grid.Column="1" TextColor="{DynamicResource PrimaryColor}" HorizontalTextAlignment="Center"  LineBreakMode="WordWrap" Text="Kalorie" FontSize="15" />
+                                    <Label Grid.Row="3" Grid.Column="1" TextColor="{DynamicResource PrimaryColor}" HorizontalTextAlignment="Center"  LineBreakMode="WordWrap" Text="{Binding Calories}" FontSize="22" />
+                                    <Label Grid.Row="2" Grid.Column="2" TextColor="{DynamicResource PrimaryColor}" HorizontalTextAlignment="Center"  LineBreakMode="WordWrap" Text="czas[min]" FontSize="15" />
+                                    <Label Grid.Row="3" Grid.Column="2" TextColor="{DynamicResource PrimaryColor}" HorizontalTextAlignment="Center"  LineBreakMode="WordWrap" Text="{Binding Time}" FontSize="22" />
+
+
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </StackLayout>
+
+    </StackLayout>
+    </ScrollView>
+</ContentPage>

@@ -12,7 +12,6 @@ namespace WorkoutDiary.Views
         public AddExercisePage(AddExerciseViewModel viewmodel)
         {
             InitializeComponent();
-            
             database = new TodoItemDatabase();
             BindingContext = _viewmodel = viewmodel;
             LoadPart();
@@ -27,17 +26,43 @@ namespace WorkoutDiary.Views
         private async void LoadPart()
         {
             var db = await database.GetInvoiceAsync();
-            var bodypartsDB = db.Select(x => x.Part).Distinct().ToList();
+            var bodypartsDB = db.Select(x => x.Part).Distinct().OrderBy(x=>x).ToList();
             namePicker.ItemsSource = bodypartsDB; // Ustawienie listy w Picker
 
         }
-        private void OnNameSelected(object sender, EventArgs e)
+        private void PartSelected(object sender, EventArgs e)
         {
             if (namePicker.SelectedIndex != -1)
             {
                 string selectedPart = namePicker.SelectedItem.ToString();
                 _viewmodel.loadPicker(selectedPart);
             }
+        }
+
+        private void DatePicker_DateSelected(object sender, DateChangedEventArgs e)
+        {
+            if (BindingContext is AddExerciseViewModel viewModel)
+            {
+                DateTime date = datepickerEditor.Date;
+                viewModel.ChooseDate(date);
+            }
+
+
+        }
+
+        private void Entry_Completed(object sender, EventArgs e)
+        {
+            if (sender == SeriesEditor)
+                RepetitionsEditor.Focus();
+            else if (sender == RepetitionsEditor)
+                WeightEditor.Focus();
+
+        }
+        
+        private void Entry_save_Completed(object sender, EventArgs e)
+        {
+            save.SendClicked();
+
         }
     }
 }
