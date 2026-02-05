@@ -36,6 +36,7 @@ namespace WorkoutDiary.Service
                     .ToList();
 
                 result.Add(parsed);
+
             }
 
             return result;
@@ -49,7 +50,7 @@ namespace WorkoutDiary.Service
 
             var allRecords = await _database.GetInvoiceAsync();
             var allParts = allRecords
-                .Select(r => r.Part.Split('+')[0])
+                .Select(r => ExtractMainPart(r.Part))
                 .Distinct()
                 .ToList();
 
@@ -64,11 +65,25 @@ namespace WorkoutDiary.Service
         }
 
 
+
         public async Task<List<List<BodyParts>>> GetLastTwoTrainingDaysAsync()
         {
             return await _database.GetLastTwoTrainingDaysAsync();
         }
+        string ExtractMainPart(string raw)
+        {
+            if (string.IsNullOrWhiteSpace(raw))
+                return "unknown";
 
+            // rozbijamy po myślniku, plusie i spacji
+            var cleaned = raw
+                .Split(new[] { '-', '+', ' ' }, StringSplitOptions.RemoveEmptyEntries)
+                .First()
+                .Trim()
+                .ToLower();
+
+            return cleaned;
+        }
 
     }
 
