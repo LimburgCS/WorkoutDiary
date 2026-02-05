@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="WorkoutDiary.Views.AddTrainingPlanPage"
+             Title="Dodawanie planu treningowego" Shell.TitleColor="{DynamicResource PrimaryColor}" BackgroundColor="{DynamicResource PageBackgroundColor}">
+    <ScrollView>
+        
+
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid  Margin="20" VerticalOptions="Center" Padding="25" Grid.Row="0" RowSpacing="4" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Row="0" Grid.Column="0" TextColor="{DynamicResource PrimaryColor}" Text="Poniedziałek"/>
+                <Editor Grid.Row="1" Grid.ColumnSpan="2" AutoSize="TextChanges"
+                       Placeholder="Podaj plan na poniedziałek"
+                       PlaceholderColor="{DynamicResource PrimaryColor}"
+                         Text="{Binding MondayParts}" />
+                
+                <Label Grid.Row="2" Grid.Column="0" TextColor="{DynamicResource PrimaryColor}" Text="Wtorek"/>
+                <Editor Grid.Row="3" Grid.ColumnSpan="2"  AutoSize="TextChanges"
+                       Placeholder="Podaj plan na wtorek"
+                       PlaceholderColor="{DynamicResource PrimaryColor}"
+                         Text="{Binding TuesdayParts}"/>
+
+                <Label Grid.Row="4" Grid.Column="0" TextColor="{DynamicResource PrimaryColor}" Text="Środa"/>
+                <Editor Grid.Row="5" Grid.ColumnSpan="2"  AutoSize="TextChanges"
+                       Placeholder="Podaj plan na środę"
+                       PlaceholderColor="{DynamicResource PrimaryColor}"
+                         Text="{Binding WednesdayParts}"/>
+
+                <Label Grid.Row="6" Grid.Column="0" TextColor="{DynamicResource PrimaryColor}" Text="Czwartek"/>
+                <Editor Grid.Row="7" Grid.ColumnSpan="2"  AutoSize="TextChanges"
+                       Placeholder="Podaj plan na czwartek"
+                       PlaceholderColor="{DynamicResource PrimaryColor}"
+                         Text="{Binding ThursdayParts}"/>
+
+                <Label Grid.Row="8" Grid.Column="0" TextColor="{DynamicResource PrimaryColor}" Text="Piątek"/>
+                <Editor Grid.Row="9" Grid.ColumnSpan="2"  AutoSize="TextChanges"
+                       Placeholder="Podaj plan na piątek"
+                       PlaceholderColor="{DynamicResource PrimaryColor}"
+                         Text="{Binding FridayParts}"/>
+
+                <Label Grid.Row="10" Grid.Column="0" TextColor="{DynamicResource PrimaryColor}" Text="Sobota"/>
+                <Editor Grid.Row="11" Grid.ColumnSpan="2"  AutoSize="TextChanges"
+                       Placeholder="Podaj plan na sobote"
+                       PlaceholderColor="{DynamicResource PrimaryColor}"
+                         Text="{Binding SaturdayParts}"/>
+
+                <Label Grid.Row="12" Grid.Column="0" TextColor="{DynamicResource PrimaryColor}" Text="Niedziela"/>
+                <Editor Grid.Row="13" Grid.ColumnSpan="2"  AutoSize="TextChanges"
+                       Placeholder="Podaj plan na niedziele"
+                       PlaceholderColor="{DynamicResource PrimaryColor}"
+                         Text="{Binding SundayParts}" />
+
+
+            </Grid>
+        <StackLayout Grid.Row="1" VerticalOptions="Center" Margin="20">
+
+
+            <Button  Text="Zapisz"
+                        TextColor="{DynamicResource PrimaryColor}" BorderWidth="2" BorderColor="{DynamicResource PrimaryColor}"
+                        Command="{Binding SaveCommand}" Background="{DynamicResource PageBackgroundColor}"/>
+        </StackLayout>
+    </Grid>
+    </ScrollView>
+</ContentPage>

@@ -24,7 +24,6 @@ namespace WorkoutDiary.ViewModels
         }
         public PersonDataBase _database;
         public CardioDataBase _cardiodatabase;
-        private Person person;
         private ObservableCollection<Person> _person;
         private ObservableCollection<Cardio> _cardio;
         private int _displayNumberWeek;

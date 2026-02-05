@@ -10,6 +10,8 @@
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -26,7 +28,21 @@
                 VerticalOptions="End" Background="{DynamicResource PageBackgroundColor}"
                 BorderColor="{DynamicResource PrimaryColor}" BorderWidth="1" TextColor="{DynamicResource PrimaryColor}"
                 />
+                <Border Grid.Row="3" StrokeShape="RoundRectangle 3" StrokeThickness="1" >
 
+
+                    <VerticalStackLayout>
+                        <Picker VerticalOptions="End" HorizontalTextAlignment="Center"
+                       Title="Wybierz siłownie do usunięcia" TextColor="Black"
+                       ItemsSource="{Binding Gym}"
+                       SelectedItem="{Binding SelectedGym}" />
+                        
+                        <Button  Text="Usuń siłownie" Padding="15"
+                        Background="Transparent" VerticalOptions="End"
+                        Command="{Binding DeleteGymCommand}"
+                        BorderColor="{DynamicResource PrimaryColor}" BorderWidth="1" TextColor="{DynamicResource PrimaryColor}"/>
+                    </VerticalStackLayout>
+                </Border>
             </Grid>
         </StackLayout>
     </ContentPage.Content>

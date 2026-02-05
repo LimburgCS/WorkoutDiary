@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:charts="clr-namespace:Microcharts.Maui;assembly=Microcharts.Maui"
+            xmlns:charts="clr-namespace:Microcharts.Maui;assembly=Microcharts.Maui"
              x:Class="WorkoutDiary.Views.CardioPage"
              NavigatedTo="ContentPage_NavigatedTo"
              Title="Cardio" Shell.TitleColor="{DynamicResource PrimaryColor}" BackgroundColor="{DynamicResource PageBackgroundColor}">
@@ -85,7 +85,7 @@
                 </StackLayout>
                 <StackLayout Orientation="Horizontal"  Padding="20, 10, 20, 0">
 
-                    <Grid HorizontalOptions="FillAndExpand">
+                    <Grid HorizontalOptions="Fill">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
@@ -95,9 +95,9 @@
                         </Grid.ColumnDefinitions>
 
                         <Grid Grid.Row="0">
-                            <DatePicker x:Name="datepicker" Grid.Row="0" TextColor="{DynamicResource PrimaryColor}" Grid.Column="0" DateSelected="DatePicker_DateSelected" BindingContext="{Binding DatePicker, Mode=TwoWay}" HorizontalOptions="StartAndExpand" Format="dd.MM.yyyy"  />
+                            <DatePicker x:Name="datepicker" Grid.Row="0" TextColor="{DynamicResource PrimaryColor}" Grid.Column="0" DateSelected="DatePicker_DateSelected" BindingContext="{Binding DatePicker, Mode=TwoWay}" HorizontalOptions="Start" Format="dd.MM.yyyy"  />
                         </Grid>
-                        <Grid Grid.ColumnSpan="1" Grid.Row="0" HorizontalOptions="CenterAndExpand">
+                        <Grid Grid.ColumnSpan="1" Grid.Row="0" HorizontalOptions="Center">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
@@ -108,9 +108,9 @@
 
                             </Grid.ColumnDefinitions>
 
-                            <ImageButton Grid.Row="1" Grid.Column="0" HorizontalOptions="CenterAndExpand" BackgroundColor="{DynamicResource PrimaryColor}" Source="/Resources/Images/caretleft.svg" Command="{Binding Back}"/>
-                            <Label Grid.Row="1" Grid.Column="1" HorizontalOptions="CenterAndExpand" TextColor="{DynamicResource PrimaryColor}" Text="{Binding DisplayNumberWeekText}" VerticalTextAlignment="Center"  FontSize="15" />
-                            <ImageButton Grid.Row="1" Grid.Column="2" HorizontalOptions="CenterAndExpand" BackgroundColor="{DynamicResource PrimaryColor}" Source="/Resources/Images/caretright.svg" Command="{Binding Next}" />
+                            <ImageButton Grid.Row="1" Grid.Column="0" HorizontalOptions="Center" BackgroundColor="{DynamicResource PrimaryColor}" Source="/Resources/Images/caretleft.svg" Command="{Binding Back}"/>
+                            <Label Grid.Row="1" Grid.Column="1" HorizontalOptions="Center" TextColor="{DynamicResource PrimaryColor}" Text="{Binding DisplayNumberWeekText}" VerticalTextAlignment="Center"  FontSize="15" />
+                            <ImageButton Grid.Row="1" Grid.Column="2" HorizontalOptions="Center" BackgroundColor="{DynamicResource PrimaryColor}" Source="/Resources/Images/caretright.svg" Command="{Binding Next}" />
                         </Grid>
                     </Grid>
                 </StackLayout>
@@ -158,7 +158,7 @@
                                     <!-- First row: Categories and Price -->
                                     <Label Grid.Row="0" Grid.ColumnSpan="2" TextColor="{DynamicResource PrimaryColor}" Text="{Binding DateTime, StringFormat='{0:dddd: dd.MM.yyyy}'}"  FontSize="10" />
                                     <Button Grid.Row="0" Grid.Column="2" TextColor="{DynamicResource PrimaryColor}" Text="X" Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.Delete}" 
-            CommandParameter="{Binding .}" FontSize="12" HeightRequest="20" Padding="0" BackgroundColor="Transparent" HorizontalOptions="EndAndExpand" VerticalOptions="Start" WidthRequest="40" />
+            CommandParameter="{Binding .}" FontSize="12" HeightRequest="20" Padding="0" BackgroundColor="Transparent" HorizontalOptions="End" VerticalOptions="Start" WidthRequest="40" />
                                     <Label Grid.Row="1" Grid.ColumnSpan="3" TextColor="{DynamicResource PrimaryColor}" HorizontalTextAlignment="Center"  LineBreakMode="WordWrap" Text="{Binding Name}" FontSize="22" />
                                     <Label Grid.Row="2" Grid.Column="0" TextColor="{DynamicResource PrimaryColor}" HorizontalTextAlignment="Center"  LineBreakMode="WordWrap" Text="Dystans[m]" FontSize="15" />
                                     <Label Grid.Row="3" Grid.Column="0" TextColor="{DynamicResource PrimaryColor}" HorizontalTextAlignment="Center"  LineBreakMode="WordWrap" Text="{Binding Distance}" FontSize="22" />

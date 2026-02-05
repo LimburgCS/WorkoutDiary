@@ -10,7 +10,6 @@ namespace WorkoutDiary.Views
 {
     public partial class SettingPage : ContentPage
     {
-        bool darkTheme = false;
         public SettingPage()
         {
             InitializeComponent();

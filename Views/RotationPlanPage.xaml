@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WorkoutDiary.Views.RotationPlanPage"
+    xmlns:viewmodels="clr-namespace:WorkoutDiary.ViewModels"
+             Title="Plan treningowy" Shell.TitleColor="{DynamicResource PrimaryColor}" BackgroundColor="#E5E5E5">
+
+
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+
+
+            <!-- REKOMENDOWANE PARTIE -->
+            <Label Text="Co ćwiczyć dziś:" 
+                   FontSize="20" 
+                   FontAttributes="Bold"/>
+
+            <CollectionView ItemsSource="{Binding RecommendedParts}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Padding="10" Margin="0,5"
+                               BorderColor="White"
+                               CornerRadius="8">
+                            <Label Text="{Binding}" FontSize="18"/>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- OSTATNIE 2 DNI TRENINGOWE -->
+            <Label Text="Ostatnie dwa dni treningowe:" 
+                   FontSize="20" 
+                   FontAttributes="Bold"
+                   Margin="0,20,0,0"/>
+
+            <CollectionView ItemsSource="{Binding LastTrainings}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Padding="10" Margin="0,5"
+                               BorderColor="White"
+                               CornerRadius="8">
+
+                            <VerticalStackLayout Spacing="5">
+                                <Label Text="{Binding DateTime, StringFormat='{0:dddd, dd.MM.yyyy}'}"
+                                                    FontAttributes="Bold"
+                                                    FontSize="16"/>
+                                <CollectionView ItemsSource="{Binding}">
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate>
+                                               
+                                            <Label Text="{Binding Part}" FontSize="14"/>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
+                            </VerticalStackLayout>
+
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

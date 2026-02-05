@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:charts="clr-namespace:Microcharts.Maui;assembly=Microcharts.Maui"
+            xmlns:charts="clr-namespace:Microcharts.Maui;assembly=Microcharts.Maui"
              x:Class="WorkoutDiary.Views.StatisticCardioPage"
              Title="Statystyka Cardio" Shell.TitleColor="{DynamicResource PrimaryColor}" BackgroundColor="{DynamicResource PageBackgroundColor}">
 
@@ -25,11 +25,11 @@
 
                 <ScrollView Orientation="Horizontal"
             Grid.Row="1"
-            HorizontalOptions="FillAndExpand"
-            VerticalOptions="FillAndExpand"
+            HorizontalOptions="Fill"
+            VerticalOptions="Fill"
             BackgroundColor="Transparent">
                     <Grid x:Name="ChartContainer"
-          VerticalOptions="FillAndExpand"
+          VerticalOptions="Fill"
           HorizontalOptions="Start"
           
           WidthRequest="800">
@@ -38,13 +38,13 @@
                         <!-- Wykres 1 -->
                         <charts:ChartView x:Name="chartView"
                           MaximumHeightRequest="300"
-                          VerticalOptions="FillAndExpand"
+                          VerticalOptions="Fill"
                           HorizontalOptions="Start"/>
 
                         <!-- Wykres 2 -->
                         <charts:ChartView x:Name="chartViewCalories"
                           MaximumHeightRequest="300"
-                          VerticalOptions="FillAndExpand"
+                          VerticalOptions="Fill"
                           HorizontalOptions="Start"
                           InputTransparent="True"/>
                         <!-- zapobiega konflikcie kliknięć -->

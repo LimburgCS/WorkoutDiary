@@ -1,5 +1,6 @@
 ﻿
 using WorkoutDiary.data;
+using WorkoutDiary.Service;
 using WorkoutDiary.ViewModels;
 
 
@@ -14,20 +15,25 @@ namespace WorkoutDiary.Views
             InitializeComponent();
             database = new TodoItemDatabase();
             BindingContext = _viewmodel = viewmodel;
-            LoadPart();
+            _ = LoadPart();
+
         }
-        public void ApplyQueryAttributes(IDictionary<string, object> query)
+        public async void ApplyQueryAttributes(IDictionary<string, object> query)
         {
             if (query.ContainsKey("exerciseId") && int.TryParse(query["exerciseId"].ToString(), out int exerciseId))
             {
-                _viewmodel.LoadExercise(exerciseId);
+                await _viewmodel.LoadExercise(exerciseId);
             }
         }
-        private async void LoadPart()
+        private async Task LoadPart()
         {
             var db = await database.GetInvoiceAsync();
-            var bodypartsDB = db.Select(x => x.Part).Distinct().OrderBy(x=>x).ToList();
+            var bodypartsDB = db.Select(x => x.Part).Distinct().OrderBy(x=>x, StringComparer.CurrentCultureIgnoreCase).ToList();
+            var nameGym = db.Select(x => x.NameGym).Distinct().OrderBy(x => x, StringComparer.CurrentCultureIgnoreCase).ToList();
             namePicker.ItemsSource = bodypartsDB; // Ustawienie listy w Picker
+            namePickerGym.ItemsSource = nameGym;
+            string savedGym = SettingsService.SelectedGym;
+            namePickerGym.SelectedItem = savedGym;
 
         }
         private void PartSelected(object sender, EventArgs e)
@@ -38,6 +44,17 @@ namespace WorkoutDiary.Views
                 _viewmodel.loadPicker(selectedPart);
             }
         }
+        //private void GymSelected(object sender, EventArgs e)
+        //{
+        //    if (namePickerGym.SelectedIndex != -1)
+        //    {
+        //        string selectedGym = namePickerGym.SelectedItem.ToString();
+
+
+        //        _viewmodel.loadPickerGym(selectedGym);
+
+        //    }
+        //}
 
         private void DatePicker_DateSelected(object sender, DateChangedEventArgs e)
         {

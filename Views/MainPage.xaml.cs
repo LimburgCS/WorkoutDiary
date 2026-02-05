@@ -22,9 +22,12 @@ namespace WorkoutDiary.Views
         {
             base.OnAppearing();
 
+
             if (BindingContext is MainPageViewModel viewModel)
             {
                 await viewModel.loadExercise();
+                //await viewModel.LoadPartsAsync();
+                //await viewModel.LoadGymAsync();
             }
         }
         //private async void LoadPart()
@@ -34,6 +37,8 @@ namespace WorkoutDiary.Views
         //    namePicker.ItemsSource = bodypartsDB; // Ustawienie listy w Picker
 
         //}
+
+        //resetowanie zaznaczenia po powrocie na strone
         private void ContentPage_NavigatedTo(object sender, NavigatedToEventArgs e)
         {
             ExerciseCollectionView.SelectedItem = null;
@@ -49,6 +54,8 @@ namespace WorkoutDiary.Views
             
             
         }
+
+
 
     }
 

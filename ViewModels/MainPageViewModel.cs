@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using WorkoutDiary.data;
 using WorkoutDiary.Model;
+using WorkoutDiary.Service;
 using WorkoutDiary.Views;
 
 namespace WorkoutDiary.ViewModels
@@ -19,8 +20,13 @@ namespace WorkoutDiary.ViewModels
     {
         public event PropertyChangedEventHandler PropertyChanged;
         public TodoItemDatabase _database;
-        public ObservableCollection<string> Parts { get; set; } = new();
+
+        public ObservableCollection<string> Parts { get; set; } = new ObservableCollection<string>();
+        public ObservableCollection<string> Gym { get; set; } = new();
         private ObservableCollection<BodyParts> _bodyParts;
+        public bool HasNoData => BodyParts == null || BodyParts.Count == 0;
+        private string _pageTitle;
+        private string _saveNameGym;
         private bool _isBottomGridVisible;
         private float _lastWeight;
         private int _displayNumberWeek;
@@ -30,6 +36,16 @@ namespace WorkoutDiary.ViewModels
             set
             {
                 _bodyParts = value;
+
+            }
+        }
+        public string PageTitle
+        {
+            get => _pageTitle;
+            set
+            {
+                _pageTitle = value;
+                OnPropertyChanged(nameof(PageTitle));
 
             }
         }
@@ -48,8 +64,18 @@ namespace WorkoutDiary.ViewModels
             }
         }
 
-
-
+        public string SaveNameGym
+        {
+            get => _saveNameGym;
+            set
+            {
+                if (_saveNameGym != value)
+                {
+                    _saveNameGym = value;
+                    OnPropertyChanged(nameof(SaveNameGym));
+                }
+            }
+        }
         private string _selectedPart;
         public string SelectedPart
         {
@@ -59,24 +85,52 @@ namespace WorkoutDiary.ViewModels
                 if (_selectedPart != value)
                 {
                     _selectedPart = value;
-                    OnPropertyChanged(nameof(SelectedPart));
-                    
 
-                    _ = loadExercise();
-                    if (_selectedPart == null || _selectedPart == "Wszystko")
-                    {
-                        IsBottomGridVisible = false;
-                    }
-                    else
-                    {
-                        IsBottomGridVisible = true;
-                        //UpdateLastWeight();
-                    }
+                    IsBottomGridVisible = !string.IsNullOrWhiteSpace(value) &&
+                                          value != "Wszystko";
+
+                    OnPropertyChanged();
+
+
+
+                    // _ = loadExercise();
+                    //if (_selectedPart == null || _selectedPart == "Wszystko")
+                    //{
+                    //    IsBottomGridVisible = false;
+                    //}
+                    //else
+                    //{
+                    //    IsBottomGridVisible = true;
+                    //    //UpdateLastWeight();
+                    //}
 
                 }
             }
         }
-     
+
+        private string _selectedGym;
+        public string SelectedGym
+        {
+            get => _selectedGym;
+            set
+            {
+                if (_selectedGym != value)
+                {
+                    _selectedGym = value;
+                    OnPropertyChanged();
+                    SettingsService.SelectedGym = value;
+
+                    //Preferences.Set("_selectedGym", value); LoadNameGymPlace();
+
+                    // _ = loadExercise();
+
+
+                }
+            }
+
+        }
+
+
         public float LastWeight
         {
             get => _lastWeight;
@@ -117,9 +171,23 @@ namespace WorkoutDiary.ViewModels
             Next = new Command(NextMethod);
             Delete = new Command<BodyParts>(async (BodyParts) => await DeleteExercise(BodyParts));
             //DisplayNumberWeek = 1;
+            PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == nameof(SelectedPart))
+                {
+                    _ = loadExercise();
+                }
+                if (e.PropertyName == nameof(SelectedGym))
+                {
+                    _ = loadExercise();
+                }
+            };
+
             LoadDisplayNumberWeek();
             _ = loadExercise();
             _ = LoadPartsAsync();
+            _ = LoadGymAsync();
+
             RefreshData();
         }
 
@@ -128,17 +196,28 @@ namespace WorkoutDiary.ViewModels
             var data = await _database.GetInvoiceAsync();
             if (data != null && data.Any())
             {
-                var db = await _database.GetInvoiceAsync();
-                var firstweek = db.FirstOrDefault();
-                int currentNumberWeek = CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(
-                date, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+                //var db = await _database.GetInvoiceAsync();
+                //var firstweek = db.FirstOrDefault();
+                //int currentNumberWeek = CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(
+                //date, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
 
-                int firstWorkNumberWeek = CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(
-                                    firstweek.DateTime, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+                //int firstWorkNumberWeek = CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(
+                //                    firstweek.DateTime, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
 
-                int weekDisplay = currentNumberWeek - firstWorkNumberWeek;
+                //int weekDisplay = currentNumberWeek - firstWorkNumberWeek;
 
-                DisplayNumberWeek = weekDisplay + 1;
+                //DisplayNumberWeek = weekDisplay + 1;
+                var first = data.First().DateTime.Date;
+                var now = date.Date;
+
+                // Różnica dni
+                var difference = (now - first).TotalDays;
+
+                // Ile pełnych tygodni minęło
+                int weekNumber = (int)(difference / 7d) + 1;
+
+                DisplayNumberWeek = weekNumber;
+
             }
             else
             {
@@ -178,55 +257,148 @@ namespace WorkoutDiary.ViewModels
 
         public async Task loadExercise()
         {
- 
-            if (_selectedPart == null || _selectedPart == "Wszystko")
+            var exerciseFromDb = await _database.GetInvoiceAsync();
+            if (exerciseFromDb == null)
+                return;
+
+           // _ = LoadGymAsync();
+            //_ =LoadPartsAsync();
+            exerciseFromDb = exerciseFromDb
+                .OrderBy(x => x.DateTime)
+                .ToList();
+
+            // Ustawianie separatorów
+            for (int i = 0; i < exerciseFromDb.Count; i++)
             {
-                //standardowe ładowanie danych
-                var exerciseFromDb = await _database.GetInvoiceAsync();
-
-                if (exerciseFromDb == null)
-                    return;
-
-                var filteredData = exerciseFromDb.Where(x => x.NumberWeek == DisplayNumberWeek).ToList(); // Dodano ToList()
-                BodyParts = new ObservableCollection<BodyParts>(filteredData);
-                OnPropertyChanged(nameof(BodyParts));
+                if (i == 0)
+                    exerciseFromDb[i].ShowSeparator = true;
+                else
+                    exerciseFromDb[i].ShowSeparator =
+                        exerciseFromDb[i].DateTime.Date != exerciseFromDb[i - 1].DateTime.Date;
+            }
 
 
+
+            // Startujemy od pełnej listy
+            var query = exerciseFromDb.AsQueryable();
+
+            // 1. Filtr po tygodniu (gdy Wszystko → filtrujemy tylko po tygodniu)
+            // 1. Filtr po partii + tygodniu
+            if (string.IsNullOrWhiteSpace(SelectedPart) || SelectedPart == "Wszystko")
+            {
+                query = query.Where(x => x.NumberWeek == DisplayNumberWeek);
             }
             else
             {
-                var exerciseFromDb = await _database.GetInvoiceAsync();
+                query = query.Where(x => x.Part == SelectedPart &&
+                                         x.NumberWeek == DisplayNumberWeek);
 
-                if (exerciseFromDb == null)
-                    return;
-                var filteredData = exerciseFromDb.Where(x => x.Part == SelectedPart).ToList(); // Dodano ToList()
-                BodyParts = new ObservableCollection<BodyParts>(filteredData);
-                OnPropertyChanged(nameof(BodyParts));
-                var filterLastWeight = exerciseFromDb.Where(x => x.Part == SelectedPart).Max(x => x.Weight);
-                _lastWeight = filterLastWeight;
+                _lastWeight = query.Any() ? query.Max(x => x.Weight) : 0;
                 OnPropertyChanged(nameof(LastWeight));
             }
 
+            // 2. Filtr po siłowni TYLKO gdy SelectedPart = "Wszystko"
+            var savedGym = SettingsService.SelectedGym;
+
+            if (SelectedPart == null || SelectedPart == "Wszystko")
+            {
+                if (savedGym != "Wszystko")
+                {
+                    query = query.Where(x => x.NameGym == savedGym &&
+                                             x.NumberWeek == DisplayNumberWeek);
+                }
+            }
+
+
+            PageTitle = savedGym == "Wszystko"
+             ? "Dziennik ćwiczeń"
+             : $"Dziennik ćwiczeń - {savedGym}";
+
+            // Finalizacja
+            BodyParts = new ObservableCollection<BodyParts>(query.ToList());
+            OnPropertyChanged(nameof(BodyParts));
+            OnPropertyChanged(nameof(HasNoData));
+
+
+            //if (_selectedPart == null || _selectedPart == "Wszystko")
+            //{
+            //    //standardowe ładowanie danych
+            //    var exerciseFromDb = await _database.GetInvoiceAsync();
+
+            //    if (exerciseFromDb == null)
+            //        return;
+
+            //    var filteredData = exerciseFromDb.Where(x => x.NumberWeek == DisplayNumberWeek).ToList(); // Dodano ToList()
+            //    BodyParts = new ObservableCollection<BodyParts>(filteredData);
+
+            //    OnPropertyChanged(nameof(BodyParts));
+
+
+            //}
+            //else
+            //{
+            //    var exerciseFromDb = await _database.GetInvoiceAsync();
+
+            //    if (exerciseFromDb == null)
+            //        return;
+            //    var filteredData = exerciseFromDb.Where(x => x.Part == SelectedPart).ToList(); // Dodano ToList()
+            //    BodyParts = new ObservableCollection<BodyParts>(filteredData);
+            //    OnPropertyChanged(nameof(BodyParts));
+            //    var filterLastWeight = exerciseFromDb.Where(x => x.Part == SelectedPart).Max(x => x.Weight);
+            //    _lastWeight = filterLastWeight;
+            //    OnPropertyChanged(nameof(LastWeight));
+            //}
+
 
         }
-        //private async void UpdateLastWeight()
-        //{
-        //    var exerciseFromDb = await _database.GetInvoiceAsync();
 
-        //    if (exerciseFromDb == null)
-        //        return;
-        //    var filterLastWeight = exerciseFromDb.Where(x => x.Part == SelectedPart).Max(x => x.Weight);
-        //    _lastWeight = filterLastWeight;
-        //    OnPropertyChanged(nameof(LastWeight));
-        //}
-        private async Task LoadPartsAsync()
+        private void LoadNameGymPlace()
+        {
+           // var savedGym = SettingsService.SelectedGym;
+
+            if (Gym.Contains(_selectedGym))
+            {
+                SettingsService.SelectedGym = _selectedGym;
+
+
+            }
+            //else
+            //{
+            //    _selectedGym = "Wszystko";
+            //    SettingsService.SelectedGym = "Wszystko";
+            //}
+
+            //PageTitle = _selectedGym == "Wszystko"
+            //    ? "Dziennik ćwiczeń"
+            //    : $"Dziennik ćwiczeń - {_selectedGym}";
+
+
+            //var savedGym = Preferences.Get("_selectedGym", "Wszystko");
+
+            //// Jeśli zapisany element istnieje w liście — ustaw go
+            //if (Gym.Contains(savedGym))
+            //{
+            //    _selectedGym = savedGym;
+            //}
+            //else
+            //{
+            //    _selectedGym = "Wszystko";
+            //}
+            //PageTitle = _selectedGym == "Wszystko"
+            //? "Dziennik ćwiczeń" : $"Dziennik ćwiczeń - {_selectedGym}";
+
+        }
+
+
+        public async Task LoadPartsAsync()
         {
             try
             {
                 var db = await _database.GetInvoiceAsync();
                 var bodypartsDB = db
                     .Select(x => x.Part)
-                    .Distinct()
+                    .Where(x => !string.IsNullOrWhiteSpace(x))
+                    .Distinct().OrderBy(x => x, StringComparer.CurrentCultureIgnoreCase)
                     .ToList();
 
                 bodypartsDB.Insert(0, "Wszystko");
@@ -243,6 +415,35 @@ namespace WorkoutDiary.ViewModels
                 Console.WriteLine($"Błąd przy wczytywaniu części: {ex.Message}");
             }
         }
+
+        public async Task LoadGymAsync()
+        {
+            try
+            {
+                var db = await _database.GetInvoiceAsync();
+                var bodypartsDB = db
+                    .Select(x => x.NameGym)
+                    .Where(x => !string.IsNullOrWhiteSpace(x))   // ⬅️ usuwa null, "", "   "
+                    .Distinct()
+                    .OrderBy(x => x, StringComparer.CurrentCultureIgnoreCase)
+                    .ToList();
+
+
+                bodypartsDB.Insert(0, "Wszystko");
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    Gym.Clear();
+                    foreach (var part in bodypartsDB)
+                        Gym.Add(part);
+                });
+            }
+            catch (Exception ex)
+            {
+                // opcjonalnie obsługa błędów
+                Console.WriteLine($"Błąd przy wczytywaniu siłowni: {ex.Message}");
+            }
+        }
+
         private async void LoadDisplayNumberWeek()
         {
             var exerciseFromDb = await _database.GetInvoiceAsync();
@@ -294,6 +495,7 @@ namespace WorkoutDiary.ViewModels
            _ = loadExercise();
 
         }
+
         private async Task NewExerciseAsync()
         {
             

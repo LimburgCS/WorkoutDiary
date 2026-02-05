@@ -56,5 +56,47 @@ namespace WorkoutDiary.data
             await Init();
             return await Database.DeleteAllAsync<BodyParts>();
         }
+
+        public async Task<List<List<BodyParts>>> GetLastTwoTrainingDaysAsync()
+        {
+            await Init();
+
+            // 1. Pobierz WSZYSTKO bez żadnych operacji na DateTime
+            var all = await Database.Table<BodyParts>().ToListAsync();
+
+            if (all == null || all.Count == 0)
+                return new List<List<BodyParts>>();
+
+            // 2. Operacje na datach dopiero TERAZ, w C#
+            var grouped = all
+                .Where(x => x.DateTime != null)
+                .GroupBy(x => x.DateTime!.Date)   // ← TERAZ .Date działa, bo to C#, nie SQL
+                .OrderByDescending(g => g.Key)
+                .Take(2)
+                .Select(g => g.ToList())
+                .ToList();
+
+            return grouped;
+        }
+
+
+
+        public async Task<List<DateTime>> GetAllTrainingDaysAsync()
+        {
+            await Init();
+
+            // 1. Pobierz WSZYSTKO bez operacji na DateTime
+            var all = await Database.Table<BodyParts>().ToListAsync();
+
+            // 2. Operacje na datach dopiero TERAZ, w C#
+            return all
+                .Where(x => x.DateTime != null)
+                .GroupBy(x => x.DateTime.Date)   // ← TERAZ działa, bo to C#, nie SQL
+                .Select(g => g.Key)
+                .OrderByDescending(d => d)
+                .ToList();
+        }
+
+
     }
 }

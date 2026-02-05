@@ -42,7 +42,8 @@ namespace WorkoutDiary.Views
         private async void LoadPart()
         {
             var db = await _database.GetInvoiceAsync();
-            var bodypartsDB = db.Select(x => x.Part).Distinct().ToList();
+            var bodypartsDB = db.Select(x => x.Part).Where(x => !string.IsNullOrWhiteSpace(x))
+                .OrderBy(x => x, StringComparer.CurrentCultureIgnoreCase).Distinct().ToList();
             namePicker.ItemsSource = bodypartsDB; // Ustawienie listy w Picker
             
         }
@@ -57,7 +58,8 @@ namespace WorkoutDiary.Views
                   .Select(group => new
                   {
                       Date = group.Key,  // Data
-                      MaxWeight = group.Max(x => x.Weight)  // Najwyższa waga danego dnia
+                      MaxWeight = group.Max(x => x.Weight),  // Najwyższa waga danego dnia
+                      MinWeight = group.Min(x => x.Weight)
                   })
                   .OrderBy(x => x.Date)  // Sortowanie po dacie
                   .ToList();
@@ -83,7 +85,8 @@ namespace WorkoutDiary.Views
             var yMax = maxValue + range * 0.3f;       // +10% od góry
             var yMin = Math.Max(0, minValue - range * 0.1f); // -10% od dołu
             LabelPart.Text = selectedPart;
-            ProgressLabel.Text = (lastweight - firstweight).ToString();
+            ProgressLabel.Text = firstweight.ToString()+"=>"+maxValue.ToString()+"("+(maxValue-firstweight).ToString()+"kg)";
+            StartExercises.Text = firstDay.ToString("dd.MM.yyyy");
             ProgressTime.Text = dbOrderBy.Count().ToString();
             var chartEntries = dbOrderBy.Select(entry => new Microcharts.ChartEntry((float?)(entry.MaxWeight))
             {

@@ -25,7 +25,7 @@
             <Label x:Name="LabelPart" HorizontalOptions="Center" FontSize="20" HorizontalTextAlignment="Center" Padding="10" TextColor="{DynamicResource PrimaryColor}"/>
 
 
-            <ScrollView Orientation="Horizontal" Grid.Row="1" Background="Transparent" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <ScrollView Orientation="Horizontal" Grid.Row="1" Background="Transparent" HorizontalOptions="Fill" VerticalOptions="Fill">
                 <StackLayout Orientation="Horizontal">
                     <charts:ChartView x:Name="chartView"
                           HeightRequest="300"  
@@ -54,14 +54,20 @@
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
-                    <Label Grid.Row="0" Text="Progres[kg]" HorizontalOptions="Center" FontSize="20" TextColor="{DynamicResource PrimaryColor}"/>
-                    <Label Grid.Row="1" x:Name="ProgressLabel" HorizontalOptions="Center" FontSize="25" TextColor="{DynamicResource PrimaryColor}"/>
-                    <Label Grid.Row="2" Text="Ilość trenigów" HorizontalOptions="Center" FontSize="20" TextColor="{DynamicResource PrimaryColor}"/>
-                    <Label Grid.Row="3" x:Name="ProgressTime" HorizontalOptions="Center" FontSize="25" TextColor="{DynamicResource PrimaryColor}"/>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Row="0" Text="Progres[kg]" TextDecorations="Underline" HorizontalOptions="Center" FontSize="15" TextColor="{DynamicResource PrimaryColor}"/>
+                    <Label Grid.Row="1" x:Name="ProgressLabel" HorizontalOptions="Center" FontSize="15" TextColor="{DynamicResource PrimaryColor}"/>
+                    <Label Grid.Row="2" Text="Ilość trenigów" TextDecorations="Underline" HorizontalOptions="Center" FontSize="15" TextColor="{DynamicResource PrimaryColor}"/>
+                    <Label Grid.Row="3" x:Name="ProgressTime" HorizontalOptions="Center" FontSize="15" TextColor="{DynamicResource PrimaryColor}"/>
+                    <Label Grid.Row="0" Grid.Column="1" Text="Start" TextDecorations="Underline" HorizontalOptions="Center"  FontSize="15" TextColor="{DynamicResource PrimaryColor}"/>
+                    <Label Grid.Row="1" Grid.Column="1" x:Name="StartExercises"  HorizontalOptions="Center"  FontSize="15" TextColor="{DynamicResource PrimaryColor}"/>
                 </Grid>
             </Frame>
         </StackLayout>
-        <StackLayout Grid.Row="2" Background="{DynamicResource PageBackgroundColor}" >
+        <!--<StackLayout Grid.Row="2" Background="{DynamicResource PageBackgroundColor}" >
 
                 <Grid ColumnSpacing="10" Padding="10" >
                     <Grid.RowDefinitions>
@@ -79,6 +85,6 @@
                              TextColor="{DynamicResource PrimaryColor}"/>
 
                 </Grid>
-        </StackLayout>
+        </StackLayout>-->
     </Grid>
 </ContentPage>

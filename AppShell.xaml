@@ -4,6 +4,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:WorkoutDiary.Views"
+    xmlns:views="clr-namespace:WorkoutDiary.Views"
     Shell.FlyoutBehavior="Disabled"
     Shell.ForegroundColor="{DynamicResource PrimaryTextColor}"
     Shell.BackgroundColor="{DynamicResource PageBackgroundColor}"
@@ -26,8 +27,8 @@ Shell.FlyoutBackdrop="White"
         <!--<Tab Title="Statystyka" Icon="graph">
             <ShellContent Title="Statystyka" Route="StatisticPage" ContentTemplate="{DataTemplate local:StatisticPage}" />
         </Tab>-->
-        <Tab Title="Cardio" Icon="person">
-            <ShellContent Title="Cardio" Route="CardioPage" ContentTemplate="{DataTemplate local:CardioPage}" />
+        <Tab Title="Plan" Icon="journal">
+            <ShellContent Title="Plan treningowy" Route="RotationPlanPage" ContentTemplate="{DataTemplate views:RotationPlanPage}" />
         </Tab>
         <Tab FlyoutItemIsVisible="False" Title="Statystyka" Icon="graph2" >
             <ShellContent Title="Statystyka ćwiczeń siłowych" Route="StatisticPage" ContentTemplate="{DataTemplate local:StatisticPage}" />
@@ -44,6 +45,7 @@ Shell.FlyoutBackdrop="White"
     </FlyoutItem>
     <ShellContent Title="Cardio" Route="StatisticCardioPage" ContentTemplate="{DataTemplate local:StatisticCardioPage}" />
     <ShellContent FlyoutItemIsVisible="True" Title="Dodaj ćwiczenie" Route="AddExercisePage" ContentTemplate="{DataTemplate local:AddExercisePage}" />
+    <ShellContent FlyoutItemIsVisible="True" Title="Dodaj plan" Route="AddTrainingPlanPage" ContentTemplate="{DataTemplate local:AddTrainingPlanPage}" />
     <!--<Shell.FlyoutFooter>
         <Grid BackgroundColor="Transparent" Padding="10">
             <Border BackgroundColor="red">
