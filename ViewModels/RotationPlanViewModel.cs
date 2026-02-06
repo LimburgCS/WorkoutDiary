@@ -14,14 +14,18 @@ namespace WorkoutDiary.ViewModels
         [ObservableProperty]
         private ObservableCollection<string> recommendedParts = new();
 
-        // Dwa ostatnie dni treningowe
         [ObservableProperty]
-        private ObservableCollection<List<BodyParts>> lastTrainings = new();
+        private ObservableCollection<TrainingDayView> lastTrainings;
+
+
+
 
         public RotationPlanViewModel(WorkoutRecommendationService recommendationService)
         {
             _recommendationService = recommendationService;
         }
+
+
 
         [RelayCommand]
         public async Task LoadRecommendationAsync()
@@ -29,8 +33,8 @@ namespace WorkoutDiary.ViewModels
             var result = await _recommendationService.GetRecommendationAsync();
             RecommendedParts = new ObservableCollection<string>(result);
 
-            var lastTwo = await _recommendationService.GetLastTwoTrainingDaysAsync();
-            LastTrainings = new ObservableCollection<List<BodyParts>>(lastTwo);
+            var lastTwo = await _recommendationService.GetLastTwoTrainingDaysForDisplayAsync();
+            LastTrainings = new ObservableCollection<TrainingDayView>(lastTwo);
 
 
         }

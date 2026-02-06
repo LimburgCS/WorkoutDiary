@@ -17,7 +17,11 @@ namespace WorkoutDiary.Helper
             { "plecy", "plecy" },
             { "nogi", "nogi" },
             { "biceps", "biceps" },
-            { "triceps", "triceps" }
+            { "triceps", "triceps" },
+            { "przedramiona", "przedramiona" },
+            { "brzuch", "brzuch" },
+            { "dipy", "triceps" }
+
         };
     }
 

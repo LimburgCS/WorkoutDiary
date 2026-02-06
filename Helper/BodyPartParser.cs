@@ -22,6 +22,10 @@ namespace WorkoutDiary.Helper
 
             var first = tokens[0];
 
+            if (first.Contains("dipy", StringComparison.OrdinalIgnoreCase))
+                return "triceps";
+
+
             return BodyPartDictionary.AllowedParts.TryGetValue(first, out var normalized)
                 ? normalized
                 : "unknown";

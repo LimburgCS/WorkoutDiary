@@ -35,31 +35,37 @@
                    FontAttributes="Bold"
                    Margin="0,20,0,0"/>
 
+
+
+
             <CollectionView ItemsSource="{Binding LastTrainings}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Frame Padding="10" Margin="0,5"
-                               BorderColor="White"
-                               CornerRadius="8">
-
+                        <Frame Padding="10" Margin="0,5" BorderColor="White" CornerRadius="8">
                             <VerticalStackLayout Spacing="5">
-                                <Label Text="{Binding DateTime, StringFormat='{0:dddd, dd.MM.yyyy}'}"
-                                                    FontAttributes="Bold"
-                                                    FontSize="16"/>
-                                <CollectionView ItemsSource="{Binding}">
+
+                                <!-- DATA -->
+                                <Label Text="{Binding Date, StringFormat='{0:dddd, dd MMM}'}"
+                           FontAttributes="Bold"
+                           FontSize="18"/>
+
+                                <!-- PEŁNE STRINGI -->
+                                <CollectionView ItemsSource="{Binding FullParts}">
                                     <CollectionView.ItemTemplate>
                                         <DataTemplate>
-                                               
-                                            <Label Text="{Binding Part}" FontSize="14"/>
+                                            <Label Text="{Binding}" FontSize="14"/>
                                         </DataTemplate>
                                     </CollectionView.ItemTemplate>
                                 </CollectionView>
-                            </VerticalStackLayout>
 
+                            </VerticalStackLayout>
                         </Frame>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
+
+
+
 
         </VerticalStackLayout>
     </ScrollView>

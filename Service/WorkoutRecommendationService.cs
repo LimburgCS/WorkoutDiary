@@ -32,7 +32,7 @@ namespace WorkoutDiary.Service
                 var parsed = day
                     .Where(x => x != null && !string.IsNullOrWhiteSpace(x.Part))
                     .Select(x => BodyPartParser.ExtractMainPart(x.Part))
-                    .Where(p => !string.IsNullOrWhiteSpace(p) && p != "unknown")
+                    .Where(p => !string.IsNullOrWhiteSpace(p))
                     .ToList();
 
                 result.Add(parsed);
@@ -66,10 +66,35 @@ namespace WorkoutDiary.Service
 
 
 
+
         public async Task<List<List<BodyParts>>> GetLastTwoTrainingDaysAsync()
         {
             return await _database.GetLastTwoTrainingDaysAsync();
         }
+
+
+        public async Task<List<TrainingDayView>> GetLastTwoTrainingDaysForDisplayAsync()
+        {
+            var raw = await _database.GetLastTwoTrainingDaysAsync(); // List<List<BodyParts>>
+            var parsed = await GetLastTwoParsedTrainingsAsync();     // List<List<string>>
+            var dates = await _database.GetAllTrainingDaysAsync();   // List<DateTime>
+
+            var result = new List<TrainingDayView>();
+
+            for (int i = 0; i < raw.Count; i++)
+            {
+                result.Add(new TrainingDayView
+                {
+                    Date = dates[i],
+                    RawParts = raw[i],
+                    ParsedParts = parsed[i]
+                });
+            }
+
+            return result;
+        }
+
+
         string ExtractMainPart(string raw)
         {
             if (string.IsNullOrWhiteSpace(raw))

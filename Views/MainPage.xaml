@@ -114,13 +114,17 @@
                                        TextColor="Black"
                                        IsVisible="{Binding ShowSeparator}" />
 
-                                <Frame
-                                CornerRadius="10"
-                                BackgroundColor="White"
-                                Margin="5"
-                                HasShadow="True"
-                                InputTransparent="True">
-                                    
+                                <Border
+                                            Stroke="Transparent"
+                                            Background="White"
+                                            StrokeThickness="0"
+                                            Margin="5"
+                                            Padding="15"
+                                            StrokeShape="RoundRectangle 10">
+
+                                    <Border.Shadow>
+                                        <Shadow Brush="Black" Opacity="0.1" Radius="10" Offset="0,1" />
+                                    </Border.Shadow>
 
 
                                     <Grid  BackgroundColor="{DynamicResource PageBackgroundColor}">
@@ -160,9 +164,11 @@
 
 
 
-                                    </Grid>
+
+                                     
                                 
-                            </Frame>
+                                    </Grid>
+                                </Border>
                             </VerticalStackLayout>
                         </DataTemplate>
                         
