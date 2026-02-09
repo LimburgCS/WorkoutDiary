@@ -9,7 +9,7 @@ namespace WorkoutDiary.Service
     public static class SettingsService
     {
         private const string SelectedGymKey = "_selectedGym";
-        private const string DefaultGymValue = "";
+        private const string DefaultGymValue = "";  
 
         public static string SelectedGym
         {

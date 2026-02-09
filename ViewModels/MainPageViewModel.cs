@@ -21,7 +21,7 @@ namespace WorkoutDiary.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
         public TodoItemDatabase _database;
 
-        public ObservableCollection<string> Parts { get; set; } = new ObservableCollection<string>();
+        public ObservableCollection<string> Parts { get; set; } = new();
         public ObservableCollection<string> Gym { get; set; } = new();
         private ObservableCollection<BodyParts> _bodyParts;
         public bool HasNoData => BodyParts == null || BodyParts.Count == 0;
@@ -36,7 +36,7 @@ namespace WorkoutDiary.ViewModels
             set
             {
                 _bodyParts = value;
-
+                OnPropertyChanged();
             }
         }
         public string PageTitle
@@ -137,9 +137,9 @@ namespace WorkoutDiary.ViewModels
             set
             {
 
-                    _lastWeight = value;
-                    OnPropertyChanged(nameof(_lastWeight));
-               
+                _lastWeight = value;
+                OnPropertyChanged(nameof(_lastWeight));
+
             }
         }
         public bool IsBottomGridVisible
@@ -157,7 +157,7 @@ namespace WorkoutDiary.ViewModels
 
         public string DisplayNumberWeekText => $"Tydzień: {DisplayNumberWeek}";
         public ICommand NewExercise { get; }
-        public ICommand Back {  get; }
+        public ICommand Back { get; }
         public ICommand Next { get; }
         public ICommand SelectDayCommand { get; }
         public ICommand Delete { get; }
@@ -181,12 +181,15 @@ namespace WorkoutDiary.ViewModels
                 {
                     _ = loadExercise();
                 }
+                if (e.PropertyName == nameof(BodyParts))
+                {
+                    _ = LoadGymAsync();
+                }
             };
 
             LoadDisplayNumberWeek();
             _ = loadExercise();
-            _ = LoadPartsAsync();
-            _ = LoadGymAsync();
+
 
             RefreshData();
         }
@@ -237,7 +240,7 @@ namespace WorkoutDiary.ViewModels
 
         private void NextMethod()
         {
-              DisplayNumberWeek++;
+            DisplayNumberWeek++;
         }
 
 
@@ -261,8 +264,10 @@ namespace WorkoutDiary.ViewModels
             if (exerciseFromDb == null)
                 return;
 
-           // _ = LoadGymAsync();
-            //_ =LoadPartsAsync();
+
+
+            _ = LoadPartsAsync();
+
             exerciseFromDb = exerciseFromDb
                 .OrderBy(x => x.DateTime)
                 .ToList();
@@ -298,6 +303,10 @@ namespace WorkoutDiary.ViewModels
             }
 
             // 2. Filtr po siłowni TYLKO gdy SelectedPart = "Wszystko"
+            //if(!exerciseFromDb.Any())
+            //{
+            //    SettingsService.SelectedGym = "Wszystko";
+            //}
             var savedGym = SettingsService.SelectedGym;
 
             if (SelectedPart == null || SelectedPart == "Wszystko")
@@ -310,84 +319,18 @@ namespace WorkoutDiary.ViewModels
             }
 
 
-            PageTitle = savedGym == "Wszystko"
-             ? "Dziennik ćwiczeń"
-             : $"Dziennik ćwiczeń - {savedGym}";
+            PageTitle = savedGym == "Wszystko" ? "Dziennik ćwiczeń" : $"Dziennik ćwiczeń - {savedGym}";
 
             // Finalizacja
             BodyParts = new ObservableCollection<BodyParts>(query.ToList());
+
             OnPropertyChanged(nameof(BodyParts));
             OnPropertyChanged(nameof(HasNoData));
 
 
-            //if (_selectedPart == null || _selectedPart == "Wszystko")
-            //{
-            //    //standardowe ładowanie danych
-            //    var exerciseFromDb = await _database.GetInvoiceAsync();
-
-            //    if (exerciseFromDb == null)
-            //        return;
-
-            //    var filteredData = exerciseFromDb.Where(x => x.NumberWeek == DisplayNumberWeek).ToList(); // Dodano ToList()
-            //    BodyParts = new ObservableCollection<BodyParts>(filteredData);
-
-            //    OnPropertyChanged(nameof(BodyParts));
-
-
-            //}
-            //else
-            //{
-            //    var exerciseFromDb = await _database.GetInvoiceAsync();
-
-            //    if (exerciseFromDb == null)
-            //        return;
-            //    var filteredData = exerciseFromDb.Where(x => x.Part == SelectedPart).ToList(); // Dodano ToList()
-            //    BodyParts = new ObservableCollection<BodyParts>(filteredData);
-            //    OnPropertyChanged(nameof(BodyParts));
-            //    var filterLastWeight = exerciseFromDb.Where(x => x.Part == SelectedPart).Max(x => x.Weight);
-            //    _lastWeight = filterLastWeight;
-            //    OnPropertyChanged(nameof(LastWeight));
-            //}
-
-
         }
 
-        private void LoadNameGymPlace()
-        {
-           // var savedGym = SettingsService.SelectedGym;
 
-            if (Gym.Contains(_selectedGym))
-            {
-                SettingsService.SelectedGym = _selectedGym;
-
-
-            }
-            //else
-            //{
-            //    _selectedGym = "Wszystko";
-            //    SettingsService.SelectedGym = "Wszystko";
-            //}
-
-            //PageTitle = _selectedGym == "Wszystko"
-            //    ? "Dziennik ćwiczeń"
-            //    : $"Dziennik ćwiczeń - {_selectedGym}";
-
-
-            //var savedGym = Preferences.Get("_selectedGym", "Wszystko");
-
-            //// Jeśli zapisany element istnieje w liście — ustaw go
-            //if (Gym.Contains(savedGym))
-            //{
-            //    _selectedGym = savedGym;
-            //}
-            //else
-            //{
-            //    _selectedGym = "Wszystko";
-            //}
-            //PageTitle = _selectedGym == "Wszystko"
-            //? "Dziennik ćwiczeń" : $"Dziennik ćwiczeń - {_selectedGym}";
-
-        }
 
 
         public async Task LoadPartsAsync()
@@ -412,7 +355,7 @@ namespace WorkoutDiary.ViewModels
             catch (Exception ex)
             {
                 // opcjonalnie obsługa błędów
-                Console.WriteLine($"Błąd przy wczytywaniu części: {ex.Message}");
+                Console.WriteLine($"Błąd przy wczytywaniu danych: {ex.Message}");
             }
         }
 
@@ -433,8 +376,8 @@ namespace WorkoutDiary.ViewModels
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
                     Gym.Clear();
-                    foreach (var part in bodypartsDB)
-                        Gym.Add(part);
+                    foreach (var Name in bodypartsDB)
+                        Gym.Add(Name);
                 });
             }
             catch (Exception ex)

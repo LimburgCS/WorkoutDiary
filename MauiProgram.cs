@@ -43,8 +43,6 @@ namespace WorkoutDiary
             builder.Services.AddTransient<CardioPage>();
             builder.Services.AddTransient<SettingPage>();
             builder.Services.AddTransient<AppShellViewModel>();
-
-
             builder.Services.AddTransient<AddTrainingPlanViewModel>();
             builder.Services.AddTransient<TrainingPlanViewModel>();
             builder.Services.AddSingleton<TrainingPlanPage>();
