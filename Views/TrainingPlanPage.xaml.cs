@@ -8,29 +8,34 @@ using WorkoutDiary.ViewModels;
 
 namespace WorkoutDiary.Views
 {
-    public partial class TrainingPlanPage : ContentPage
+    public partial class TrainingPlanPage : ContentView
     {
 
         public TrainingPlanPage(TrainingPlanViewModel vm)
         {
             InitializeComponent();
             BindingContext = vm ;
-            OnAppearing();
-        }
-
-        protected override async void OnAppearing()
-        {
-            base.OnAppearing();
-
-            // Zakładamy, że ViewModel ma metodę odświeżania danych
-            if (BindingContext is TrainingPlanViewModel viewModel)
+            this.BindingContextChanged += (s, e) =>
             {
-               await viewModel.LoadTrainingPlans();
-            }
+                if (BindingContext != vm)
+                    BindingContext = vm;
+            };
+            //OnAppearing();
         }
-        private void ContentPage_NavigatedTo(object sender, NavigatedToEventArgs e)
-        {
-            TrainingPlanCollectionView.SelectedItem = null;
-        }
+
+        //protected override async void OnAppearing()
+        //{
+        //    base.OnAppearing();
+
+        //    // Zakładamy, że ViewModel ma metodę odświeżania danych
+        //    if (BindingContext is TrainingPlanViewModel viewModel)
+        //    {
+        //       await viewModel.LoadTrainingPlans();
+        //    }
+        //}
+        //private void ContentPage_NavigatedTo(object sender, NavigatedToEventArgs e)
+        //{
+        //    TrainingPlanCollectionView.SelectedItem = null;
+        //}
     }
 }

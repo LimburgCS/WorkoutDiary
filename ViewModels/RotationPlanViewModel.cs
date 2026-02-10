@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using WorkoutDiary.data;
 using WorkoutDiary.Model;
 using WorkoutDiary.Service;
+using WorkoutDiary.Views;
 
 namespace WorkoutDiary.ViewModels
 {
@@ -17,9 +18,6 @@ namespace WorkoutDiary.ViewModels
         [ObservableProperty]
         private ObservableCollection<TrainingDayView> lastTrainings;
 
-
-
-
         public RotationPlanViewModel(WorkoutRecommendationService recommendationService)
         {
             _recommendationService = recommendationService;
@@ -27,18 +25,21 @@ namespace WorkoutDiary.ViewModels
 
 
 
-        [RelayCommand]
-        public async Task LoadRecommendationAsync()
+        public async Task InitAsync()
         {
             var result = await _recommendationService.GetRecommendationAsync();
             RecommendedParts = new ObservableCollection<string>(result);
 
             var lastTwo = await _recommendationService.GetLastTwoTrainingDaysForDisplayAsync();
             LastTrainings = new ObservableCollection<TrainingDayView>(lastTwo);
-
-
         }
 
+
+        [RelayCommand]
+        public async Task ChangePlanView()
+        {
+            await Shell.Current.GoToAsync("/TrainingPlanPage");
+        }
 
     }
 }

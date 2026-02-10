@@ -19,6 +19,7 @@ namespace WorkoutDiary
             Routing.RegisterRoute(nameof(AddTrainingPlanPage), typeof(AddTrainingPlanPage));
             Routing.RegisterRoute(nameof(SettingPage), typeof(SettingPage));
             Routing.RegisterRoute(nameof(RotationPlanPage), typeof(RotationPlanPage));
+            Routing.RegisterRoute(nameof(TrainingPlanHostPage), typeof(TrainingPlanHostPage));
             BindingContext = new AppShellViewModel();
             
             //var itemToRemove = this.Items.FirstOrDefault(i => i.Title == "Statystyka-cardio"); // niewidoczny flylayout

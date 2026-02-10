@@ -45,13 +45,16 @@ namespace WorkoutDiary
             builder.Services.AddTransient<AppShellViewModel>();
             builder.Services.AddTransient<AddTrainingPlanViewModel>();
             builder.Services.AddTransient<TrainingPlanViewModel>();
-            builder.Services.AddSingleton<TrainingPlanPage>();
+            builder.Services.AddTransient<TrainingPlanPage>();
             builder.Services.AddTransient<AddTrainingPlanPage>();
 
             builder.Services.AddSingleton<WorkoutRuleEngine>();
             builder.Services.AddSingleton<WorkoutRecommendationService>();
             builder.Services.AddTransient<RotationPlanViewModel>();
             builder.Services.AddTransient<RotationPlanPage>();
+            builder.Services.AddTransient<TrainingPlanHostViewModel>();
+            builder.Services.AddTransient<TrainingPlanHostPage>();
+
 
 
 

@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="WorkoutDiary.Views.TrainingPlanHostPage" Title="{Binding CurrentTitle}" Shell.TitleColor="Black" BackgroundColor="#E5E5E5">
+
+    <!--<ContentPage.ToolbarItems>
+        <ToolbarItem Text="Add"
+                 Command="{Binding NewTrainingPlanAddedCommand}" IsEnabled="{Binding IsDisplayButton}"
+                 IconImageSource="{FontImage Glyph='+', Color=Black, Size=22}">
+            
+        </ToolbarItem>
+    </ContentPage.ToolbarItems>-->
+
+
+    <Grid RowDefinitions="auto, *">
+        <!--<HorizontalStackLayout Grid.Row="0" Background="White" Padding="5">
+            <Label Text="{Binding CurrentTitle}" FontSize="20"
+                   FontAttributes="Bold" TextColor="Black"
+                   HorizontalOptions="Start" VerticalOptions="Center"/>
+            <Button Command="{Binding NewPlan}" BorderColor="black" Text="+" MinimumHeightRequest="30" MinimumWidthRequest="30"
+                    FontSize="15" HorizontalOptions="End"  VerticalOptions="Center"  Padding="0" BorderWidth="1" Margin="20" IsVisible="{Binding IsDisplayButton}"
+                    TextColor="Black" Background="White" />
+        </HorizontalStackLayout>-->
+        <ContentView Grid.Row="0" Content="{Binding CurrentView}" />
+
+
+
+        <VerticalStackLayout Grid.Row="1" HorizontalOptions="End" VerticalOptions="End">
+            <Button x:Name="ButtonAddPlan" 
+            Command="{Binding NewTrainingPlanAddedCommand}" BorderColor="black" Text="Dodaj plan" LineBreakMode="CharacterWrap" MinimumHeightRequest="50"
+            FontSize="10" HorizontalOptions="End" WidthRequest="60" Padding="0" BorderWidth="1" Margin="0,0,20,10" IsVisible="{Binding IsDisplayButton}"
+            TextColor="Black" Background="White" />
+            
+            <Button 
+            Command="{Binding ToggleViewCommand}" BorderColor="black" Text="{Binding TextButtonChngePlan}" LineBreakMode="CharacterWrap" MinimumHeightRequest="50"
+                    FontSize="10" HorizontalOptions="End" WidthRequest="60" Padding="0" BorderWidth="1" Margin="0,0,20,20"
+                    TextColor="Black" Background="White" />
+        </VerticalStackLayout>
+    </Grid>
+    
+</ContentPage>
+

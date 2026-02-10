@@ -1,12 +1,6 @@
-﻿using CommunityToolkit.Mvvm.Input;
-using System;
-using System.Collections.Generic;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using WorkoutDiary.data;
 using WorkoutDiary.Model;
@@ -14,75 +8,77 @@ using WorkoutDiary.Views;
 
 namespace WorkoutDiary.ViewModels
 {
-    public class TrainingPlanViewModel : INotifyPropertyChanged
+    public partial class TrainingPlanViewModel : ObservableObject
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-        public TrainingPlanDataBase _database;
-        private ObservableCollection<TrainingPlan> _trainingPlan;
-        public ObservableCollection<TrainingPlan> TrainingPlan
-        {
-            get => _trainingPlan;
-            set
-            {
-                _trainingPlan = value;
-                OnPropertyChanged(nameof(TrainingPlan));
+        private readonly TrainingPlanDataBase _database;
 
-            }
-        }
-        public ICommand NewPlan { get; }
-        public ICommand Delete { get; }
+        [ObservableProperty]
+        private ObservableCollection<TrainingPlan> trainingPlan = new();
+
+
         public ICommand SelectPlan { get; }
+        public ICommand Delete { get; }
         public TrainingPlanViewModel(TrainingPlanDataBase database)
         {
             _database = database;
-            TrainingPlan = new ObservableCollection<TrainingPlan>();
             SelectPlan = new Command<TrainingPlan>(async (TrainingPlan) => await SelectPlanAsync(TrainingPlan));
-            Delete = new Command<TrainingPlan>(async (TrainingPlan) => await DeletePlan(TrainingPlan));
-            NewPlan = new AsyncRelayCommand(NewPlanAsync);
-            _ = LoadTrainingPlans();
+            Delete = new Command<TrainingPlan>(async (TrainingPlan) => await DeletePlanAsync(TrainingPlan));
+            _ = LoadTrainingPlansAsync();
         }
 
-        private async Task SelectPlanAsync(TrainingPlan TrainingPlan)
+
+        [RelayCommand]
+        public async Task LoadTrainingPlansAsync()
         {
-            if (TrainingPlan != null)
-            {
-                // Użyj identyfikatora lub innego klucza zamiast całego obiektu
-                await Shell.Current.GoToAsync($"{nameof(AddTrainingPlanPage)}?planId={TrainingPlan.Id}");
-            }
+            var plans = await _database.GetTrainingAsync();
+
+            if (plans is null)
+                return;
+
+            TrainingPlan = new ObservableCollection<TrainingPlan>(plans);
+
+
+
         }
+
+
+        private async Task SelectPlanAsync(TrainingPlan plan)
+        {
+            if (plan is null)
+                return;
+
+            await Shell.Current.GoToAsync($"{nameof(AddTrainingPlanPage)}?planId={plan.Id}");
+            // opcjonalnie: wyczyść zaznaczenie po kliknięciu
+            // TrainingPlanCollectionView.SelectedItem = null; ← to już w code-behind, jeśli chcesz
+        }
+
+
+
+        [RelayCommand]
         private async Task NewPlanAsync()
         {
             await Shell.Current.GoToAsync(nameof(AddTrainingPlanPage));
         }
 
-        public async Task LoadTrainingPlans()
-        {
-            var plans = await _database.GetTrainingAsync();
 
-            if (plans == null)
+        private async Task DeletePlanAsync(TrainingPlan plan)
+        {
+            if (plan is null)
                 return;
 
-
-            TrainingPlan = new ObservableCollection<TrainingPlan>(plans);
-
-        }
-
-        private async Task DeletePlan(TrainingPlan plans)
-        {
-            bool confirm = await Application.Current.MainPage.DisplayAlert("Potwierdzenie", "Czy na pewno chcesz usunąć plan?", "Tak", "Nie");
+            bool confirm = await Application.Current.MainPage.DisplayAlert(
+                "Potwierdzenie",
+                "Czy na pewno chcesz usunąć plan?",
+                "Tak",
+                "Nie");
 
             if (confirm)
             {
-                await _database.DeletePlanAsync(plans);
-                TrainingPlan.Remove(plans);
-                //await _supabase.From<ShopList>().Where(x => x.Id == shopList.Id).Delete();
+                await _database.DeletePlanAsync(plan);
+                TrainingPlan.Remove(plan);
             }
-            _ = LoadTrainingPlans();
 
-        }
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            await LoadTrainingPlansAsync();
         }
     }
 }

@@ -181,16 +181,16 @@ namespace WorkoutDiary.ViewModels
                 {
                     _ = loadExercise();
                 }
-                if (e.PropertyName == nameof(BodyParts))
-                {
-                    _ = LoadGymAsync();
-                }
+                //if (e.PropertyName == nameof(BodyParts))
+                //{
+                //    _ = LoadGymAsync(); problem po wyborze silowni, powtarzaa sie wybor selecttedGym
+                //}
             };
 
             LoadDisplayNumberWeek();
             _ = loadExercise();
 
-
+            _ = LoadGymAsync();
             RefreshData();
         }
 
