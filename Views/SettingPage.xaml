@@ -13,6 +13,7 @@
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -59,6 +60,16 @@
                         BorderColor="{DynamicResource PrimaryColor}" BorderWidth="1" TextColor="{DynamicResource PrimaryColor}"/>
                     </VerticalStackLayout>
                 </Border>
+                <HorizontalStackLayout Grid.Row="5" HorizontalOptions="Center" Spacing="10">
+                    <Button  Text="Export danych" Padding="15"
+                        Background="Transparent" VerticalOptions="End"
+                        Command="{Binding Export}"
+                        BorderColor="{DynamicResource PrimaryColor}" BorderWidth="1" TextColor="{DynamicResource PrimaryColor}"/>
+                    <Button  Text="Import danych" Padding="15"
+                        Background="Transparent" VerticalOptions="End"
+                        Command="{Binding Import}"
+                        BorderColor="{DynamicResource PrimaryColor}" BorderWidth="1" TextColor="{DynamicResource PrimaryColor}"/>
+                </HorizontalStackLayout>
             </Grid>
         </StackLayout>
     </ContentPage.Content>

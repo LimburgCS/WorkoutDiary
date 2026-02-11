@@ -59,6 +59,7 @@ namespace WorkoutDiary.ViewModels
                 _ = vm2.LoadTrainingPlansAsync();
 
 
+
             
         }
 
@@ -84,11 +85,7 @@ namespace WorkoutDiary.ViewModels
             }
         }
 
-        [RelayCommand]
-        public async Task NewTrainingPlanAdded()
-        {
-            await Shell.Current.GoToAsync(nameof(AddTrainingPlanPage));
-        }
+
     }
 
 

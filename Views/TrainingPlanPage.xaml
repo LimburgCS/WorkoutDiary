@@ -10,9 +10,9 @@
 
 
 
-    <Grid RowDefinitions="auto,*,auto">
+    <Grid RowDefinitions="auto">
 
-        <ScrollView Margin="5" Grid.Row="1" VerticalOptions="Start">
+        <ScrollView Margin="5" Grid.Row="0" VerticalOptions="Start">
 
             <StackLayout>
 
@@ -179,6 +179,12 @@
 
             </StackLayout>
         </ScrollView>
+        <VerticalStackLayout Grid.Row="0" HorizontalOptions="Center" VerticalOptions="Center">
+            <Button
+            Command="{Binding NewTrainingPlanAddedCommand}" Opacity="0.5" Text="kliknij, aby dodać tygodniowy plan treningowy" LineBreakMode="CharacterWrap"
+            FontSize="20" HorizontalOptions="Center" Padding="50" BorderWidth="1" Margin="20" IsVisible="{Binding IsDisplayButton}"
+            TextColor="Black" Background="White" />
+        </VerticalStackLayout>
     </Grid>
 
 </ContentView>

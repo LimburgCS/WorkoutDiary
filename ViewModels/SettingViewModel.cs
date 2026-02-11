@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using WorkoutDiary.data;
@@ -67,6 +68,8 @@ namespace WorkoutDiary.ViewModels
         public ICommand DeleteExerciseCardio { get; }
         public ICommand DeleteGymCommand { get; }
         public ICommand DeletePartCommand { get; }
+        public ICommand Export  { get; }
+        public ICommand Import { get; }
         public SettingViewModel()
         {
             _database = new TodoItemDatabase();
@@ -76,6 +79,8 @@ namespace WorkoutDiary.ViewModels
             DeleteExerciseCardio = new AsyncRelayCommand(DeleteCardioAsync);
             DeleteGymCommand = new Command<BodyParts>(async (BodyParts) => await DeleteNameGym(BodyParts));
             DeletePartCommand = new Command<BodyParts>(async (BodyParts) => await DeleteNamePart(BodyParts));
+            Export = new AsyncRelayCommand(ExportDataBaseAsync);
+            Import = new AsyncRelayCommand(ImportDataBaseAsync);
             _ = LoadGymAsync();
         }
 
@@ -172,6 +177,81 @@ namespace WorkoutDiary.ViewModels
                 SelectNamePart = null;
             }
         }
+
+        public async Task ExportDataBaseAsync()
+        {
+            try
+            {
+                var data = await _database.GetInvoiceAsync();
+
+                var json = JsonSerializer.Serialize(data, new JsonSerializerOptions
+                {
+                    WriteIndented = true
+                });
+
+                var fileName = $"backup_{DateTime.Now:yyyyMMdd_HHmmss}.json";
+                var filePath = Path.Combine(FileSystem.AppDataDirectory, fileName);
+
+                File.WriteAllText(filePath, json);
+
+                await Share.Default.RequestAsync(new ShareFileRequest
+                {
+                    Title = "Eksport danych",
+                    File = new ShareFile(filePath)
+                });
+            }
+            catch (Exception ex)
+            {
+                await Shell.Current.DisplayAlert("Błąd", $"Nie udało się wyeksportować danych: {ex.Message}", "OK");
+            }
+        }
+
+        public async Task ImportDataBaseAsync()
+        {
+            try
+            {
+                var customJsonType = new FilePickerFileType(
+                    new Dictionary<DevicePlatform, IEnumerable<string>>
+                    {
+                { DevicePlatform.Android, new[] { "application/json" } },
+                { DevicePlatform.iOS, new[] { "public.json" } },
+                { DevicePlatform.WinUI, new[] { ".json" } },
+                { DevicePlatform.MacCatalyst, new[] { "public.json" } }
+                    });
+
+                var result = await FilePicker.Default.PickAsync(new PickOptions
+                {
+                    PickerTitle = "Wybierz plik z danymi",
+                    FileTypes = customJsonType
+                });
+
+                if (result == null)
+                    return;
+
+                var json = File.ReadAllText(result.FullPath);
+                var importedData = JsonSerializer.Deserialize<List<BodyParts>>(json);
+
+                if (importedData == null || importedData.Count == 0)
+                {
+                    await Shell.Current.DisplayAlert("Błąd", "Plik nie zawiera danych.", "OK");
+                    return;
+                }
+
+                foreach (var item in importedData)
+                {
+                    item.Id = 0; // jeśli masz AutoIncrement
+                    await _database.SaveInvoiceAsync(item);
+                }
+
+                await Shell.Current.DisplayAlert("Sukces", "Dane zostały zaimportowane.", "OK");
+            }
+            catch (Exception ex)
+            {
+                await Shell.Current.DisplayAlert("Błąd", $"Nie udało się zaimportować danych: {ex.Message}", "OK");
+            }
+        }
+
+
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

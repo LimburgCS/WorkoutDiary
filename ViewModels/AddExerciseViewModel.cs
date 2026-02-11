@@ -23,6 +23,7 @@ namespace WorkoutDiary.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         public ObservableCollection<string> TitleGym { get; set; } = new();
+        private List<string> _allParts;
         public TodoItemDatabase _database;
         private BodyParts _bodyPart;
         private string _pageTitle;
@@ -70,8 +71,10 @@ namespace WorkoutDiary.ViewModels
             {
                 _part = value;
                 OnPropertyChanged(nameof(Part));
+                ValidatePart(value);
             }
         }
+
 
         public string Comment
         {
@@ -173,6 +176,22 @@ namespace WorkoutDiary.ViewModels
                 OnPropertyChanged(nameof(DatetimeEntry));
             }
         }
+
+        private bool _isPartDuplicate;
+        public bool IsPartDuplicate
+        {
+            get => _isPartDuplicate;
+            set
+            {
+                if (_isPartDuplicate != value)
+                {
+                    _isPartDuplicate = value;
+                    OnPropertyChanged(nameof(IsPartDuplicate));
+                }
+            }
+        }
+
+
         public ICommand SaveCommand { get; }
         public ICommand ButtonInfo { get; }
 
@@ -184,12 +203,23 @@ namespace WorkoutDiary.ViewModels
             DatetimeEntry = DateTime.Today;
             LoadNumberWeek();
             _ = LoadNameGymPlace();
-            
+            LoadPartsAsync();
         }
 
         private async Task ButtonInfoCommand()
         {
             await Application.Current.MainPage.DisplayAlert("Informacja", "Dodane ćwiczenia są zapisywane, a przy kolejnym trenigu należy wybrać ćwiczenie z listy. Dzięki temu progress danej partii można sprawdzić w oknie 'statystyka' ", "Ok!");
+        }
+
+        private async void LoadPartsAsync()
+        {
+            var db = await _database.GetInvoiceAsync();
+
+            _allParts = db
+                .Select(x => x.Part)
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
         }
 
 
@@ -236,17 +266,21 @@ namespace WorkoutDiary.ViewModels
                 //int reduceNumberWeek = (datePickerNumberWeek - FirstNumberWeek) + 1;
                 //DatePickerNumberWeek = reduceNumberWeek;
 
-                var first = db.FirstOrDefault().DateTime.Date;
+                var first = db.First().DateTime.Date;
                 var now = date.Date;
 
-                //// Różnica dni
-                var difference = (now - first).TotalDays;
+                // znajdź poniedziałek tygodnia startowego
+                var startWeekMonday = first.AddDays(-(int)first.DayOfWeek + (int)DayOfWeek.Monday);
 
-                //// Ile pełnych tygodni minęło
-                int weekNumber = (int)(difference / 7d) + 1;
+                // znajdź poniedziałek tygodnia aktualnej daty
+                var nowWeekMonday = now.AddDays(-(int)now.DayOfWeek + (int)DayOfWeek.Monday);
+
+                // różnica tygodni (ciągła, bez resetu w nowym roku)
+                int weekNumber = ((nowWeekMonday - startWeekMonday).Days / 7) + 1;
 
                 DatePickerNumberWeek = weekNumber;
-               
+
+
             }
             else
             {
@@ -474,6 +508,22 @@ namespace WorkoutDiary.ViewModels
             PageTitle = $" {savedGym}";
 
         }
+
+        private void ValidatePart(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                IsPartDuplicate = false;
+                return;
+            }
+
+            IsPartDuplicate = _allParts
+                .Any(x => x.Equals(value, StringComparison.OrdinalIgnoreCase));
+        }
+
+
+
+
         public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
             if (query.ContainsKey("exerciseId") && int.TryParse(query["exerciseId"].ToString(), out int exerciseId))

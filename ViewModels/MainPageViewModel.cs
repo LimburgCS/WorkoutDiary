@@ -189,7 +189,7 @@ namespace WorkoutDiary.ViewModels
 
             LoadDisplayNumberWeek();
             _ = loadExercise();
-
+            _ = LoadPartsAsync();
             _ = LoadGymAsync();
             RefreshData();
         }
@@ -266,24 +266,16 @@ namespace WorkoutDiary.ViewModels
 
 
 
-            _ = LoadPartsAsync();
+
 
             exerciseFromDb = exerciseFromDb
                 .OrderBy(x => x.DateTime)
                 .ToList();
 
-            // Ustawianie separatorów
-            for (int i = 0; i < exerciseFromDb.Count; i++)
-            {
-                if (i == 0)
-                    exerciseFromDb[i].ShowSeparator = true;
-                else
-                    exerciseFromDb[i].ShowSeparator =
-                        exerciseFromDb[i].DateTime.Date != exerciseFromDb[i - 1].DateTime.Date;
-            }
 
 
 
+ 
             // Startujemy od pełnej listy
             var query = exerciseFromDb.AsQueryable();
 
@@ -315,9 +307,17 @@ namespace WorkoutDiary.ViewModels
                 {
                     query = query.Where(x => x.NameGym == savedGym &&
                                              x.NumberWeek == DisplayNumberWeek);
-                }
+                 }
             }
-
+            var filtered = query.ToList();
+            for (int i = 0; i < filtered.Count; i++)
+            {
+                if (i == 0)
+                    filtered[i].ShowSeparator = true;
+                else
+                    filtered[i].ShowSeparator =
+                        filtered[i].DateTime.Date != filtered[i - 1].DateTime.Date;
+            }
 
             PageTitle = savedGym == "Wszystko" ? "Dziennik ćwiczeń" : $"Dziennik ćwiczeń - {savedGym}";
 

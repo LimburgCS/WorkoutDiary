@@ -18,16 +18,16 @@ namespace WorkoutDiary.Views
             bodyParts = new ObservableCollection<BodyParts>();
             OnAppearing();
         }
-        protected override async void OnAppearing()
+        protected override  void OnAppearing()
         {
             base.OnAppearing();
 
 
             if (BindingContext is MainPageViewModel viewModel)
             {
-                await viewModel.loadExercise();
-                //await viewModel.LoadPartsAsync();
-                //await viewModel.LoadGymAsync();
+                _ = viewModel.loadExercise();
+                _ = viewModel.LoadGymAsync();
+                _ = viewModel.LoadPartsAsync();
             }
         }
         //private async void LoadPart()

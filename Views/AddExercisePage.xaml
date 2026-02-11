@@ -28,6 +28,7 @@
                         TextColor="{DynamicResource PrimaryColor}"/>
 
             </Grid>
+
             <Border Grid.Row="1" Margin="0" StrokeShape="RoundRectangle 5" StrokeThickness="2" Stroke="Transparent">
 
 
@@ -62,7 +63,14 @@
                        PlaceholderColor="Gray"
                          Text="{Binding Part}" TextColor="{DynamicResource PrimaryColor}"
                          HeightRequest="40" />
-                <Label Grid.Row="2" Grid.ColumnSpan="2" Text="LUB" TextColor="{DynamicResource PrimaryColor}" HorizontalOptions="Center" FontSize="15"/>
+                
+                    <Frame
+                        BackgroundColor="#FFEEEE" BorderColor="Red" Padding="8" CornerRadius="6" IsVisible="{Binding IsPartDuplicate}">
+
+                        <Label Text="Taka partia już istnieje!" TextColor="Red" FontAttributes="Bold" />
+                    </Frame>
+                    <Label Grid.Row="2" Grid.ColumnSpan="2" Text="LUB" TextColor="{DynamicResource PrimaryColor}" HorizontalOptions="Center" FontSize="15"/>
+                
                 <Picker x:Name="namePicker" BackgroundColor="{DynamicResource PageBackgroundColor}" Margin="0,0,0,0"
                         Grid.Row="3" Grid.ColumnSpan="2" 
                         Title="Wybierz ćwiczenie z listy"

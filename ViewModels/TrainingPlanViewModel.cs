@@ -15,7 +15,8 @@ namespace WorkoutDiary.ViewModels
         [ObservableProperty]
         private ObservableCollection<TrainingPlan> trainingPlan = new();
 
-
+        [ObservableProperty]
+        private bool isDisplayButton;
         public ICommand SelectPlan { get; }
         public ICommand Delete { get; }
         public TrainingPlanViewModel(TrainingPlanDataBase database)
@@ -24,6 +25,7 @@ namespace WorkoutDiary.ViewModels
             SelectPlan = new Command<TrainingPlan>(async (TrainingPlan) => await SelectPlanAsync(TrainingPlan));
             Delete = new Command<TrainingPlan>(async (TrainingPlan) => await DeletePlanAsync(TrainingPlan));
             _ = LoadTrainingPlansAsync();
+            
         }
 
 
@@ -35,6 +37,7 @@ namespace WorkoutDiary.ViewModels
             if (plans is null)
                 return;
 
+            IsDisplayButton = !plans.Any();
             TrainingPlan = new ObservableCollection<TrainingPlan>(plans);
 
 
@@ -60,7 +63,11 @@ namespace WorkoutDiary.ViewModels
             await Shell.Current.GoToAsync(nameof(AddTrainingPlanPage));
         }
 
-
+        [RelayCommand]
+        public async Task NewTrainingPlanAdded()
+        {
+            await Shell.Current.GoToAsync(nameof(AddTrainingPlanPage));
+        }
         private async Task DeletePlanAsync(TrainingPlan plan)
         {
             if (plan is null)
