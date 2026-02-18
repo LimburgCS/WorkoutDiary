@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using WorkoutDiary.data;
 using WorkoutDiary.Model;
+using WorkoutDiary.Service;
 using WorkoutDiary.Views;
 
 namespace WorkoutDiary.ViewModels
@@ -11,6 +12,11 @@ namespace WorkoutDiary.ViewModels
     public partial class TrainingPlanViewModel : ObservableObject
     {
         private readonly TrainingPlanDataBase _database;
+        private int _selectedReadyPlanId;
+
+        public List<ReadyTrainingPlan> Plans { get; set; }
+        
+
 
         [ObservableProperty]
         private ObservableCollection<TrainingPlan> trainingPlan = new();
@@ -18,31 +24,53 @@ namespace WorkoutDiary.ViewModels
         [ObservableProperty]
         private bool isDisplayButton;
         public ICommand SelectPlan { get; }
+        public ICommand SelectReadyPlan { get; }
         public ICommand Delete { get; }
         public TrainingPlanViewModel(TrainingPlanDataBase database)
         {
             _database = database;
             SelectPlan = new Command<TrainingPlan>(async (TrainingPlan) => await SelectPlanAsync(TrainingPlan));
+            SelectReadyPlan = new Command<ReadyTrainingPlan>(async plan => await SelectTrainingAsync(plan));
             Delete = new Command<TrainingPlan>(async (TrainingPlan) => await DeletePlanAsync(TrainingPlan));
+            Plans = ReadyTrainingPlan.DefaultPlans;
+
             _ = LoadTrainingPlansAsync();
-            
         }
 
 
         [RelayCommand]
         public async Task LoadTrainingPlansAsync()
         {
-            var plans = await _database.GetTrainingAsync();
+            var plan = await _database.GetTrainingIDAsync(SettingsService.SelectPlan);
 
-            if (plans is null)
+            if (plan is null)
+            {
+                IsDisplayButton = true;
                 return;
+            }
 
-            IsDisplayButton = !plans.Any();
-            TrainingPlan = new ObservableCollection<TrainingPlan>(plans);
+            IsDisplayButton = false;
 
+            TrainingPlan = new ObservableCollection<TrainingPlan>
+            {
+                 plan
+            };
 
 
         }
+
+
+        private async Task SelectTrainingAsync(ReadyTrainingPlan selectedReadyPlan)
+        {
+            SettingsService.SelectPlan = selectedReadyPlan.Id;
+
+            await Shell.Current.GoToAsync(
+                $"{nameof(AddTrainingPlanPage)}?planId={selectedReadyPlan.Id}");
+
+        }
+
+
+
 
 
         private async Task SelectPlanAsync(TrainingPlan plan)
@@ -50,10 +78,16 @@ namespace WorkoutDiary.ViewModels
             if (plan is null)
                 return;
 
-            await Shell.Current.GoToAsync($"{nameof(AddTrainingPlanPage)}?planId={plan.Id}");
-            // opcjonalnie: wyczyść zaznaczenie po kliknięciu
-            // TrainingPlanCollectionView.SelectedItem = null; ← to już w code-behind, jeśli chcesz
+            // jeśli wcześniej wybrano gotowy plan → użyj jego ID
+            int idToUse = SettingsService.SelectPlan != 0 ? SettingsService.SelectPlan : plan.Id;
+
+            await Shell.Current.GoToAsync($"{nameof(AddTrainingPlanPage)}?planId={idToUse}");
         }
+
+
+
+
+
 
 
 
@@ -68,6 +102,9 @@ namespace WorkoutDiary.ViewModels
         {
             await Shell.Current.GoToAsync(nameof(AddTrainingPlanPage));
         }
+
+
+
         private async Task DeletePlanAsync(TrainingPlan plan)
         {
             if (plan is null)

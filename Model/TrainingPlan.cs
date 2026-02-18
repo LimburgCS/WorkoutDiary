@@ -11,7 +11,7 @@ namespace WorkoutDiary.Model
 {
     public class TrainingPlan
     {
-        [PrimaryKey]
+        [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
         public string MondayParts { get; set; }
         public string TuesdayParts { get; set; }
