@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using WorkoutDiary.data;
 using WorkoutDiary.Model;
+using WorkoutDiary.Service;
 
 namespace WorkoutDiary.ViewModels
 {
@@ -126,12 +127,13 @@ namespace WorkoutDiary.ViewModels
         }
         private async Task DeletePartsAsync()
         {
-            bool confirm = await Application.Current.MainPage.DisplayAlert("Potwierdzenie", "Czy na pewno chcesz usunąć wszystkie dane ćwiczeń siłowych?", "Tak", "Nie");
+            bool confirm = await Application.Current.MainPage.DisplayAlert("Potwierdzenie", "Czy na pewno chcesz usunąć wszystkie dane?", "Tak", "Nie");
 
             if (confirm)
             {
                 await _database.DeleteInvoiceAllAsync();
                 BodyParts.Clear();
+                SettingsService.SelectedGym = "Wszystko";
             }
         }
         private async Task DeleteCardioAsync()
