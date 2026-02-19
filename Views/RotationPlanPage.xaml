@@ -9,7 +9,7 @@
 
         <VerticalStackLayout Grid.Row="0" Padding="20" Spacing="20">
             <!-- REKOMENDOWANE PARTIE -->
-            <Label Text="Kolejne sugerowane ćwiczenia:" 
+            <Label Text="Kolejne sugerowane ćwiczenia:" TextColor="{DynamicResource PrimaryColor}"
                    FontSize="20" 
                    FontAttributes="Bold"/>
 
@@ -19,7 +19,7 @@
                         <Frame Padding="10" Margin="0,5"
                                BorderColor="White"
                                CornerRadius="8">
-                            <Label Text="{Binding}" FontSize="18"/>
+                            <Label Text="{Binding}" FontSize="18" TextColor="{DynamicResource PrimaryColor}"/>
                         </Frame>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
@@ -27,7 +27,7 @@
 
             <!-- OSTATNIE 2 DNI TRENINGOWE -->
             <Label Text="Ostatnie dwa dni treningowe:" 
-                   FontSize="20" 
+                   FontSize="20"  TextColor="{DynamicResource PrimaryColor}"
                    FontAttributes="Bold"
                    Margin="0,0,0,0"/>
 
@@ -39,7 +39,7 @@
                             <VerticalStackLayout Spacing="5">
 
                                 <!-- DATA -->
-                                <Label Text="{Binding Date, StringFormat='{0:dddd, dd MMM}'}"
+                                <Label Text="{Binding Date, StringFormat='{0:dddd, dd MMM}'}" TextColor="{DynamicResource PrimaryColor}"
                            FontAttributes="Bold"
                            FontSize="18"/>
 
@@ -47,7 +47,7 @@
                                 <CollectionView ItemsSource="{Binding FullParts}">
                                     <CollectionView.ItemTemplate>
                                         <DataTemplate>
-                                            <Label Text="{Binding}" FontSize="14"/>
+                                            <Label Text="{Binding}" FontSize="14" TextColor="{DynamicResource PrimaryColor}"/>
                                         </DataTemplate>
                                     </CollectionView.ItemTemplate>
                                 </CollectionView>

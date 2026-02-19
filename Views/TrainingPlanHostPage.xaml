@@ -17,8 +17,8 @@
 
             <Button 
             Command="{Binding ToggleViewCommand}" BorderColor="black" Text="{Binding TextButtonChngePlan}" LineBreakMode="CharacterWrap" MinimumHeightRequest="50"
-                    FontSize="10" HorizontalOptions="End" WidthRequest="60" Padding="0" BorderWidth="1" Margin="0,0,20,20"
-                    TextColor="Black" Background="White" />
+                    FontSize="10" HorizontalOptions="End" WidthRequest="60" Padding="0" BorderWidth="1" Margin="0,0,20,20" 
+                    TextColor="{DynamicResource PrimaryColor}" Background="White" />
         </VerticalStackLayout>
     </Grid>
     

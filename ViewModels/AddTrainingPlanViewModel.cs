@@ -121,7 +121,7 @@ namespace WorkoutDiary.ViewModels
                 // Tworzymy nowy plan
                 var newPlan = new TrainingPlan
                 {
-                    
+
                     MondayParts = MondayParts,
                     TuesdayParts = TuesdayParts,
                     WednesdayParts = WednesdayParts,
@@ -130,6 +130,7 @@ namespace WorkoutDiary.ViewModels
                     SaturdayParts = SaturdayParts,
                     SundayParts = SundayParts
                 };
+
 
                 await _database.SaveTrainingAsync(newPlan);
 
@@ -173,19 +174,21 @@ namespace WorkoutDiary.ViewModels
                 return;
 
             // Generujemy tygodniowy plan
-            GenerateWeeklyPlan(plan);
+            //GenerateWeeklyPlan(plan);
 
-            // Tworzysz nowy plan w bazie
+            var map = DayMapping[plan.DaysPerWeek];
+
             var newPlan = new TrainingPlan
             {
-                MondayParts = MondayParts,
-                TuesdayParts = TuesdayParts,
-                WednesdayParts = WednesdayParts,
-                ThursdayParts = ThursdayParts,
-                FridayParts = FridayParts,
-                SaturdayParts = SaturdayParts,
-                SundayParts = SundayParts
+                MondayParts = map.Contains(0) ? ConvertDayToString(plan.WeeklySplit[Array.IndexOf(map, 0)]) : "",
+                TuesdayParts = map.Contains(1) ? ConvertDayToString(plan.WeeklySplit[Array.IndexOf(map, 1)]) : "",
+                WednesdayParts = map.Contains(2) ? ConvertDayToString(plan.WeeklySplit[Array.IndexOf(map, 2)]) : "",
+                ThursdayParts = map.Contains(3) ? ConvertDayToString(plan.WeeklySplit[Array.IndexOf(map, 3)]) : "",
+                FridayParts = map.Contains(4) ? ConvertDayToString(plan.WeeklySplit[Array.IndexOf(map, 4)]) : "",
+                SaturdayParts = map.Contains(5) ? ConvertDayToString(plan.WeeklySplit[Array.IndexOf(map, 5)]) : "",
+                SundayParts = ""
             };
+
 
             await _database.SaveTrainingAsync(newPlan);
 
@@ -194,8 +197,42 @@ namespace WorkoutDiary.ViewModels
 
             // Ustawiasz _trainingPlan, żeby Save() wiedziało, że to edycja
             _trainingPlan = newPlan;
-
         }
+
+        private string ConvertDayToString(TrainingDay day)
+        {
+            var lines = new List<string>();
+
+            foreach (var part in day.Parts)
+            {
+                lines.Add($"{part.Part.ToUpper()}: {string.Join(", ", part.Exercises)}");
+            }
+
+            return string.Join("\n", lines);
+        }
+
+        private void GenerateWeeklyPlan(ReadyTrainingPlan plan)
+        {
+            if (plan == null)
+                return;
+
+            MondayParts = plan.DaysPerWeek > 0 ? ConvertDayToString(plan.WeeklySplit[0]) : "";
+            TuesdayParts = plan.DaysPerWeek > 1 ? ConvertDayToString(plan.WeeklySplit[1]) : "";
+            WednesdayParts = plan.DaysPerWeek > 2 ? ConvertDayToString(plan.WeeklySplit[2]) : "";
+            ThursdayParts = plan.DaysPerWeek > 3 ? ConvertDayToString(plan.WeeklySplit[3]) : "";
+            FridayParts = plan.DaysPerWeek > 4 ? ConvertDayToString(plan.WeeklySplit[4]) : "";
+            SaturdayParts = plan.DaysPerWeek > 5 ? ConvertDayToString(plan.WeeklySplit[5]) : "";
+            SundayParts = "";
+        }
+
+        private static readonly Dictionary<int, int[]> DayMapping = new()
+{
+    { 2, new[] { 0, 3 } },             // Poniedziałek, Czwartek
+    { 3, new[] { 0, 2, 4 } },          // Poniedziałek, Środa, Piątek
+    { 4, new[] { 0, 1, 3, 4 } },       // Pon, Wt, Czw, Pt
+    { 5, new[] { 0, 1, 2, 3, 4 } },    // Pon–Pt
+    { 6, new[] { 0, 1, 2, 3, 4, 5 } }  // Pon–Sob
+};
         //public async Task LoadTrainingPlan(int planId)
         //{
         //    _trainingPlan = await _database.GetTrainingIDAsync(planId);
@@ -220,43 +257,6 @@ namespace WorkoutDiary.ViewModels
         //    }
         //}
 
-        private void GenerateWeeklyPlan(ReadyTrainingPlan plan)
-        {
-            if (plan == null)
-                return;
-
-            var week = new[]
-            {
-        nameof(MondayParts),
-        nameof(TuesdayParts),
-        nameof(WednesdayParts),
-        nameof(ThursdayParts),
-        nameof(FridayParts),
-        nameof(SaturdayParts),
-        nameof(SundayParts)
-    };
-
-            // Reset
-            MondayParts = TuesdayParts = WednesdayParts = "";
-            ThursdayParts = FridayParts = SaturdayParts = SundayParts = "";
-
-            for (int i = 0; i < plan.DaysPerWeek; i++)
-            {
-                var parts = string.Join(", ", plan.WeeklySplit[i]);
-                var day = week[i];
-
-                switch (day)
-                {
-                    case nameof(MondayParts): MondayParts = parts; break;
-                    case nameof(TuesdayParts): TuesdayParts = parts; break;
-                    case nameof(WednesdayParts): WednesdayParts = parts; break;
-                    case nameof(ThursdayParts): ThursdayParts = parts; break;
-                    case nameof(FridayParts): FridayParts = parts; break;
-                    case nameof(SaturdayParts): SaturdayParts = parts; break;
-                    case nameof(SundayParts): SundayParts = parts; break;
-                }
-            }
-        }
 
         //public void ApplyQueryAttributes(IDictionary<string, object> query)
         //{
