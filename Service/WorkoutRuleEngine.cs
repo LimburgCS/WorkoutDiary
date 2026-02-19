@@ -10,16 +10,16 @@ namespace WorkoutDiary.Service
     public class WorkoutRuleEngine
     {
         private static readonly Dictionary<string, int> Priority = new();
-        //{
-        //    { "klata", 3 },
-        //    { "plecy", 3 },
-        //    { "nogi", 3 },
-        //    { "barki", 2 },
-        //    { "triceps", 1 },
-        //    { "biceps", 1 },
-        //    { "przedramiona", 1 },
-        //    { "brzuch", 1 }
-        //};
+    //{
+    //    { "klata", 3 },
+    //    { "plecy", 3 },
+    //    { "nogi", 3 },
+    //    { "barki", 2 },
+    //    { "triceps", 1 },
+    //    { "biceps", 1 },
+    //    { "przedramiona", 1 },
+    //    { "brzuch", 1 }
+    //};
 
         private int GetPriority(string part, List<string> dayBeforeYesterday)
         {

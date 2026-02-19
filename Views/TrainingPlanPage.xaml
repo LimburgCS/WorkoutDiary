@@ -184,10 +184,26 @@
             Command="{Binding NewTrainingPlanAddedCommand}" Opacity="0.5" Text="kliknij, aby dodać tygodniowy plan treningowy" LineBreakMode="CharacterWrap"
             FontSize="20" HorizontalOptions="Center" Padding="50" BorderWidth="1" Margin="20" IsVisible="{Binding IsDisplayButton}"
             TextColor="Black" Background="White" />
-            <Button
-            Command="{Binding ChoiceTrainingPlanAddedCommand}" Opacity="0.5" Text="kliknij, aby wybrać tygodniowy plan treningowy" LineBreakMode="CharacterWrap"
-            FontSize="20" HorizontalOptions="Center" Padding="50" BorderWidth="1" Margin="20" IsVisible="{Binding IsDisplayButton}"
-            TextColor="Black" Background="White" />
+
+
+            <CollectionView
+    ItemsSource="{Binding Plans}"
+    SelectionMode="Single"
+    SelectionChangedCommand="{Binding SelectReadyPlan}"
+    SelectionChangedCommandParameter="{Binding Source={RelativeSource Self}, Path=SelectedItem}"
+                IsVisible="{Binding IsDisplayButton}">
+
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <VerticalStackLayout>
+                                <Label Text="{Binding Name}" FontSize="18" />
+                                <Label Text="{Binding Description}" FontSize="13" TextColor="Gray"/>
+                            </VerticalStackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+            </CollectionView>
         </VerticalStackLayout>
     </Grid>
 
