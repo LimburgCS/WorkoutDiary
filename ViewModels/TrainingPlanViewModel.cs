@@ -68,6 +68,13 @@ namespace WorkoutDiary.ViewModels
         {
             await Shell.Current.GoToAsync(nameof(AddTrainingPlanPage));
         }
+        
+
+        [RelayCommand]
+        public async Task ChoiceTrainingPlanAdded()
+        {
+            await Shell.Current.GoToAsync(nameof(ListTrainingPlanPage));
+        }
         private async Task DeletePlanAsync(TrainingPlan plan)
         {
             if (plan is null)
@@ -87,5 +94,7 @@ namespace WorkoutDiary.ViewModels
 
             await LoadTrainingPlansAsync();
         }
+
+
     }
 }

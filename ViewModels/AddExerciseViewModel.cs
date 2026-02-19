@@ -365,14 +365,17 @@ namespace WorkoutDiary.ViewModels
 
                 //int weekDisplay = currentNumberWeek - firstWorkNumberWeek;
                 //NumberWeek = weekDisplay + 1;
-                var first = db.FirstOrDefault().DateTime.Date;
+                var first = db.First().DateTime.Date;
                 var now = date.Date;
 
-                //// Różnica dni
-                var difference = (now - first).TotalDays;
+                // znajdź poniedziałek tygodnia startowego
+                var startWeekMonday = first.AddDays(-(int)first.DayOfWeek + (int)DayOfWeek.Monday);
 
-                //// Ile pełnych tygodni minęło
-                int weekNumber = (int)(difference / 7d) + 1;
+                // znajdź poniedziałek tygodnia aktualnej daty
+                var nowWeekMonday = now.AddDays(-(int)now.DayOfWeek + (int)DayOfWeek.Monday);
+
+                // różnica tygodni (ciągła, bez resetu w nowym roku)
+                int weekNumber = ((nowWeekMonday - startWeekMonday).Days / 7) + 1;
 
                 DatePickerNumberWeek = weekNumber;
 

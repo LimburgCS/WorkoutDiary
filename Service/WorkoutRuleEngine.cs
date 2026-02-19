@@ -9,17 +9,17 @@ namespace WorkoutDiary.Service
 {
     public class WorkoutRuleEngine
     {
-        private static readonly Dictionary<string, int> Priority = new()
-    {
-        { "klata", 3 },
-        { "plecy", 3 },
-        { "nogi", 3 },
-        { "barki", 2 },
-        { "triceps", 1 },
-        { "biceps", 1 },
-        { "przedramiona", 1 },
-        { "brzuch", 1 }
-    };
+        private static readonly Dictionary<string, int> Priority = new();
+        //{
+        //    { "klata", 3 },
+        //    { "plecy", 3 },
+        //    { "nogi", 3 },
+        //    { "barki", 2 },
+        //    { "triceps", 1 },
+        //    { "biceps", 1 },
+        //    { "przedramiona", 1 },
+        //    { "brzuch", 1 }
+        //};
 
         private int GetPriority(string part, List<string> dayBeforeYesterday)
         {
@@ -45,6 +45,7 @@ namespace WorkoutDiary.Service
                 return allParts
                     .OrderByDescending(p => GetPriority(p, dayBeforeYesterday))
                     .Take(2)
+                    .Distinct()
                     .ToList();
             }
 
@@ -58,11 +59,12 @@ namespace WorkoutDiary.Service
             var missing = allParts
                 .Where(p => !trained.Contains(p))
                .OrderByDescending(p => GetPriority(p, dayBeforeYesterday))
+               .Distinct()
                 .ToList();
 
             // 4. Jeśli są pominięte → wybierz 2 najważniejsze
             if (missing.Count >= 2)
-                return missing.Take(3).ToList();
+                return missing.Take(3).Distinct().ToList();
 
             if (missing.Count == 1)
             {
@@ -70,6 +72,7 @@ namespace WorkoutDiary.Service
                     .Where(p => !yesterday.Contains(p) && p != missing[0])
                     .OrderByDescending(p => GetPriority(p, dayBeforeYesterday))
                     .Take(1)
+                    .Distinct()
                     .ToList();
 
                 return missing.Concat(rotation1).ToList();
@@ -81,6 +84,7 @@ namespace WorkoutDiary.Service
                 .Where(p => !yesterday.Contains(p))
                 .OrderByDescending(p => GetPriority(p, dayBeforeYesterday))
                 .Take(2)
+                .Distinct()
                 .ToList();
 
             if (rotation.Any())
@@ -90,6 +94,7 @@ namespace WorkoutDiary.Service
             return dayBeforeYesterday
                 .OrderByDescending(p => GetPriority(p, dayBeforeYesterday))
                 .Take(2)
+                .Distinct()
                 .ToList();
         }
 
