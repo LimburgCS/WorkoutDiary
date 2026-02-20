@@ -13,7 +13,7 @@ namespace WorkoutDiary.ViewModels
     {
         private readonly TrainingPlanDataBase _database;
         private int _selectedReadyPlanId;
-
+        private AddTrainingPlanViewModel _addTrainingPlanViewModel;
         public List<ReadyTrainingPlan> Plans { get; set; }
         
 
@@ -26,9 +26,10 @@ namespace WorkoutDiary.ViewModels
         public ICommand SelectPlan { get; }
         public ICommand SelectReadyPlan { get; }
         public ICommand Delete { get; }
-        public TrainingPlanViewModel(TrainingPlanDataBase database)
+        public TrainingPlanViewModel(TrainingPlanDataBase database, AddTrainingPlanViewModel addTrainingPlanViewModel)
         {
             _database = database;
+            _addTrainingPlanViewModel = addTrainingPlanViewModel;
             SelectPlan = new Command<TrainingPlan>(async (TrainingPlan) => await SelectPlanAsync(TrainingPlan));
             SelectReadyPlan = new Command<ReadyTrainingPlan>(async plan => await SelectTrainingAsync(plan));
             Delete = new Command<TrainingPlan>(async (TrainingPlan) => await DeletePlanAsync(TrainingPlan));
@@ -64,9 +65,10 @@ namespace WorkoutDiary.ViewModels
         {
             SettingsService.SelectPlan = selectedReadyPlan.Id;
 
-            await Shell.Current.GoToAsync(
-                $"{nameof(AddTrainingPlanPage)}?planId={selectedReadyPlan.Id}");
-
+            //await Shell.Current.GoToAsync(
+            //    $"{nameof(AddTrainingPlanPage)}?planId={selectedReadyPlan.Id}");
+            await _addTrainingPlanViewModel.LoadReadyPlan(selectedReadyPlan.Id);
+            await LoadTrainingPlansAsync();
         }
 
 

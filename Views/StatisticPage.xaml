@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:charts="clr-namespace:Microcharts.Maui;assembly=Microcharts.Maui"
              x:Class="WorkoutDiary.Views.StatisticPage"
-             Title="Statystyka - trening siłowy" Shell.TitleColor="{DynamicResource PrimaryColor}" BackgroundColor="{DynamicResource PageBackgroundColor}">
+             Title="Statystyka - trening siłowy" Shell.TitleColor="{DynamicResource PrimaryColor}" BackgroundImageSource="lowpoly.jpg">
 
 
     <Grid RowDefinitions="*,Auto,auto" Padding="0">

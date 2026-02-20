@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="WorkoutDiary.Views.SettingPage"
-             Title="Ustawienia" Shell.TitleColor="{DynamicResource PrimaryColor}" BackgroundColor="{DynamicResource PageBackgroundColor}">
+             Title="Ustawienia" Shell.TitleColor="{DynamicResource PrimaryColor}" BackgroundImageSource="lowpoly.jpg">
     <ContentPage.Content>
         <StackLayout Padding="10">
             <Grid RowSpacing="10">
@@ -21,13 +21,13 @@
 
                 <!--<Button Text="jasny motyw" Grid.Row="0" Grid.Column="0" Clicked="ChangeThemeButton_Clicked" TextColor="{DynamicResource LabelTextColor}" />-->
                 <Button Text="Wyczyść dziennik ćwiczeń" Grid.Row="1" Grid.Column="0" Padding="15"
-                            VerticalOptions="End" Background="{DynamicResource PageBackgroundColor}"
+                            VerticalOptions="End"
                             BorderColor="{DynamicResource PrimaryColor}" BorderWidth="1" TextColor="{DynamicResource PrimaryColor}"
                 Command="{Binding DeleteExerciseParts}"/>
                 <Button Text="Wyczyść dziennik cardio" Grid.Row="2" Grid.Column="0"
                 Command="{Binding DeleteExerciseCardio}"
                 Padding="15"
-                VerticalOptions="End" Background="{DynamicResource PageBackgroundColor}"
+                VerticalOptions="End"
                 BorderColor="{DynamicResource PrimaryColor}" BorderWidth="1" TextColor="{DynamicResource PrimaryColor}"
                 />
                 <Border Grid.Row="3" StrokeShape="RoundRectangle 3" StrokeThickness="1" >

@@ -2,9 +2,10 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="WorkoutDiary.Views.MainPage"
+                xmlns:local="clr-namespace:WorkoutDiary.Helper"
              xmlns:viewodel="clr-namespace:WorkoutDiary.ViewModels"
              NavigatedTo="ContentPage_NavigatedTo"
-             Title="{Binding PageTitle}" Shell.TitleColor="{DynamicResource PrimaryColor}" BackgroundColor="#E5E5E5">
+             Title="{Binding PageTitle}" Shell.TitleColor="{DynamicResource PrimaryColor}" BackgroundImageSource="lowpoly.jpg">
 
 
 
@@ -12,6 +13,9 @@
         <ToolbarItem Text="Add" Command="{Binding NewExercise}" IconImageSource="{FontImage Glyph='+', Color=Black, Size=22}" />
     </ContentPage.ToolbarItems>
     <Grid RowDefinitions="auto,*,auto">
+
+
+
         <StackLayout Grid.Row="0">
 
 
@@ -65,8 +69,6 @@
 
             <StackLayout>
 
-
-
                 <CollectionView x:Name="ExerciseCollectionView"
                          ItemsSource="{Binding BodyParts}"
                         Margin="20"
@@ -77,7 +79,7 @@
                     <CollectionView.ItemsLayout>
 
                         <LinearItemsLayout Orientation="Vertical" />
-
+ 
                     </CollectionView.ItemsLayout>
 
 
@@ -128,7 +130,8 @@
 
 
                                     <Grid  BackgroundColor="{DynamicResource PageBackgroundColor}">
-                                    <Grid.RowDefinitions>
+
+                                        <Grid.RowDefinitions>
                                         <RowDefinition Height="auto" />
                                         <RowDefinition Height="auto" />
                                         <RowDefinition Height="auto" />

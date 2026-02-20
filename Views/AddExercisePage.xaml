@@ -4,7 +4,8 @@
              x:Class="WorkoutDiary.Views.AddExercisePage"
              xmlns:viewModels="clr-namespace:WorkoutDiary.ViewModels"
              Title="{Binding PageTitle}" Shell.TitleColor="{DynamicResource PrimaryColor}"
-             BackgroundColor="{DynamicResource PageBackgroundColor}">
+             BackgroundImageSource="lowpoly.jpg">
+    
     <ScrollView>
         
 
