@@ -46,7 +46,6 @@ Shell.FlyoutBackdrop="White"
     </FlyoutItem>
     <ShellContent Title="Cardio" Route="StatisticCardioPage" ContentTemplate="{DataTemplate local:StatisticCardioPage}" />
     <ShellContent Title="Tygodniowy plan treningowy" Route="TrainingPlanPage" ContentTemplate="{DataTemplate local:TrainingPlanPage}" />
-    <ShellContent Route="ListTrainingPlanPage" ContentTemplate="{DataTemplate local:ListTrainingPlanPage}" />
     <ShellContent FlyoutItemIsVisible="True" Title="Dodaj ćwiczenie" Route="AddExercisePage" ContentTemplate="{DataTemplate local:AddExercisePage}" />
     <ShellContent FlyoutItemIsVisible="True" Title="Dodaj plan" Route="AddTrainingPlanPage" ContentTemplate="{DataTemplate local:AddTrainingPlanPage}" />
     <!--<Shell.FlyoutFooter>

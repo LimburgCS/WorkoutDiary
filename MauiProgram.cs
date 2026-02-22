@@ -47,8 +47,6 @@ namespace WorkoutDiary
             builder.Services.AddTransient<TrainingPlanViewModel>();
             builder.Services.AddTransient<TrainingPlanPage>();
             builder.Services.AddTransient<AddTrainingPlanPage>(); 
-            builder.Services.AddTransient<ListTrainingPlanPage>();
-            builder.Services.AddTransient<ChoiceTrainingViewModel>();
 
             builder.Services.AddSingleton<WorkoutRuleEngine>();
             builder.Services.AddSingleton<WorkoutRecommendationService>();

@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
+using System.Timers;
 using System.Windows.Input;
 using WorkoutDiary.data;
 using WorkoutDiary.Model;
@@ -12,10 +13,10 @@ namespace WorkoutDiary.ViewModels
     public partial class TrainingPlanViewModel : ObservableObject
     {
         private readonly TrainingPlanDataBase _database;
+
         private int _selectedReadyPlanId;
         private AddTrainingPlanViewModel _addTrainingPlanViewModel;
         public List<ReadyTrainingPlan> Plans { get; set; }
-        
 
 
         [ObservableProperty]

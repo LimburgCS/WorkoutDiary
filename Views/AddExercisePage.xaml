@@ -23,7 +23,7 @@
                          Text="{Binding Gym}" TextColor="{DynamicResource PrimaryColor}"/>
                 <Picker x:Name="namePickerGym" BackgroundColor="{DynamicResource PageBackgroundColor}" Margin="0,0,0,0"
                         Title="Wybierz z listy" HorizontalOptions="Center" Grid.Column="1"
-                        TitleColor="Gray" Grid.Row="1"
+                        TitleColor="Gray" Grid.Row="1" Background="Transparent"
                         ItemsSource="{Binding TitleGym}"
                         SelectedItem="{Binding GymPicker}"
                         TextColor="{DynamicResource PrimaryColor}"/>
@@ -68,14 +68,14 @@
                     <Frame
                         BackgroundColor="#FFEEEE" BorderColor="Red" Padding="8" CornerRadius="6" IsVisible="{Binding IsPartDuplicate}">
 
-                        <Label Text="Taka partia już istnieje!" TextColor="Red" FontAttributes="Bold" />
+                        <Label Text="Takie ćwiczenie już istnieje!" TextColor="Red" FontAttributes="Bold" />
                     </Frame>
                     <Label Grid.Row="2" Grid.ColumnSpan="2" Text="LUB" TextColor="{DynamicResource PrimaryColor}" HorizontalOptions="Center" FontSize="15"/>
                 
                 <Picker x:Name="namePicker" BackgroundColor="{DynamicResource PageBackgroundColor}" Margin="0,0,0,0"
                         Grid.Row="3" Grid.ColumnSpan="2" 
                         Title="Wybierz ćwiczenie z listy"
-                        TitleColor="Gray"
+                        TitleColor="Gray" Background="Transparent"
                         HeightRequest="40"
                         TextColor="{DynamicResource PrimaryColor}"
                         SelectedIndexChanged="PartSelected">
@@ -91,7 +91,7 @@
                             DateSelected="DatePicker_DateSelected" 
                             HorizontalOptions="Start" Format="dd.MM.yyyy" Opacity="0" />
                 <Label Grid.Row="6" Grid.ColumnSpan="1" Margin="40,0,0,0" x:Name="DatetimeEditor" TextColor="{DynamicResource PrimaryColor}"
-                        Text="{Binding DatetimeEntry, StringFormat='{0:dd.MM.yyyy}'}"
+                        Text="{Binding DatetimeEntry, StringFormat='{0:dd.MM.yyyy}'}" 
                         HeightRequest="40"  VerticalTextAlignment="Center" TextDecorations="Underline" />
                 <Label Grid.Row="7" Grid.ColumnSpan="2" Text="Dane treningu" TextColor="{DynamicResource PrimaryColor}"/>
                 <Entry Grid.Row="8" Grid.ColumnSpan="2" x:Name="SeriesEditor"

@@ -3,18 +3,25 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="WorkoutDiary.Views.MainPage"
                 xmlns:local="clr-namespace:WorkoutDiary.Helper"
-             xmlns:viewodel="clr-namespace:WorkoutDiary.ViewModels"
-             NavigatedTo="ContentPage_NavigatedTo"
+             xmlns:viewodel="clr-namespace:WorkoutDiary.ViewModels" 
+             xmlns:Converters="clr-namespace:WorkoutDiary.Converter"
+             NavigatedTo="ContentPage_NavigatedTo" 
              Title="{Binding PageTitle}" Shell.TitleColor="{DynamicResource PrimaryColor}" BackgroundImageSource="lowpoly.jpg">
 
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Converters:BoolToOpacityConverter x:Key="BoolToOpacityConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
 
     <ContentPage.ToolbarItems >
         <ToolbarItem Text="Add" Command="{Binding NewExercise}" IconImageSource="{FontImage Glyph='+', Color=Black, Size=22}" />
     </ContentPage.ToolbarItems>
+
+
+
     <Grid RowDefinitions="auto,*,auto">
-
-
 
         <StackLayout Grid.Row="0">
 
@@ -89,7 +96,7 @@
                         <DataTemplate >
                             <VerticalStackLayout x:Name="Vertical" BackgroundColor="Transparent">
 
-                                <VisualStateManager.VisualStateGroups>
+                                <!--<VisualStateManager.VisualStateGroups>
                                     <VisualStateGroup x:Name="CommonStates">
                                         <VisualState x:Name="Normal">
                                             <VisualState.Setters>
@@ -108,7 +115,7 @@
                                             </VisualState.Setters>
                                         </VisualState>
                                     </VisualStateGroup>
-                                </VisualStateManager.VisualStateGroups>
+                                </VisualStateManager.VisualStateGroups>-->
 
                                 <Label Text="{Binding DateTime, StringFormat='{0:dddd, dd.MM.yyyy}'}"
                                        FontAttributes="Bold"
@@ -190,18 +197,90 @@
             <Border StrokeShape="RoundRectangle 1" StrokeThickness="1" Stroke="{DynamicResource PrimaryColor}" >
 
                 <Grid VerticalOptions="End" HorizontalOptions="Center" >
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width = "*"/>
-                    <ColumnDefinition Width = "*"/>
-                </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width = "*"/>
+                        <ColumnDefinition Width = "*"/>
+                    </Grid.ColumnDefinitions>
                     <Label Grid.Row="0" Grid.Column="0" Text="Max ostatnie obciążenie "  HorizontalTextAlignment="Center" TextColor="{DynamicResource PrimaryColor}" FontSize="15" />
                     <Label Grid.Row="0" Grid.Column="1" HorizontalTextAlignment="Center"  Text="{Binding LastWeight, StringFormat='{0:F2}kg'}"  TextColor="{DynamicResource PrimaryColor}" FontSize="15" />
-            </Grid>
+                </Grid>
             </Border>
         </StackLayout>
+        <!-- Panel boczny -->
+        <AbsoluteLayout Grid.RowSpan="2">
+            <BoxView x:Name="Overlay"
+             BackgroundColor="Transparent"
+             IsVisible="False"
+             AbsoluteLayout.LayoutBounds="0,0,1,1"
+             AbsoluteLayout.LayoutFlags="All">
+                <BoxView.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="Overlay_Tapped"/>
+                </BoxView.GestureRecognizers>
+            </BoxView>
+
+
+            <Frame x:Name="SidePanel"
+           BackgroundColor="#FFFFFFEE"
+           WidthRequest="260"
+           Padding="20"
+           CornerRadius="0"
+           TranslationX="-260"
+           VerticalOptions="Fill"
+           HorizontalOptions="Start"
+           HasShadow="True"
+           AbsoluteLayout.LayoutBounds="0,0.15,AutoSize,AutoSize"
+           AbsoluteLayout.LayoutFlags="PositionProportional">
+
+                <Frame.GestureRecognizers>
+                    <SwipeGestureRecognizer Direction="Left" Swiped="SidePanel_Swiped"/>
+                </Frame.GestureRecognizers>
+
+
+                <VerticalStackLayout Spacing="12">
+                <Label Text="Notatki" FontAttributes="Bold" FontSize="20"/>
+                    <Editor x:Name="NotesEditor" Text="{Binding Notes, Mode=TwoWay}"
+                    Placeholder="Zapisz swoje uwagi..."
+                    AutoSize="TextChanges"
+                    HeightRequest="300"/>
+                    <Label Text="Zapisano" VerticalOptions="End" FontSize="8" TextColor="Black"
+                     Opacity="{Binding IsSavedVisible,
+                        Converter={StaticResource BoolToOpacityConverter}}"/>
+
+                </VerticalStackLayout>
+
+        </Frame>
+
+        <!-- Uchwyt do otwierania -->
+        <Frame x:Name="Handle"
+           WidthRequest="40"
+           HeightRequest="100"
+           BackgroundColor="#444"
+           CornerRadius="5"
+           BorderColor="Black"
+           HorizontalOptions="Start"
+           VerticalOptions="Center"
+           TranslationX="0"
+           Padding="0"
+           HasShadow="True" 
+           AbsoluteLayout.LayoutBounds="0,0.33,AutoSize,AutoSize"
+           AbsoluteLayout.LayoutFlags="PositionProportional">
+
+                <Label Text="Notatki" FontSize="11"
+                   TextColor="White" Rotation="90" 
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"/>
+
+                <Frame.GestureRecognizers>
+                <TapGestureRecognizer Tapped="TogglePanel"/>
+            </Frame.GestureRecognizers>
+
+        </Frame>
+        </AbsoluteLayout>
+
     </Grid>
+
 
 </ContentPage>

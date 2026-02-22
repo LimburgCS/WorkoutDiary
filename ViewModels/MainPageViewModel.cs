@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows.Input;
 using WorkoutDiary.data;
 using WorkoutDiary.Model;
@@ -20,7 +21,8 @@ namespace WorkoutDiary.ViewModels
     {
         public event PropertyChangedEventHandler PropertyChanged;
         public TodoItemDatabase _database;
-
+        private readonly PersonDataBase _NoteDb;
+        private readonly System.Timers.Timer _timer;
         public ObservableCollection<string> Parts { get; set; } = new();
         public ObservableCollection<string> Gym { get; set; } = new();
         private ObservableCollection<BodyParts> _bodyParts;
@@ -30,6 +32,11 @@ namespace WorkoutDiary.ViewModels
         private bool _isBottomGridVisible;
         private float _lastWeight;
         private int _displayNumberWeek;
+
+        private string _notes;
+        private string _lastSavedNotes = string.Empty;
+        private bool _isSavedVisible;
+
         public ObservableCollection<BodyParts> BodyParts
         {
             get => _bodyParts;
@@ -39,6 +46,33 @@ namespace WorkoutDiary.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        public string Notes
+        {
+            get => _notes;
+            set
+            {
+                if (_notes != value)
+                {
+                    _notes = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public bool IsSavedVisible
+        {
+            get => _isSavedVisible;
+            set
+            {
+                if (_isSavedVisible != value)
+                {
+                    _isSavedVisible = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         public string PageTitle
         {
             get => _pageTitle;
@@ -161,9 +195,10 @@ namespace WorkoutDiary.ViewModels
         public ICommand Next { get; }
         public ICommand SelectDayCommand { get; }
         public ICommand Delete { get; }
-        public MainPageViewModel(TodoItemDatabase database)
+        public MainPageViewModel(TodoItemDatabase database, PersonDataBase _notes)
         {
             _database = database;
+            _NoteDb = _notes;
             BodyParts = new ObservableCollection<BodyParts>();
             NewExercise = new AsyncRelayCommand(NewExerciseAsync);
             SelectDayCommand = new Command<BodyParts>(async (BodyParts) => await SelectExerciseAsync(BodyParts));
@@ -192,6 +227,12 @@ namespace WorkoutDiary.ViewModels
             _ = LoadPartsAsync();
             _ = LoadGymAsync();
             RefreshData();
+            _ = LoadNotes();
+            _timer = new System.Timers.Timer(2000);
+            _timer.Elapsed += AutoSave;
+            _timer.AutoReset = true;
+            _timer.Start();
+
         }
 
         public async void ChooseDate(DateTime date)
@@ -268,6 +309,7 @@ namespace WorkoutDiary.ViewModels
 
 
 
+
             exerciseFromDb = exerciseFromDb
                 .OrderBy(x => x.DateTime)
                 .ToList();
@@ -323,6 +365,7 @@ namespace WorkoutDiary.ViewModels
 
             // Finalizacja
             BodyParts = new ObservableCollection<BodyParts>(query.ToList());
+            
 
             OnPropertyChanged(nameof(BodyParts));
             OnPropertyChanged(nameof(HasNoData));
@@ -330,7 +373,16 @@ namespace WorkoutDiary.ViewModels
 
         }
 
+        private async Task LoadNotes()
+        {
+            var existing = await _NoteDb.LoadNotes();
 
+            if (existing != null)
+            {
+                Notes = existing.Notes;
+                _lastSavedNotes = existing.Notes;
+            }
+        }
 
 
         public async Task LoadPartsAsync()
@@ -404,6 +456,27 @@ namespace WorkoutDiary.ViewModels
 
 
         }
+
+        private async void AutoSave(object sender, ElapsedEventArgs e)
+        {
+            if (!string.Equals(Notes, _lastSavedNotes))
+            {
+                await SaveNotesAsync();
+            }
+        }
+        private async Task SaveNotesAsync()
+        {
+            _lastSavedNotes = Notes;
+
+            await _NoteDb.SaveNotesAsync(Notes);
+
+            IsSavedVisible = true;
+
+            await Task.Delay(1000);
+
+            IsSavedVisible = false;
+        }
+
         private void RefreshData()
         {
             //odświeżenie listy po usunięciu danych w AppShellViewModel

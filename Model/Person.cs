@@ -9,7 +9,7 @@ namespace WorkoutDiary.Model
 {
     public class Person
     {
-        [PrimaryKey]
+        [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
         public float Growth { get; set; }
         public float Weight { get; set; }
@@ -17,6 +17,7 @@ namespace WorkoutDiary.Model
         public int Pulse { get; set; }
         public double IndexBmi { get; set; }
         public string RateBmi { get; set; }
+        public string Notes { get; set; }
 
     }
 }

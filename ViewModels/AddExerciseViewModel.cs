@@ -26,6 +26,7 @@ namespace WorkoutDiary.ViewModels
         private List<string> _allParts;
         public TodoItemDatabase _database;
         private BodyParts _bodyPart;
+        private bool _isEditMode;
         private string _pageTitle;
         private string _part;
         private string _partPicker;
@@ -71,7 +72,9 @@ namespace WorkoutDiary.ViewModels
             {
                 _part = value;
                 OnPropertyChanged(nameof(Part));
-                ValidatePart(value);
+                if(!_isEditMode)
+                    ValidatePart(value);
+
             }
         }
 
@@ -204,6 +207,7 @@ namespace WorkoutDiary.ViewModels
             LoadNumberWeek();
             _ = LoadNameGymPlace();
             LoadPartsAsync();
+            _isEditMode  = false;
         }
 
         private async Task ButtonInfoCommand()
@@ -227,7 +231,7 @@ namespace WorkoutDiary.ViewModels
         {
             _ = LoadNameGymPlace();
             _bodyPart = await _database.GetInvoiceIDAsync(exerciseId);
-
+            _isEditMode = true;
             if (_bodyPart != null)
             {
                 

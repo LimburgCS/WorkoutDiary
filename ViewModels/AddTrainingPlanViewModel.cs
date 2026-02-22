@@ -180,13 +180,13 @@ namespace WorkoutDiary.ViewModels
 
             var newPlan = new TrainingPlan
             {
-                MondayParts = map.Contains(0) ? ConvertDayToString(plan.WeeklySplit[Array.IndexOf(map, 0)]) : "",
-                TuesdayParts = map.Contains(1) ? ConvertDayToString(plan.WeeklySplit[Array.IndexOf(map, 1)]) : "",
-                WednesdayParts = map.Contains(2) ? ConvertDayToString(plan.WeeklySplit[Array.IndexOf(map, 2)]) : "",
-                ThursdayParts = map.Contains(3) ? ConvertDayToString(plan.WeeklySplit[Array.IndexOf(map, 3)]) : "",
-                FridayParts = map.Contains(4) ? ConvertDayToString(plan.WeeklySplit[Array.IndexOf(map, 4)]) : "",
-                SaturdayParts = map.Contains(5) ? ConvertDayToString(plan.WeeklySplit[Array.IndexOf(map, 5)]) : "",
-                SundayParts = ""
+                MondayParts = map.Contains(0) ? ConvertDayToString(plan.WeeklySplit[Array.IndexOf(map, 0)]) : "Dzień wolny",
+                TuesdayParts = map.Contains(1) ? ConvertDayToString(plan.WeeklySplit[Array.IndexOf(map, 1)]) : "Dzień wolny",
+                WednesdayParts = map.Contains(2) ? ConvertDayToString(plan.WeeklySplit[Array.IndexOf(map, 2)]) : "Dzień wolny",
+                ThursdayParts = map.Contains(3) ? ConvertDayToString(plan.WeeklySplit[Array.IndexOf(map, 3)]) : "Dzień wolny",
+                FridayParts = map.Contains(4) ? ConvertDayToString(plan.WeeklySplit[Array.IndexOf(map, 4)]) : "Dzień wolny",
+                SaturdayParts = map.Contains(5) ? ConvertDayToString(plan.WeeklySplit[Array.IndexOf(map, 5)]) : "Dzień wolny",
+                SundayParts = "Dzień wolny"
             };
 
 
@@ -201,15 +201,28 @@ namespace WorkoutDiary.ViewModels
 
         private string ConvertDayToString(TrainingDay day)
         {
+            if (day == null || day.Parts == null || day.Parts.Count == 0)
+                return "Dzień wolny";
+
             var lines = new List<string>();
 
             foreach (var part in day.Parts)
             {
-                lines.Add($"{part.Part.ToUpper()}: {string.Join(", ", part.Exercises)}");
+                // Nagłówek partii
+                lines.Add($"★ {part.Part.ToUpper()}");
+
+                // Ćwiczenia jako punktory
+                foreach (var exercise in part.Exercises)
+                    lines.Add($"• {exercise}");
+
+                // Odstęp między partiami
+                lines.Add("");
             }
 
-            return string.Join("\n", lines);
+            // Usunięcie ostatniej pustej linii
+            return string.Join("\n", lines).TrimEnd();
         }
+
 
         private void GenerateWeeklyPlan(ReadyTrainingPlan plan)
         {

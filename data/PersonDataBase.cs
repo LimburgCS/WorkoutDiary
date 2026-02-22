@@ -51,5 +51,40 @@ namespace WorkoutDiary.data
             await Init();
             return await Database.DeleteAllAsync<Person>();
         }
+
+        public async Task SaveNotesAsync(string text)
+        {
+            await Init();
+
+            // pobierz istniejącą notatkę
+            var existing = await Database.Table<Person>().FirstOrDefaultAsync();
+
+            if (existing == null)
+            {
+                // tworzymy nową
+                var note = new Person
+                {
+                    Notes = text,
+                };
+
+                await Database.InsertAsync(note);
+            }
+            else
+            {
+                // aktualizujemy istniejącą
+                existing.Notes = text;
+
+                await Database.UpdateAsync(existing);
+            }
+        }
+
+        public async Task<Person> LoadNotes()
+        {
+            await Init();
+
+            return await Database.Table<Person>().FirstOrDefaultAsync();
+        }
+
+
     }
 }
