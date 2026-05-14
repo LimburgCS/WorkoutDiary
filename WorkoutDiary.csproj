@@ -21,7 +21,7 @@
 		<Nullable>disable</Nullable>
 
 		<!-- Display name -->
-		<ApplicationTitle>WorkoutDiary</ApplicationTitle>
+		<ApplicationTitle>Dziennik ćwiczeń</ApplicationTitle>
 
 		<!-- App Identifier -->
 		<ApplicationId>com.companyname.workoutdiary</ApplicationId>
@@ -40,14 +40,14 @@
 
 	<ItemGroup>
 		<!-- App Icon -->
-		<MauiIcon Include="Resources\AppIcon\dumbbell.svg" Color="#FFFFFF" ForegroundScale="0.45" />
+		<MauiIcon Include="Resources\AppIcon\starttitle.svg" ForegroundFile="Resources\AppIcon\starttitle.svg" Color="#FFFFFF"/>
 
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\dumbbell1.svg" Color="#FFFFFF" BaseSize="200,185" />
+		<!--<MauiSplashScreen Include="Resources\Splash\starttitle.png" Color="#FFFFFF" BaseSize="300,200" />-->
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
-		<MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
+		<!--<MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />-->
 
 		<!-- Custom Fonts -->
 		<MauiFont Include="Resources\Fonts\*" />
@@ -102,6 +102,9 @@
 	    <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\SettingPage.xaml">
+	    <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\StartPage.xaml">
 	    <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\StatisticCardioPage.xaml">

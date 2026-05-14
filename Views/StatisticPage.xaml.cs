@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WorkoutDiary.data;
 using WorkoutDiary.Model;
+using WorkoutDiary.Service;
 
 namespace WorkoutDiary.Views
 {
@@ -20,6 +21,7 @@ namespace WorkoutDiary.Views
         private readonly TodoItemDatabase _database;
         public ObservableCollection<BodyParts> BodyParts;
         private string _selectPart;
+        private string _selectGym;
         public StatisticPage()
         {
             InitializeComponent();
@@ -41,19 +43,26 @@ namespace WorkoutDiary.Views
 
         private async void LoadPart()
         {
-            var db = await _database.GetInvoiceAsync();
+
+
+
+            var db = await _database.GetBodyPartAsync();
             var bodypartsDB = db.Select(x => x.Part).Where(x => !string.IsNullOrWhiteSpace(x))
                 .OrderBy(x => x, StringComparer.CurrentCultureIgnoreCase).Distinct().ToList();
+            var nameGymDB = db.Select(x=>x.NameGym).Where(x => !string.IsNullOrWhiteSpace(x))
+                .OrderBy(x => x, StringComparer.CurrentCultureIgnoreCase).Distinct().ToList();
             namePicker.ItemsSource = bodypartsDB; // Ustawienie listy w Picker
-            
+            PickerNameGym.ItemsSource = nameGymDB;
+            PickerNameGym.SelectedItem = SettingsService.SelectedGym;
+
         }
-        private async Task LoadChartv2(string selectedPart)
+        private async Task LoadChartv2(string selectedPart, string selectGym)
         {
             chartView.Chart = null;
             _selectPart = selectedPart;
-            var db = await _database.GetInvoiceAsync();
-            var dbOrderBy1 = db.Where(x=>x.Part == selectedPart).OrderBy(x => x.DateTime).ToList();
-            var dbOrderBy = db.Where(x => x.Part == selectedPart)
+            var db = await _database.GetBodyPartAsync();
+            //var dbOrderBy1 = db.Where(x=>x.Part == selectedPart).OrderBy(x => x.DateTime).ToList();
+            var dbOrderBy = db.Where(x => x.Part == selectedPart).Where(x=> x.NameGym == selectGym).Where(x => x.Weight > 0)
                   .GroupBy(x => x.DateTime.Date)  // Grupowanie po samej dacie (ignorujemy godziny)
                   .Select(group => new
                   {
@@ -84,7 +93,7 @@ namespace WorkoutDiary.Views
 
             var yMax = maxValue + range * 0.3f;       // +10% od góry
             var yMin = Math.Max(0, minValue - range * 0.1f); // -10% od dołu
-            LabelPart.Text = selectedPart;
+            //LabelPart.Text = selectedPart;
             ProgressLabel.Text = firstweight.ToString()+"=>"+maxValue.ToString()+"("+(maxValue-firstweight).ToString()+"kg)";
             StartExercises.Text = firstDay.ToString("dd.MM.yyyy");
             ProgressTime.Text = dbOrderBy.Count().ToString();
@@ -122,9 +131,9 @@ namespace WorkoutDiary.Views
         }
         private async void UpdateChart()
         {
-            var db = await _database.GetInvoiceAsync();
-            var dbOrderBy1 = db.Where(x => x.Part == _selectPart).OrderBy(x => x.DateTime).ToList();
-            var dbOrderBy = db.Where(x => x.Part == _selectPart)
+            var db = await _database.GetBodyPartAsync();
+            //var dbOrderBy1 = db.Where(x => x.Part == _selectPart).OrderBy(x => x.DateTime).ToList();
+            var dbOrderBy = db.Where(x => x.Part == _selectPart).Where(x => x.NameGym == _selectGym).Where(x => x.Weight > 0)
                   .GroupBy(x => x.DateTime.Date)  // Grupowanie po samej dacie (ignorujemy godziny)
                   .Select(group => new
                   {
@@ -142,7 +151,7 @@ namespace WorkoutDiary.Views
             double lastweight = dbOrderBy.Last().MaxWeight;
             DateTime firstDay = dbOrderBy.First().Date;
             DateTime lastDay = dbOrderBy.Last().Date;
-            LabelPart.Text = _selectPart;
+            //LabelPart.Text = _selectPart;
             var minValue = dbOrderBy.Min(x => x.MaxWeight);
             var maxValue = dbOrderBy.Max(x => x.MaxWeight);
 
@@ -190,10 +199,12 @@ namespace WorkoutDiary.Views
         }
         private void PartSelected(object sender, EventArgs e)
         {
+            var savedGym = SettingsService.SelectedGym;
             if (namePicker.SelectedIndex != -1)
             {
                 string selectedPart = namePicker.SelectedItem.ToString();
-                _ = LoadChartv2(selectedPart); // Załaduj dane dla wybranej osoby
+                string selectGym = PickerNameGym.SelectedIndex != -1 ? PickerNameGym.SelectedItem.ToString() : savedGym;
+                _ = LoadChartv2(selectedPart, selectGym); // Załaduj dane dla wybranej osoby
             }
         }
 

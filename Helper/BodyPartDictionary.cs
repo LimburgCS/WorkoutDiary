@@ -15,6 +15,7 @@ namespace WorkoutDiary.Helper
             { "barki", "barki" },
             { "ramiona", "barki" },
             { "plecy", "plecy" },
+            { "podciągnięcia", "plecy" },
             { "nogi", "nogi" },
             { "biceps", "biceps" },
             { "triceps", "triceps" },

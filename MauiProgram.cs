@@ -29,9 +29,10 @@ namespace WorkoutDiary
             builder.Services.AddSingleton<PersonDataBase>();
             builder.Services.AddSingleton<CardioDataBase>();
             builder.Services.AddSingleton<TrainingPlanDataBase>();
-            builder.Services.AddTransient<MainPageViewModel>();
-            builder.Services.AddSingleton<MainPage>(); //unikanie ponownego tworzenia
             builder.Services.AddTransient<AddExerciseViewModel>(); // każada strona ma nowy kontent
+            builder.Services.AddSingleton<MainPageViewModel>();
+            builder.Services.AddSingleton<MainPage>(); //unikanie ponownego tworzenia
+            
 
             builder.Services.AddTransient<AddCardioViewModel>(); 
             builder.Services.AddTransient<CardioViewModel>();

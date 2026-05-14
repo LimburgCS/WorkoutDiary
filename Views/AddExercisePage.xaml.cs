@@ -27,7 +27,7 @@ namespace WorkoutDiary.Views
         }
         private async Task LoadPart()
         {
-            var db = await database.GetInvoiceAsync();
+            var db = await database.GetBodyPartAsync();
             var bodypartsDB = db.Select(x => x.Part).Distinct().OrderBy(x=>x, StringComparer.CurrentCultureIgnoreCase).ToList();
             var nameGym = db.Select(x => x.NameGym).Distinct().OrderBy(x => x, StringComparer.CurrentCultureIgnoreCase).ToList();
             namePicker.ItemsSource = bodypartsDB; // Ustawienie listy w Picker

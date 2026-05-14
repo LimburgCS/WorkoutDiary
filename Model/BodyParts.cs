@@ -37,6 +37,10 @@ namespace WorkoutDiary.Model
                 }
             }
         }
+
+        [Ignore]
+        public int OrderNumber { get; set; }
+
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string name = null)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));

@@ -3,26 +3,37 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:charts="clr-namespace:Microcharts.Maui;assembly=Microcharts.Maui"
              x:Class="WorkoutDiary.Views.StatisticPage"
-             Title="Statystyka - trening siłowy" Shell.TitleColor="{DynamicResource PrimaryColor}" BackgroundImageSource="lowpoly.jpg">
+             Title="Statystyki" Shell.TitleColor="{DynamicResource PrimaryColor}" BackgroundImageSource="titleapp.jpg">
 
 
     <Grid RowDefinitions="*,Auto,auto" Padding="0">
 
         <StackLayout Grid.Row="0">
-            <Border Margin="10">
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="15"/>
-                </Border.StrokeShape>
-                <Picker x:Name="namePicker" 
+            <Grid RowDefinitions="*,*" ColumnDefinitions="*, auto" Margin="10">
+
+                <Label Grid.Row="0" Grid.Column="0" Text="wybierz partie" HorizontalOptions="Center" FontSize="15" TextColor="Black"/>
+                <Picker Grid.Column="0" x:Name="namePicker" 
                 Title="Wybierz partie"
-                TitleColor="Black"
                 TextColor="Black"
-                BackgroundColor="White"
+                Margin="10"
+                FontSize="20"
+                Background="Transparent"
+                HorizontalTextAlignment="Center"
+                SelectedIndexChanged="PartSelected">
+            </Picker>
+                <Label Grid.Row="0" Grid.Column="1" Text="wybierz siłownie" HorizontalOptions="Center" FontSize="15" TextColor="Black"/>
+                <Picker Grid.Column="1" x:Name="PickerNameGym" 
+                Title="Wybierz siłownie"
+                TextColor="Black"
+                Margin="10"
+                FontSize="20"
+                Background="Transparent"
+                HorizontalTextAlignment="Center"
                 SelectedIndexChanged="PartSelected">
                 </Picker>
-            </Border>
 
-            <Label x:Name="LabelPart" HorizontalOptions="Center" FontSize="20" HorizontalTextAlignment="Center" Padding="10" TextColor="{DynamicResource PrimaryColor}"/>
+            </Grid>
+                <!--<Label x:Name="LabelPart" HorizontalOptions="Center" FontSize="20" HorizontalTextAlignment="Center" Padding="10" TextColor="{DynamicResource PrimaryColor}"/>-->
 
 
             <ScrollView Orientation="Horizontal" Grid.Row="1" Background="Transparent" HorizontalOptions="Fill" VerticalOptions="Fill">

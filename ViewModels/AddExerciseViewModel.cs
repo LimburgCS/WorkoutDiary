@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.Messaging;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -9,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using WorkoutDiary.data;
+using WorkoutDiary.Helper;
 using WorkoutDiary.Model;
 using WorkoutDiary.Service;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -22,6 +24,7 @@ namespace WorkoutDiary.ViewModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+        readonly MainPageViewModel _mainPageVM;
         public ObservableCollection<string> TitleGym { get; set; } = new();
         private List<string> _allParts;
         public TodoItemDatabase _database;
@@ -195,6 +198,9 @@ namespace WorkoutDiary.ViewModels
         }
 
 
+
+
+
         public ICommand SaveCommand { get; }
         public ICommand ButtonInfo { get; }
 
@@ -217,7 +223,7 @@ namespace WorkoutDiary.ViewModels
 
         private async void LoadPartsAsync()
         {
-            var db = await _database.GetInvoiceAsync();
+            var db = await _database.GetBodyPartAsync();
 
             _allParts = db
                 .Select(x => x.Part)
@@ -255,10 +261,10 @@ namespace WorkoutDiary.ViewModels
         {
             DatetimeEntry = date;
             Datetime = date;
-            var data = await _database.GetInvoiceAsync();
+            var data = await _database.GetBodyPartAsync();
             if (data != null && data.Any())
             {
-                var db = await _database.GetInvoiceAsync();
+                var db = await _database.GetBodyPartAsync();
                 //var firstweek = db.FirstOrDefault();
                 //int FirstNumberWeek = CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(
                 //firstweek.DateTime, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
@@ -336,7 +342,7 @@ namespace WorkoutDiary.ViewModels
 
                 var newExercise = new BodyParts()
                 {
-                    Id = (await _database.GetInvoiceAsync()).Count + 1, // lub zastosuj logikę generowania ID
+                    Id = (await _database.GetBodyPartAsync()).Count + 1, // lub zastosuj logikę generowania ID
                     Part = Part ?? PartPicker,
                     NameGym = Gym ?? GymPicker, // Gym ma pierwszenstwo
                     Comment = Comment,
@@ -350,17 +356,19 @@ namespace WorkoutDiary.ViewModels
                 };
                 SettingsService.SelectedGym = Gym ?? GymPicker;
                 await _database.SaveInvoiceAsync(newExercise);
-            }
+                WeakReferenceMessenger.Default.Send(new ExerciseAddedMessage(newExercise.NumberWeek));
 
+            }
             await Shell.Current.GoToAsync("..");
+
         }
         private async void LoadNumberWeek()
         {
             var date = DateTime.Today;
-            var data = await _database.GetInvoiceAsync();
+            var data = await _database.GetBodyPartAsync();
             if (data != null && data.Any())
             {
-                var db = await _database.GetInvoiceAsync();
+                var db = await _database.GetBodyPartAsync();
                 //var firstweek = db.FirstOrDefault();
                 //int currentNumberWeek = CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(
                 //DateTime.Now, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
@@ -419,7 +427,7 @@ namespace WorkoutDiary.ViewModels
         {
             try
             {
-                var db = await _database.GetInvoiceAsync();
+                var db = await _database.GetBodyPartAsync();
                 var bodypartsDB = db
                     .Select(x => x.NameGym)
                     .Where(x => !string.IsNullOrWhiteSpace(x))   // ⬅️ usuwa null, "", "   "
@@ -471,7 +479,7 @@ namespace WorkoutDiary.ViewModels
             // PageTitle = _pageTitle == "nie wybrano siłowni"
             //  ? "nie wybrano siłowni" : $" {savedGym}";
             var savedGym = SettingsService.SelectedGym;   // ostatnio wybrana siłownia
-            var db = await _database.GetInvoiceAsync();
+            var db = await _database.GetBodyPartAsync();
 
             var bodypartsDB = db
                 .Select(x => x.NameGym)

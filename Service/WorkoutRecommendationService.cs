@@ -48,7 +48,7 @@ namespace WorkoutDiary.Service
 
             var lastTwoRaw = await _database.GetLastTwoTrainingDaysAsync();
 
-            var allRecords = await _database.GetInvoiceAsync();
+            var allRecords = await _database.GetBodyPartAsync();
             var allParts = allRecords
                 .Select(r => ExtractMainPart(r.Part))
                 .Distinct()

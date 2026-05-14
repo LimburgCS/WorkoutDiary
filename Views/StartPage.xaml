@@ -1,0 +1,26 @@
+﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WorkoutDiary.Views.StartPage"
+             BackgroundColor="#FFFFFF">
+
+    <Grid>
+        <Frame CornerRadius="100" WidthRequest="200"
+                HeightRequest="200">
+           
+        
+        <Image Source="titlelogo.png"
+               HorizontalOptions="Center"
+               VerticalOptions="Center"
+               WidthRequest="300"
+               HeightRequest="300"/>
+        </Frame>
+
+        <Label Text="Dziennik ćwiczeń"
+               FontSize="28"
+               FontAttributes="Bold"
+               TextColor="#000000"
+               HorizontalOptions="Center"
+               VerticalOptions="End"
+               Margin="0,0,0,60"/>
+    </Grid>
+</ContentPage>

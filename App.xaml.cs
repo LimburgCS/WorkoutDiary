@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using WorkoutDiary.Views;
 
 namespace WorkoutDiary
 {
@@ -8,7 +9,7 @@ namespace WorkoutDiary
         {
             InitializeComponent();
 
-            MainPage = new AppShell();
+            MainPage = new StartPage();
             Application.Current.UserAppTheme = AppTheme.Light;
             Thread.CurrentThread.CurrentCulture = new CultureInfo("pl-PL");
             Thread.CurrentThread.CurrentUICulture = new CultureInfo("pl-PL");

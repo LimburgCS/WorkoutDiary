@@ -6,7 +6,7 @@
              xmlns:viewodel="clr-namespace:WorkoutDiary.ViewModels" 
              xmlns:Converters="clr-namespace:WorkoutDiary.Converter"
              NavigatedTo="ContentPage_NavigatedTo" 
-             Title="{Binding PageTitle}" Shell.TitleColor="{DynamicResource PrimaryColor}" BackgroundImageSource="lowpoly.jpg">
+             Title="{Binding PageTitle}" Shell.TitleColor="{DynamicResource PrimaryColor}" BackgroundImageSource="titleapp.jpg">
 
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -21,72 +21,93 @@
 
 
 
-    <Grid RowDefinitions="auto,*,auto">
+    <Grid RowDefinitions="auto,auto,*">
 
         <StackLayout Grid.Row="0">
 
+            <Border
+                 Stroke="Transparent"
+                 Background="White"
+                 StrokeThickness="0"
+                 Margin="20,10,20,0"
+                 Padding="0"
+                 StrokeShape="RoundRectangle 5">
 
-            <Grid HorizontalOptions="Fill">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="*"/>
-
-                </Grid.ColumnDefinitions>
-                <Grid Grid.Column="0" Grid.Row="0" HorizontalOptions="Start" Margin="10,0,0,0">
-                    <DatePicker x:Name="datepicker" Grid.Row="0"   Grid.Column="0" DateSelected="DatePicker_DateSelected" BindingContext="{Binding DatePicker, Mode=TwoWay}" Format="dd.MM.yyyy"  />
-                </Grid>
-                <Grid Grid.Column="1" >
-                    <Picker Grid.Column="0"
-                       Title="Wybierz siłownie"
-                       ItemsSource="{Binding Gym}"
-                       SelectedItem="{Binding SelectedGym}" />
-                   
-                </Grid>
-                <Grid Grid.Column="1" Grid.Row="1" Margin="0,15,0,0" ColumnSpacing="5" HorizontalOptions="Center">
+                <Border.Shadow>
+                    <Shadow Brush="Black" Opacity="0.5" Radius="5" Offset="0,1" />
+                </Border.Shadow>
+                
+                <Grid HorizontalOptions="Fill" Background="White" Margin="1">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="2"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="2"/>
+                        <ColumnDefinition Width="*"/>
 
                     </Grid.ColumnDefinitions>
-                    <ImageButton Grid.Row="0" Grid.Column="0" BackgroundColor="{DynamicResource PrimaryColor}" Source="/Resources/Images/caretleft.svg" Command="{Binding Back}"/>
-                    <Label Grid.Row="0" Grid.Column="1"  TextColor="{DynamicResource PrimaryColor}" Text="{Binding DisplayNumberWeekText}" VerticalTextAlignment="Center"  FontSize="15" />
-                    <ImageButton Grid.Row="0" Grid.Column="2"  BackgroundColor="{DynamicResource PrimaryColor}" Source="/Resources/Images/caretright.svg" Command="{Binding Next}" />
-                </Grid>
-                <Grid Grid.Column="2" Grid.Row="0" HorizontalOptions="End" Margin="0,0,10,0">
-                    <Picker
-                Title="Wybierz partię"
-                ItemsSource="{Binding Parts}"
-                SelectedItem="{Binding SelectedPart}" />
-                </Grid>
+                    <DatePicker x:Name="datepicker" Grid.Row="0"  TextColor="#00C853"
+                                Grid.Column="0" DateSelected="DatePicker_DateSelected"
+                                BindingContext="{Binding DatePicker, Mode=TwoWay}"
+                                Format="dd.MM.yyyy" FontSize="13" />
+                    <BoxView Grid.Column="1" Margin="0,4,0,4"
+                             WidthRequest="1"
+                             BackgroundColor="#E0E0E0"
+                             VerticalOptions="Fill"
+                             HorizontalOptions="Center"/>
 
-            </Grid>
+                    <Picker Grid.Column="2" HorizontalTextAlignment="Center"
+                               Title="Wybierz siłownie" FontSize="13"
+                            TextColor="#00C853"
+                               ItemsSource="{Binding Gym}"
+                               SelectedItem="{Binding SelectedGym}" />
+
+                    <BoxView Grid.Column="3" Margin="0,4,0,4"
+                             WidthRequest="1"
+                             BackgroundColor="#E0E0E0"
+                             VerticalOptions="Fill"
+                             HorizontalOptions="Center"/>
+                    
+                    
+                        <Picker Grid.Column="4" HorizontalTextAlignment="Center" 
+                        Title="Wybierz partię" FontSize="13" TextColor="#00C853" BackgroundColor="Transparent"
+                        ItemsSource="{Binding Parts}"
+                        SelectedItem="{Binding SelectedPart}" />
+
+                </Grid>
+                
+            </Border>
         </StackLayout>
+        <Grid Grid.Row="1" Margin="0,15,0,0" ColumnSpacing="5" HorizontalOptions="Center" VerticalOptions="Start">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
 
+            </Grid.ColumnDefinitions>
+            <ImageButton Grid.Row="0" Grid.Column="0" BackgroundColor="{DynamicResource PrimaryColor}" Source="/Resources/Images/caretleft.svg" Command="{Binding Back}"/>
+            <Label Grid.Row="0" Grid.Column="1"  TextColor="{DynamicResource PrimaryColor}" Text="{Binding DisplayNumberWeekText}" VerticalTextAlignment="Center"  FontSize="15" />
+            <ImageButton Grid.Row="0" Grid.Column="2"  BackgroundColor="{DynamicResource PrimaryColor}" Source="/Resources/Images/caretright.svg" Command="{Binding Next}" />
+        </Grid>
 
-        <ScrollView Margin="5" Grid.Row="1" VerticalOptions="Start">
+        <ScrollView Margin="5" Grid.Row="2" VerticalOptions="Start">
 
             <StackLayout>
 
                 <CollectionView x:Name="ExerciseCollectionView"
                          ItemsSource="{Binding BodyParts}"
                         Margin="20"
+                                Opacity="0.8"
                         SelectionMode="Single"
-                        
                         SelectionChangedCommand="{Binding SelectDayCommand}"
                         SelectionChangedCommandParameter="{Binding Source={RelativeSource Self}, Path=SelectedItem}">
                     <CollectionView.ItemsLayout>
 
                         <LinearItemsLayout Orientation="Vertical" />
- 
+
                     </CollectionView.ItemsLayout>
 
 
@@ -94,7 +115,7 @@
                     <CollectionView.ItemTemplate>
 
                         <DataTemplate >
-                            <VerticalStackLayout x:Name="Vertical" BackgroundColor="Transparent">
+                            <VerticalStackLayout x:Name="Vertical">
 
                                 <!--<VisualStateManager.VisualStateGroups>
                                     <VisualStateGroup x:Name="CommonStates">
@@ -139,51 +160,67 @@
                                     <Grid  BackgroundColor="{DynamicResource PageBackgroundColor}">
 
                                         <Grid.RowDefinitions>
-                                        <RowDefinition Height="auto" />
-                                        <RowDefinition Height="auto" />
-                                        <RowDefinition Height="auto" />
-                                        <RowDefinition Height="auto" />
-                                        <RowDefinition Height="auto" />
-                                        <RowDefinition Height="auto" />
-                                    </Grid.RowDefinitions>
+                                            <RowDefinition Height="auto" />
+                                            <RowDefinition Height="auto" />
+                                            <RowDefinition Height="auto" />
+                                            <RowDefinition Height="2"/>
+                                            <RowDefinition Height="auto" />
+                                            <RowDefinition Height="auto" />
+                                        </Grid.RowDefinitions>
 
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <!-- First column -->
-                                        <ColumnDefinition Width="*" />
-                                        <!-- Second column -->
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-
-
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="2"/>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="2"/>
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
 
 
-                                    <!-- First row: Categories and Price -->
-                                    <Label  Grid.Row="0" Grid.Column="0" TextColor="{DynamicResource PrimaryColor}"  HorizontalTextAlignment="Center" Text="{Binding NameGym}" FontSize="10"  />
-                                        <Button Grid.Row="0" Grid.Column="2" TextColor="{DynamicResource PrimaryColor}" Text="X" Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.Delete}" 
+
+
+                                        <!-- First row: Categories and Price -->
+                                        <Label  Grid.Row="0" Grid.Column="0" TextColor="{DynamicResource PrimaryColor}"  HorizontalTextAlignment="Center" Text="{Binding NameGym}" FontSize="10"  />
+                                        <Button Grid.Row="0" Grid.Column="5" TextColor="{DynamicResource PrimaryColor}" Text="X" Command="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=BindingContext.Delete}" 
                             CommandParameter="{Binding .}" FontSize="12" HeightRequest="20" Padding="0" BackgroundColor="Transparent" HorizontalOptions="End" VerticalOptions="Start" WidthRequest="40" ZIndex="800"/>
-                                    <Label Grid.Row="1" Grid.ColumnSpan="3" TextColor="{DynamicResource PrimaryColor}" HorizontalTextAlignment="Center"  LineBreakMode="WordWrap" Text="{Binding Part}" FontSize="18" />
-                                    <Label Grid.Row="2" Grid.ColumnSpan="3" TextColor="{DynamicResource PrimaryColor}" HorizontalTextAlignment="Center"  LineBreakMode="WordWrap" Text="{Binding Comment}" TextDecorations="Underline" FontSize="13" />
-                                    <Label Grid.Row="3" Grid.Column="0" TextColor="{DynamicResource PrimaryColor}" HorizontalTextAlignment="Center" Text="Serie" FontSize="15"  />
-                                    <Label Grid.Row="4" Grid.Column="0" TextColor="{DynamicResource PrimaryColor}" HorizontalTextAlignment="Center" Text="{Binding Series}" FontSize="18"  />
-                                    <Label Grid.Row="3" Grid.Column="1" TextColor="{DynamicResource PrimaryColor}" HorizontalTextAlignment="Center" Text="Powtórzenia" FontSize="15"  />
-                                    <Label Grid.Row="4" Grid.Column="1" TextColor="{DynamicResource PrimaryColor}"  HorizontalOptions="Center" Text="{Binding Repetitions}" FontSize="18" />
-                                    <Label Grid.Row="3" Grid.Column="2" TextColor="{DynamicResource PrimaryColor}" HorizontalTextAlignment="Center" Text="Obciążenie" FontSize="15"  />
-                                    <Label Grid.Row="4" Grid.Column="2" TextColor="{DynamicResource PrimaryColor}" HorizontalOptions="Center" Text="{Binding Weight, StringFormat='{0:F2}kg'}" FontSize="18" />
-                                    <!-- Delete button in the first row, right-aligned -->
+                                        <Label Grid.Row="1" Grid.ColumnSpan="5" TextColor="{DynamicResource PrimaryColor}" HorizontalTextAlignment="Center"  LineBreakMode="WordWrap" Text="{Binding Part}" FontSize="18" />
+                                        <Label Grid.Row="2" Grid.ColumnSpan="5" TextColor="{DynamicResource PrimaryColor}" HorizontalTextAlignment="Center"  LineBreakMode="WordWrap" Text="{Binding Comment}" TextDecorations="Underline" FontSize="13" />
+                                        <BoxView Grid.Row="3" Grid.ColumnSpan="5"
+                                                 HeightRequest="1"
+                                                 BackgroundColor="#E0E0E0"
+                                                 HorizontalOptions="Fill"
+                                                 VerticalOptions="Center" />
+
+                                        <Label Grid.Row="4" Grid.Column="0" TextColor="{DynamicResource PrimaryColor}" HorizontalTextAlignment="Center" Text="Serie" FontSize="15"  />
+                                        <Label Grid.Row="5" Grid.Column="0" TextColor="{DynamicResource PrimaryColor}" HorizontalTextAlignment="Center" Text="{Binding Series}" FontSize="18"  />
+                                        <Label Grid.Row="4" Grid.Column="2" TextColor="{DynamicResource PrimaryColor}" HorizontalTextAlignment="Center" Text="Powtórzenia" FontSize="15"  />
+                                        <Label Grid.Row="5" Grid.Column="2" TextColor="{DynamicResource PrimaryColor}"  HorizontalOptions="Center" Text="{Binding Repetitions}" FontSize="18" />
+                                        <Label Grid.Row="4" Grid.Column="4" TextColor="{DynamicResource PrimaryColor}" HorizontalTextAlignment="Center" Text="Obciążenie" FontSize="15"  />
+                                        <Label Grid.Row="5" Grid.Column="4" TextColor="{DynamicResource PrimaryColor}" HorizontalOptions="Center" Text="{Binding Weight, StringFormat='{0:F2}kg'}" FontSize="18" />
+                                        <!--<Label Grid.Row="5" Grid.ColumnSpan="3" TextColor="{DynamicResource PrimaryColor}" HorizontalOptions="Center" Text="{Binding OrderNumber, StringFormat='kolejność ćw {0}'}" FontSize="18" />-->
+                                        <!-- Delete button in the first row, right-aligned -->
+
+                                        <BoxView Grid.Row="4" Grid.RowSpan="5" Grid.Column="1"
+                                                 WidthRequest="1" Margin="0,4,0,0"
+                                                 BackgroundColor="#E0E0E0"
+                                                 HorizontalOptions="Center"
+                                                 VerticalOptions="Fill" />
+                                        <BoxView Grid.Row="4" Grid.RowSpan="5" Grid.Column="3"
+                                                 WidthRequest="1" Margin="0,4,0,0"
+                                                 BackgroundColor="#E0E0E0"
+                                                 HorizontalOptions="Center"
+                                                 VerticalOptions="Fill" />
 
 
 
 
-                                     
-                                
                                     </Grid>
                                 </Border>
                             </VerticalStackLayout>
                         </DataTemplate>
-                        
+
                     </CollectionView.ItemTemplate>
-                    
+
                 </CollectionView>
 
                 <Label Text="Brak danych lub ćwiczenia znajdują się w innej siłowni" HorizontalOptions="Center" VerticalOptions="Center"
@@ -191,26 +228,48 @@
                         IsVisible="{Binding HasNoData}" />
             </StackLayout>
         </ScrollView>
-        <StackLayout Grid.RowSpan="2" VerticalOptions="End" IsVisible="{Binding IsBottomGridVisible}" BackgroundColor="{DynamicResource PageBackgroundColor}">
+        <StackLayout Grid.RowSpan="3" VerticalOptions="End" IsVisible="{Binding IsBottomGridVisible}" BackgroundColor="{DynamicResource PageBackgroundColor}">
 
 
-            <Border StrokeShape="RoundRectangle 1" StrokeThickness="1" Stroke="{DynamicResource PrimaryColor}" >
+            <Border StrokeThickness="1" Stroke="{DynamicResource PrimaryColor}" >
 
-                <Grid VerticalOptions="End" HorizontalOptions="Center" >
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width = "*"/>
-                        <ColumnDefinition Width = "*"/>
-                    </Grid.ColumnDefinitions>
-                    <Label Grid.Row="0" Grid.Column="0" Text="Max ostatnie obciążenie "  HorizontalTextAlignment="Center" TextColor="{DynamicResource PrimaryColor}" FontSize="15" />
-                    <Label Grid.Row="0" Grid.Column="1" HorizontalTextAlignment="Center"  Text="{Binding LastWeight, StringFormat='{0:F2}kg'}"  TextColor="{DynamicResource PrimaryColor}" FontSize="15" />
+                <Grid ColumnDefinitions="Auto,auto,*" Margin="5">
+
+                    <!-- LEWA STRONA -->
+                    <Label Grid.Column="0"
+           VerticalOptions="Start"
+           Text="Max obciążenie:"
+           TextColor="{DynamicResource PrimaryColor}"
+           FontSize="15" />
+
+                    <Label Grid.Column="1"
+               Margin="10,0,0,0"
+               Text="{Binding LastWeight, StringFormat='{0:F2}kg'}"
+               TextColor="{DynamicResource PrimaryColor}"
+               FontSize="15" />
+
+                    <Grid Grid.Column="2"
+          ColumnDefinitions="Auto,Auto"
+          HorizontalOptions="Center">
+
+                        <Label Grid.Column="0"
+               Text="{Binding LastSeries, StringFormat='Serie: {0:F0}'}"
+               TextColor="{DynamicResource PrimaryColor}"
+               FontSize="15" />
+
+                        <Label Grid.Column="1"
+               Margin="10,0,0,0"
+               Text="{Binding LastRepetition, StringFormat='Powt.: {0:F0}'}"
+               TextColor="{DynamicResource PrimaryColor}"
+               FontSize="15" />
+
+                    </Grid>
+
                 </Grid>
             </Border>
         </StackLayout>
         <!-- Panel boczny -->
-        <AbsoluteLayout Grid.RowSpan="2">
+        <AbsoluteLayout Grid.Row="3" Grid.RowSpan="3">
             <BoxView x:Name="Overlay"
              BackgroundColor="Transparent"
              IsVisible="False"
@@ -233,14 +292,16 @@
            HasShadow="True"
            AbsoluteLayout.LayoutBounds="0,0.15,AutoSize,AutoSize"
            AbsoluteLayout.LayoutFlags="PositionProportional">
-
+                
+                
+                
                 <Frame.GestureRecognizers>
                     <SwipeGestureRecognizer Direction="Left" Swiped="SidePanel_Swiped"/>
                 </Frame.GestureRecognizers>
 
 
                 <VerticalStackLayout Spacing="12">
-                <Label Text="Notatki" FontAttributes="Bold" FontSize="20"/>
+                    <Label Text="Notatki" FontAttributes="Bold" FontSize="20"/>
                     <Editor x:Name="NotesEditor" Text="{Binding Notes, Mode=TwoWay}"
                     Placeholder="Zapisz swoje uwagi..."
                     AutoSize="TextChanges"
@@ -251,33 +312,37 @@
 
                 </VerticalStackLayout>
 
-        </Frame>
+            </Frame>
 
-        <!-- Uchwyt do otwierania -->
-        <Frame x:Name="Handle"
-           WidthRequest="40"
-           HeightRequest="100"
-           BackgroundColor="#444"
-           CornerRadius="5"
-           BorderColor="Black"
+            <!-- Uchwyt do otwierania -->
+            <Frame x:Name="Handle"
+           BackgroundColor="White"
+           CornerRadius="50"
+           WidthRequest="60"
+           HeightRequest="60"
+           BorderColor="#b5dd9d"
            HorizontalOptions="Start"
            VerticalOptions="Center"
            TranslationX="0"
            Padding="0"
            HasShadow="True" 
-           AbsoluteLayout.LayoutBounds="0,0.33,AutoSize,AutoSize"
+           AbsoluteLayout.LayoutBounds="0.05,0.92,50,50"
            AbsoluteLayout.LayoutFlags="PositionProportional">
+                
+                <Image Source="journaltext"
+                    WidthRequest="35" HeightRequest="35"/>
 
-                <Label Text="Notatki" FontSize="11"
+                
+                <!--<Label Text="Notatki" FontSize="11"
                    TextColor="White" Rotation="90" 
                    HorizontalOptions="Center"
-                   VerticalOptions="Center"/>
+                   VerticalOptions="Center"/>-->
 
                 <Frame.GestureRecognizers>
-                <TapGestureRecognizer Tapped="TogglePanel"/>
-            </Frame.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="TogglePanel"/>
+                </Frame.GestureRecognizers>
 
-        </Frame>
+            </Frame>
         </AbsoluteLayout>
 
     </Grid>

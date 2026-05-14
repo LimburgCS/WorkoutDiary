@@ -25,11 +25,22 @@ namespace WorkoutDiary.data
             var result = await Database.CreateTableAsync<BodyParts>();
         }
 
-        public async Task<List<BodyParts>> GetInvoiceAsync()
+        public async Task<List<BodyParts>> GetBodyPartAsync()
         {
             await Init();
             return await Database.Table<BodyParts>().ToListAsync();
         }
+        public async Task<List<BodyParts>> GetBodyPartsFilteredAsync(int week)
+        {
+            await Init();
+
+            var query = Database.Table<BodyParts>()
+                                .Where(x => x.NumberWeek == week);
+
+
+            return await query.OrderBy(x => x.DateTime).ToListAsync();
+        }
+
         public async Task<BodyParts> GetInvoiceIDAsync(int id)
         {
             await Init();

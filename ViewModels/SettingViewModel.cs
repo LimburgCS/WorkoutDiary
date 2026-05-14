@@ -91,7 +91,7 @@ namespace WorkoutDiary.ViewModels
         {
             try
             {
-                var db = await _database.GetInvoiceAsync();
+                var db = await _database.GetBodyPartAsync();
                 var bodypartsDB = db
                     .Select(x => x.NameGym)
                     .Where(x => !string.IsNullOrWhiteSpace(x))   // ⬅️ usuwa null, "", "   "
@@ -152,7 +152,7 @@ namespace WorkoutDiary.ViewModels
 
             if (confirm)
             {
-                var db = await _database.GetInvoiceAsync();
+                var db = await _database.GetBodyPartAsync();
                 var DeleteNameGym = db.Where(x => x.NameGym == SelectedGym).ToList();
                 foreach (var item in DeleteNameGym)
                 {
@@ -169,7 +169,7 @@ namespace WorkoutDiary.ViewModels
 
             if (confirm)
             {
-                var db = await _database.GetInvoiceAsync();
+                var db = await _database.GetBodyPartAsync();
                 var DeleteNameGym = db.Where(x => x.Part == SelectNamePart).ToList();
                 foreach (var item in DeleteNameGym)
                 {
@@ -184,7 +184,7 @@ namespace WorkoutDiary.ViewModels
         {
             try
             {
-                var data = await _database.GetInvoiceAsync();
+                var data = await _database.GetBodyPartAsync();
 
                 var json = JsonSerializer.Serialize(data, new JsonSerializerOptions
                 {
@@ -246,6 +246,7 @@ namespace WorkoutDiary.ViewModels
                 }
 
                 await Shell.Current.DisplayAlert("Sukces", "Dane zostały zaimportowane.", "OK");
+                SettingsService.SelectedGym = "Wszystko";
             }
             catch (Exception ex)
             {

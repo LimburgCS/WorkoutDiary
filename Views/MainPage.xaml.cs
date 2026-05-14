@@ -66,16 +66,16 @@ namespace WorkoutDiary.Views
                 Overlay.IsVisible = false;
 
                 await Task.WhenAll(
-                    SidePanel.TranslateTo(-260, 0, 250, Easing.CubicOut),
-                    Handle.TranslateTo(0, 0, 250, Easing.CubicOut)
+                    SidePanel.TranslateTo(-260, 0, 250, Easing.CubicOut)
+                   // Handle.TranslateTo(0, 0, 250, Easing.CubicOut)
                 );
             }
             else
             {
                 Overlay.IsVisible = true;
                 await Task.WhenAll(
-                    SidePanel.TranslateTo(0, 0, 250, Easing.CubicOut),
-                    Handle.TranslateTo(260, 0, 250, Easing.CubicOut)
+                    SidePanel.TranslateTo(0, 0, 250, Easing.CubicOut)
+                    //Handle.TranslateTo(260, 0, 250, Easing.CubicOut)
                 );
             }
 

@@ -4,7 +4,7 @@
              x:Class="WorkoutDiary.Views.AddExercisePage"
              xmlns:viewModels="clr-namespace:WorkoutDiary.ViewModels"
              Title="{Binding PageTitle}" Shell.TitleColor="{DynamicResource PrimaryColor}"
-             BackgroundImageSource="lowpoly.jpg">
+             BackgroundImageSource="titleapp.jpg">
     
     <ScrollView>
         
@@ -56,7 +56,7 @@
                 </Grid.ColumnDefinitions>
                     <Label Grid.Row="0" Grid.Column="0" HorizontalOptions="Start" TextColor="{DynamicResource PrimaryColor}" Text="Dodaj ćwiczenie"/>
                 <ImageButton Grid.Row="0" Grid.Column="1" Command="{Binding ButtonInfo}"
-                             HorizontalOptions="Start" Scale="1.2" HeightRequest="15"  BackgroundColor="{DynamicResource PrimaryColor}"
+                             HorizontalOptions="Start" Scale="1.2" HeightRequest="15"  BackgroundColor="#b5dd9d"
                              Padding="0"
                              Source="info.svg"/>
                 <Entry Grid.Row="1" Grid.ColumnSpan="2" x:Name="PartEditor"
@@ -86,7 +86,7 @@
                          Text="{Binding Comment}" TextColor="{DynamicResource PrimaryColor}"
                          HeightRequest="40" />
                 <Label Grid.Row="5" Grid.Column="0" HorizontalOptions="Start" VerticalOptions="Center" TextColor="{DynamicResource PrimaryColor}" Text="Data ćwiczenia"/>
-                <Image Grid.Row="6" Grid.Column="0" BackgroundColor="{DynamicResource PrimaryColor}" HorizontalOptions="Start" HeightRequest="30" Source="calendar.svg"/>
+                    <Image Grid.Row="6" Grid.Column="0" BackgroundColor="#b5dd9d" HorizontalOptions="Start" HeightRequest="30" Source="calendar.svg"/>
                 <DatePicker x:Name="datepickerEditor" Grid.Row="6" Grid.Column="0"
                             DateSelected="DatePicker_DateSelected" 
                             HorizontalOptions="Start" Format="dd.MM.yyyy" Opacity="0" />
@@ -113,8 +113,8 @@
                 <Button Grid.Row="13" Grid.ColumnSpan="2" Text="Zapisz"
                         x:Name="save"
                         Command="{Binding SaveCommand}"
-                        Background="{DynamicResource PrimaryColor}" 
-                        TextColor="{DynamicResource PageBackgroundColor}"/>
+                        Background="#b5dd9d" 
+                        TextColor="{DynamicResource PrimaryColor}"/>
 
 
             </Grid>

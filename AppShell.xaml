@@ -11,7 +11,7 @@
     Shell.TabBarBackgroundColor="White"
    
 Shell.FlyoutBackdrop="White"
-    Shell.TabBarForegroundColor="black"
+    Shell.TabBarForegroundColor="#b5dd9d"
     Title="WorkoutDiary">
 
     <FlyoutItem FlyoutDisplayOptions="AsMultipleItems">
