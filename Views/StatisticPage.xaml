@@ -9,24 +9,24 @@
     <Grid RowDefinitions="*,Auto,auto" Padding="0">
 
         <StackLayout Grid.Row="0">
-            <Grid RowDefinitions="*,*" ColumnDefinitions="*, auto" Margin="10">
+            <Grid RowDefinitions="*,auto" ColumnDefinitions="*, *" Margin="10">
 
-                <Label Grid.Row="0" Grid.Column="0" Text="wybierz partie" HorizontalOptions="Center" FontSize="15" TextColor="Black"/>
-                <Picker Grid.Column="0" x:Name="namePicker" 
+                <Label Grid.Row="0" Grid.Column="0" x:Name="LabelNamePart" Text="Wybrane ćwiczenie" HorizontalOptions="Center" TextColor="Black"/>
+                <Picker Grid.Column="0" Grid.Row="1" x:Name="namePicker" 
                 Title="Wybierz partie"
-                TextColor="Black"
-                Margin="10"
-                FontSize="20"
+                TextColor="#8cca68"
+                FontSize="15"
                 Background="Transparent"
                 HorizontalTextAlignment="Center"
                 SelectedIndexChanged="PartSelected">
             </Picker>
-                <Label Grid.Row="0" Grid.Column="1" Text="wybierz siłownie" HorizontalOptions="Center" FontSize="15" TextColor="Black"/>
-                <Picker Grid.Column="1" x:Name="PickerNameGym" 
+
+
+                <Label Grid.Row="0" Grid.Column="1" x:Name="LabelNameGym" Text="Wybrana siłownia" HorizontalOptions="Center" TextColor="Black"/>
+                <Picker Grid.Column="1" Grid.Row="1" x:Name="PickerNameGym" 
                 Title="Wybierz siłownie"
-                TextColor="Black"
-                Margin="10"
-                FontSize="20"
+                TextColor="#8cca68"
+                FontSize="15"
                 Background="Transparent"
                 HorizontalTextAlignment="Center"
                 SelectedIndexChanged="PartSelected">

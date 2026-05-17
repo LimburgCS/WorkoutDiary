@@ -1,4 +1,6 @@
-﻿using CommunityToolkit.Mvvm.Messaging;
+﻿using CommunityToolkit.Maui.Views;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -13,7 +15,7 @@ using WorkoutDiary.data;
 using WorkoutDiary.Helper;
 using WorkoutDiary.Model;
 using WorkoutDiary.Service;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using WorkoutDiary.Views;
 
 namespace WorkoutDiary.ViewModels
 {
@@ -26,6 +28,8 @@ namespace WorkoutDiary.ViewModels
         }
         readonly MainPageViewModel _mainPageVM;
         public ObservableCollection<string> TitleGym { get; set; } = new();
+        public ObservableCollection<string> Parts { get; set; } = new();
+        public ObservableCollection<BodyParts> Suggestions { get; set; } = new();
         private List<string> _allParts;
         public TodoItemDatabase _database;
         private BodyParts _bodyPart;
@@ -43,6 +47,7 @@ namespace WorkoutDiary.ViewModels
         private int _numberweek;
         private int _datePickerNumberWeek;
         private string _comment;
+        private bool ShowSugesstionFlag;
 
         public string PageTitle
         {
@@ -62,7 +67,7 @@ namespace WorkoutDiary.ViewModels
                 if (_selectedGym != value)
                 {
                     _selectedGym = value;
-                    OnPropertyChanged(nameof(_selectedGym));
+                    OnPropertyChanged(nameof(SelectedGym));
                    // Preferences.Set("_selectedGym", value);
                     _ = FindNameGymPlace();
                 }
@@ -75,8 +80,11 @@ namespace WorkoutDiary.ViewModels
             {
                 _part = value;
                 OnPropertyChanged(nameof(Part));
-                if(!_isEditMode)
-                    ValidatePart(value);
+                //if(!_isEditMode)
+                //    ValidatePart(value);
+                if(!ShowSugesstionFlag)
+                    FilterParts(value);
+
 
             }
         }
@@ -106,7 +114,7 @@ namespace WorkoutDiary.ViewModels
             set
             {
                 _partPicker = value;
-                OnPropertyChanged(nameof(_partPicker));
+                OnPropertyChanged(nameof(PartPicker));
             }
         }
         public string GymPicker
@@ -115,7 +123,7 @@ namespace WorkoutDiary.ViewModels
             set
             {
                 _gymPicker = value;
-                OnPropertyChanged(nameof(_gymPicker));
+                OnPropertyChanged(nameof(GymPicker));
             }
         }
         public int? Series
@@ -198,22 +206,105 @@ namespace WorkoutDiary.ViewModels
         }
 
 
+        private bool _showSuggestions;
+        public bool ShowSuggestions
+        {
+            get => _showSuggestions;
+            set
+            {
+                _showSuggestions = value;
+                OnPropertyChanged(nameof(ShowSuggestions));
+            }
+        }
 
+        private bool _showLabel;
+        public bool ShowLabel
+        {
+            get => _showLabel;
+            set
+            {
+                _showLabel = value;
+                OnPropertyChanged(nameof(ShowLabel));
+                OnPropertyChanged(nameof(ShowLabelLUB));
+            }
+        }
 
+        public bool ShowLabelLUB => !ShowLabel;
 
         public ICommand SaveCommand { get; }
         public ICommand ButtonInfo { get; }
+        public IRelayCommand<BodyParts> SuggestionSelectedCommand { get; }
+        public ICommand PickPartCommand { get; }
+        public ICommand PickGymCommand { get; }
 
         public AddExerciseViewModel(TodoItemDatabase database)
         {
             _database = database;
             SaveCommand = new Command(async () => await Save());
             ButtonInfo = new Command(async () => await ButtonInfoCommand());
+            PickPartCommand = new Command(async () => await PickPart());
+            PickGymCommand = new Command(async () => await PickGym());
+            SuggestionSelectedCommand = new RelayCommand<BodyParts>(OnSuggestionSelected);
             DatetimeEntry = DateTime.Today;
             LoadNumberWeek();
             _ = LoadNameGymPlace();
-            LoadPartsAsync();
+            _ = LoadPartsAsync();
             _isEditMode  = false;
+            ShowLabel = false;
+        }
+        private async void FilterParts(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value) || value.Length < 2)
+            {
+                Suggestions.Clear();
+                ShowSuggestions = false;
+                return;
+            }
+            var db = await _database.GetBodyPartAsync();
+            var filtered = db
+                .Where(x => x.Part.Contains(value, StringComparison.OrdinalIgnoreCase))
+                .Take(6).DistinctBy(x => x.Part)
+                .ToList();
+
+            Suggestions.Clear();
+
+            foreach (var item in filtered)
+            {
+                Suggestions.Add(item);
+            }
+                
+
+            ShowSuggestions = Suggestions.Any();
+        }
+        private void OnSuggestionSelected(BodyParts selected)
+        {
+            if (selected == null)
+                return;
+            ShowSugesstionFlag = true;
+            Part = selected.Part;      // uzupełnij Entry
+            ShowSuggestions = false;   // schowaj dropdown
+            Suggestions.Clear();       // wyczyść listę
+
+            ShowSugesstionFlag = false;
+        }
+
+        private async Task PickPart()
+        {
+            var popup = new PickerPopup(Parts.ToList());
+            var result = await Application.Current.MainPage.ShowPopupAsync(popup);
+
+            if (result is string selected)
+                PartPicker = selected;
+            ShowLabel = true;
+        }
+
+        private async Task PickGym()
+        {
+            var popup = new PickerPopup(TitleGym.ToList());
+            var result = await Application.Current.MainPage.ShowPopupAsync(popup);
+
+            if (result is string selected)
+                SelectedGym = selected;
         }
 
         private async Task ButtonInfoCommand()
@@ -221,16 +312,16 @@ namespace WorkoutDiary.ViewModels
             await Application.Current.MainPage.DisplayAlert("Informacja", "Dodane ćwiczenia są zapisywane, a przy kolejnym trenigu należy wybrać ćwiczenie z listy. Dzięki temu progress danej partii można sprawdzić w oknie 'statystyka' ", "Ok!");
         }
 
-        private async void LoadPartsAsync()
-        {
-            var db = await _database.GetBodyPartAsync();
+        //private async void LoadPartsAsync()
+        //{
+        //    var db = await _database.GetBodyPartAsync();
 
-            _allParts = db
-                .Select(x => x.Part)
-                .Where(x => !string.IsNullOrWhiteSpace(x))
-                .Distinct(StringComparer.OrdinalIgnoreCase)
-                .ToList();
-        }
+        //    _allParts = db
+        //        .Select(x => x.Part)
+        //        .Where(x => !string.IsNullOrWhiteSpace(x))
+        //        .Distinct(StringComparer.OrdinalIgnoreCase)
+        //        .ToList();
+        //}
 
 
         public async Task LoadExercise(int exerciseId)
@@ -414,10 +505,10 @@ namespace WorkoutDiary.ViewModels
 
 
         }
-        public void loadPicker(string selectedPart)
-        {
-            PartPicker = selectedPart;
-        }
+        //public void loadPicker(string selectedPart)
+        //{
+        //    PartPicker = selectedPart;
+        //}
         //public void loadPickerGym(string selectedGym)
         //{
         //    GymPicker = selectedGym;
@@ -450,8 +541,33 @@ namespace WorkoutDiary.ViewModels
             _ = FindNameGymPlace();
 
 
+        }
 
 
+        public async Task LoadPartsAsync()
+        {
+            try
+            {
+                var db = await _database.GetBodyPartAsync();
+                var bodypartsDB = db
+                    .Select(x => x.Part)
+                    .Where(x => !string.IsNullOrWhiteSpace(x))
+                    .Distinct().OrderBy(x => x, StringComparer.CurrentCultureIgnoreCase)
+                    .ToList();
+
+                bodypartsDB.Insert(0, "Wszystko");
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    Parts.Clear();
+                    foreach (var part in bodypartsDB)
+                        Parts.Add(part);
+                });
+            }
+            catch (Exception ex)
+            {
+                // opcjonalnie obsługa błędów
+                Console.WriteLine($"Błąd przy wczytywaniu danych: {ex.Message}");
+            }
         }
         private async Task FindNameGymPlace()
         {
@@ -524,17 +640,17 @@ namespace WorkoutDiary.ViewModels
 
         }
 
-        private void ValidatePart(string value)
-        {
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                IsPartDuplicate = false;
-                return;
-            }
+        //private void ValidatePart(string value)
+        //{
+        //    if (string.IsNullOrWhiteSpace(value))
+        //    {
+        //        IsPartDuplicate = false;
+        //        return;
+        //    }
 
-            IsPartDuplicate = _allParts
-                .Any(x => x.Equals(value, StringComparison.OrdinalIgnoreCase));
-        }
+        //    IsPartDuplicate = _allParts
+        //        .Any(x => x.Equals(value, StringComparison.OrdinalIgnoreCase));
+        //}
 
 
 

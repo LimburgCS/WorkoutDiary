@@ -6,7 +6,7 @@
              xmlns:viewodel="clr-namespace:WorkoutDiary.ViewModels" 
              xmlns:Converters="clr-namespace:WorkoutDiary.Converter"
              NavigatedTo="ContentPage_NavigatedTo" 
-             Title="{Binding PageTitle}" Shell.TitleColor="{DynamicResource PrimaryColor}" BackgroundImageSource="titleapp.jpg">
+             Title="{Binding PageTitle}" Shell.TitleColor="{DynamicResource PrimaryColor}" BackgroundImageSource="titleapp.png">
 
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -49,7 +49,7 @@
                         <ColumnDefinition Width="*"/>
 
                     </Grid.ColumnDefinitions>
-                    <DatePicker x:Name="datepicker" Grid.Row="0"  TextColor="#00C853"
+                    <DatePicker x:Name="datepicker" Grid.Row="0"  TextColor="#8cca68"
                                 Grid.Column="0" DateSelected="DatePicker_DateSelected"
                                 BindingContext="{Binding DatePicker, Mode=TwoWay}"
                                 Format="dd.MM.yyyy" FontSize="13" />
@@ -59,11 +59,27 @@
                              VerticalOptions="Fill"
                              HorizontalOptions="Center"/>
 
-                    <Picker Grid.Column="2" HorizontalTextAlignment="Center"
+                    <!--<Picker Grid.Column="2" HorizontalTextAlignment="Center"
                                Title="Wybierz siłownie" FontSize="13"
-                            TextColor="#00C853"
+                            TextColor="#8cca68"
                                ItemsSource="{Binding Gym}"
-                               SelectedItem="{Binding SelectedGym}" />
+                               SelectedItem="{Binding SelectedGym}" />-->
+
+                    <Border Grid.Column="2" Stroke="Transparent" Margin="1">
+
+                        <Label Text="{Binding SelectedGym, TargetNullValue='Wybierz siłownię'}"
+                                HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
+                                FontSize="13"
+                                TextColor="#8cca68">
+
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding PickGymCommand}" />
+                            </Label.GestureRecognizers>
+
+                        </Label>
+
+                    </Border>
+
 
                     <BoxView Grid.Column="3" Margin="0,4,0,4"
                              WidthRequest="1"
@@ -72,11 +88,25 @@
                              HorizontalOptions="Center"/>
                     
                     
-                        <Picker Grid.Column="4" HorizontalTextAlignment="Center" 
-                        Title="Wybierz partię" FontSize="13" TextColor="#00C853" BackgroundColor="Transparent"
+                        <!--<Picker Grid.Column="4" HorizontalTextAlignment="Center" 
+                        Title="Wybierz partię" FontSize="13" TextColor="#8cca68" BackgroundColor="Transparent"
                         ItemsSource="{Binding Parts}"
-                        SelectedItem="{Binding SelectedPart}" />
+                        SelectedItem="{Binding SelectedPart}" />-->
 
+                    <Border Grid.Column="4" Stroke="Transparent" Margin="1">
+
+                        <Label Text="{Binding SelectedPart, TargetNullValue='Wybierz partię'}"
+                                HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
+                                FontSize="13"
+                                TextColor="#8cca68">
+
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding PickPartCommand}"/>
+                            </Label.GestureRecognizers>
+
+                        </Label>
+
+                    </Border>
                 </Grid>
                 
             </Border>
@@ -320,7 +350,7 @@
            CornerRadius="50"
            WidthRequest="60"
            HeightRequest="60"
-           BorderColor="#b5dd9d"
+           BorderColor="#8cca68"
            HorizontalOptions="Start"
            VerticalOptions="Center"
            TranslationX="0"

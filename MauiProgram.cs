@@ -1,4 +1,5 @@
 ﻿
+using CommunityToolkit.Maui;
 using Microcharts.Maui;
 using Microsoft.Extensions.Logging;
 using SkiaSharp.Views.Maui.Controls.Hosting;
@@ -19,6 +20,7 @@ namespace WorkoutDiary
 
                 .UseMauiApp<App>()
                 .UseMicrocharts()
+                .UseMauiCommunityToolkit()
                 .UseSkiaSharp()
                 .ConfigureFonts(fonts =>
                 {

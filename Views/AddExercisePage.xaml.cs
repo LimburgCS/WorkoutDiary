@@ -1,5 +1,6 @@
 ﻿
 using WorkoutDiary.data;
+using WorkoutDiary.Model;
 using WorkoutDiary.Service;
 using WorkoutDiary.ViewModels;
 
@@ -10,12 +11,13 @@ namespace WorkoutDiary.Views
     {
         private readonly AddExerciseViewModel _viewmodel;   
         TodoItemDatabase database;
+        AddExerciseViewModel _AddExerciseViewModelViewModel;
         public AddExercisePage(AddExerciseViewModel viewmodel)
         {
             InitializeComponent();
             database = new TodoItemDatabase();
             BindingContext = _viewmodel = viewmodel;
-            _ = LoadPart();
+            //_ = LoadPart();
 
         }
         public async void ApplyQueryAttributes(IDictionary<string, object> query)
@@ -25,25 +27,27 @@ namespace WorkoutDiary.Views
                 await _viewmodel.LoadExercise(exerciseId);
             }
         }
-        private async Task LoadPart()
-        {
-            var db = await database.GetBodyPartAsync();
-            var bodypartsDB = db.Select(x => x.Part).Distinct().OrderBy(x=>x, StringComparer.CurrentCultureIgnoreCase).ToList();
-            var nameGym = db.Select(x => x.NameGym).Distinct().OrderBy(x => x, StringComparer.CurrentCultureIgnoreCase).ToList();
-            namePicker.ItemsSource = bodypartsDB; // Ustawienie listy w Picker
-            namePickerGym.ItemsSource = nameGym;
-            string savedGym = SettingsService.SelectedGym;
-            namePickerGym.SelectedItem = savedGym;
+        //private async Task LoadPart()
+        //{
+        //    var db = await database.GetBodyPartAsync();
+        //    var bodypartsDB = db.Select(x => x.Part).Distinct().OrderBy(x=>x, StringComparer.CurrentCultureIgnoreCase).ToList();
+        //    var nameGym = db.Select(x => x.NameGym).Distinct().OrderBy(x => x, StringComparer.CurrentCultureIgnoreCase).ToList();
+        //    namePicker.ItemsSource = bodypartsDB; // Ustawienie listy w Picker
+        //    namePickerGym.ItemsSource = nameGym;
+        //    string savedGym = SettingsService.SelectedGym;
+        //    namePickerGym.SelectedItem = savedGym;
 
-        }
-        private void PartSelected(object sender, EventArgs e)
-        {
-            if (namePicker.SelectedIndex != -1)
-            {
-                string selectedPart = namePicker.SelectedItem.ToString();
-                _viewmodel.loadPicker(selectedPart);
-            }
-        }
+        //}
+        //private void PartSelected(object sender, EventArgs e)
+        //{
+        //    if (namePicker.SelectedIndex != -1)
+        //    {
+        //        string selectedPart = namePicker.SelectedItem.ToString();
+        //        _viewmodel.loadPicker(selectedPart);
+        //    }
+        //}
+
+
         //private void GymSelected(object sender, EventArgs e)
         //{
         //    if (namePickerGym.SelectedIndex != -1)
@@ -81,5 +85,8 @@ namespace WorkoutDiary.Views
             save.SendClicked();
 
         }
+
+
+
     }
 }

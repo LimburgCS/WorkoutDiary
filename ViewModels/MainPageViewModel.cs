@@ -1,5 +1,6 @@
 ﻿
 
+using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using System.Collections.ObjectModel;
@@ -220,12 +221,17 @@ namespace WorkoutDiary.ViewModels
         public ICommand Next { get; }
         public ICommand SelectDayCommand { get; }
         public ICommand Delete { get; }
+
+        public ICommand PickGymCommand { get; }
+        public ICommand PickPartCommand { get; }
         public MainPageViewModel(TodoItemDatabase database, PersonDataBase _notes)
         {
             _database = database;
             _NoteDb = _notes;
             BodyParts = new ObservableCollection<BodyParts>();
             NewExercise = new AsyncRelayCommand(NewExerciseAsync);
+            PickGymCommand = new Command(async () => await PickGym());
+            PickPartCommand = new Command(async () => await PickPart());
             SelectDayCommand = new Command<BodyParts>(async (BodyParts) => await SelectExerciseAsync(BodyParts));
             Back = new Command(BackMethod);
             Next = new Command(NextMethod);
@@ -263,7 +269,22 @@ namespace WorkoutDiary.ViewModels
             _timer.AutoReset = true;
             _timer.Start();
         }
+        private async Task PickGym()
+        {
+            var popup = new PickerPopup(Gym.ToList());
+            var result = await Application.Current.MainPage.ShowPopupAsync(popup);
 
+            if (result is string selected)
+                SelectedGym = selected;
+        }
+        private async Task PickPart()
+        {
+            var popup = new PickerPopup(Parts.ToList());
+            var result = await Application.Current.MainPage.ShowPopupAsync(popup);
+
+            if (result is string selected)
+                SelectedPart = selected;
+        }
         public async void ChooseDate(DateTime date)
         {
             var data = await _database.GetBodyPartAsync();

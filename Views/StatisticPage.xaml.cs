@@ -1,4 +1,5 @@
-﻿using Microcharts;
+﻿using CommunityToolkit.Maui.Views;
+using Microcharts;
 using Microcharts.Maui;
 using SkiaSharp;
 using SQLite;
@@ -25,12 +26,11 @@ namespace WorkoutDiary.Views
         public StatisticPage()
         {
             InitializeComponent();
-            //chartView.Chart = new LineChart { Entries = entries };
             _database = new TodoItemDatabase();
-            //LoadChart();
             BodyParts = new ObservableCollection<BodyParts>();
             LoadPart();
             OnAppearing();
+            CheckLabel();
         }
         protected override void OnAppearing()
         {
@@ -39,8 +39,31 @@ namespace WorkoutDiary.Views
             {
                 UpdateChart();
             }
+
+
+
         }
 
+        private void CheckLabel()
+        {
+            if (namePicker.SelectedItem is null)
+            {
+                LabelNamePart.IsVisible = false;
+            }
+            else
+            {
+                LabelNamePart.IsVisible = true;
+            }
+
+            if (PickerNameGym.SelectedItem is null || PickerNameGym.SelectedItem is "Wszystko")
+            {
+                LabelNameGym.IsVisible = false;
+            }
+            else
+            {
+                LabelNameGym.IsVisible = true;
+            }
+        }
         private async void LoadPart()
         {
 
@@ -49,19 +72,23 @@ namespace WorkoutDiary.Views
             var db = await _database.GetBodyPartAsync();
             var bodypartsDB = db.Select(x => x.Part).Where(x => !string.IsNullOrWhiteSpace(x))
                 .OrderBy(x => x, StringComparer.CurrentCultureIgnoreCase).Distinct().ToList();
-            var nameGymDB = db.Select(x=>x.NameGym).Where(x => !string.IsNullOrWhiteSpace(x))
+            var nameGymDB = db.Select(x => x.NameGym).Where(x => !string.IsNullOrWhiteSpace(x))
                 .OrderBy(x => x, StringComparer.CurrentCultureIgnoreCase).Distinct().ToList();
             namePicker.ItemsSource = bodypartsDB; // Ustawienie listy w Picker
             PickerNameGym.ItemsSource = nameGymDB;
             PickerNameGym.SelectedItem = SettingsService.SelectedGym;
+            CheckLabel();
 
         }
+
+
         private async Task LoadChartv2(string selectedPart, string selectGym)
         {
             chartView.Chart = null;
-            _selectPart = selectedPart;
             var db = await _database.GetBodyPartAsync();
-            //var dbOrderBy1 = db.Where(x=>x.Part == selectedPart).OrderBy(x => x.DateTime).ToList();
+
+            if (db == null || !db.Any())
+                return;
             var dbOrderBy = db.Where(x => x.Part == selectedPart).Where(x=> x.NameGym == selectGym).Where(x => x.Weight > 0)
                   .GroupBy(x => x.DateTime.Date)  // Grupowanie po samej dacie (ignorujemy godziny)
                   .Select(group => new
@@ -128,11 +155,14 @@ namespace WorkoutDiary.Views
             };
 
             chartView.Chart = lineChart;
+            CheckLabel();
         }
         private async void UpdateChart()
         {
             var db = await _database.GetBodyPartAsync();
-            //var dbOrderBy1 = db.Where(x => x.Part == _selectPart).OrderBy(x => x.DateTime).ToList();
+            if (db == null || !db.Any())
+                return;
+
             var dbOrderBy = db.Where(x => x.Part == _selectPart).Where(x => x.NameGym == _selectGym).Where(x => x.Weight > 0)
                   .GroupBy(x => x.DateTime.Date)  // Grupowanie po samej dacie (ignorujemy godziny)
                   .Select(group => new
@@ -204,7 +234,10 @@ namespace WorkoutDiary.Views
             {
                 string selectedPart = namePicker.SelectedItem.ToString();
                 string selectGym = PickerNameGym.SelectedIndex != -1 ? PickerNameGym.SelectedItem.ToString() : savedGym;
+
                 _ = LoadChartv2(selectedPart, selectGym); // Załaduj dane dla wybranej osoby
+
+                CheckLabel();
             }
         }
 
@@ -217,44 +250,8 @@ namespace WorkoutDiary.Views
 
 
 
-        //private async void LoadChart()
-        //{
-        //    var data = await _database.GetInvoiceAsync();
-        //    var weeklyData = data
-        //        .GroupBy(d => CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(d.DateTime, CalendarWeekRule.FirstDay, DayOfWeek.Monday))
-        //        .Select(g => new
-        //        {
-        //            WeekNumber = g.Key,
-        //            LastWeight = g.OrderByDescending(x => x.DateTime).First().Weight // Ostatnia waga w danym tygodniu
-        //        })
-        //        .OrderBy(d => d.WeekNumber) // Sortowanie według tygodnia
-        //        .ToList();
 
-        //    // Tworzenie punktów dla wykresu
-        //    var entries = weeklyData.Select(d => new ChartEntry((float)d.LastWeight)
-        //    {
-        //        Label = $"Tydz {d.WeekNumber}",
-        //        ValueLabel = d.LastWeight.ToString("F1"), // Zaokrąglona wartość wagi
-        //        Color = SKColor.Parse("#3498db") // Niebieski kolor linii
-        //    }).ToList();
 
-        //    // Tworzenie wykresu liniowego
-        //    chartView.Chart = new LineChart
-        //    {
-        //        //Entries = entries,
-        //        //LineMode = LineMode.Straight, // Prosta linia
-        //        //LineSize = 1,
-        //        //PointSize = 10,
-        //        //BackgroundColor = SKColors.Transparent
-        //        Entries = entries,
-        //        LineMode = LineMode.Straight, // Prosta linia
-        //        LineSize = 3, // Cieńsza linia
-        //        PointMode = PointMode.Circle, // Pokazanie punktów
-        //        PointSize = 8, // Mniejsze punkty
-        //        BackgroundColor = SKColors.Transparent,
-        //        MinValue = entries.Min(e => float.Parse(e.ValueLabel)) - 2, // Zostawienie odstępu na dole
-        //        MaxValue = entries.Max(e => float.Parse(e.ValueLabel)) + 2  // Zostawienie odstępu na górze
-        //    };
-        //}
+
     }
 }
